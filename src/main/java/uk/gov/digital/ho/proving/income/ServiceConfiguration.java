@@ -8,6 +8,8 @@ import com.mongodb.client.MongoDatabase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import uk.gov.digital.ho.proving.income.acl.EarningsService;
+import uk.gov.digital.ho.proving.income.acl.MongodbBackedEarningsService;
 
 import java.text.SimpleDateFormat;
 
@@ -29,6 +31,11 @@ public class ServiceConfiguration {
         m.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
         m.enable(SerializationFeature.INDENT_OUTPUT);
         return m;
+    }
+
+    @Bean
+    public EarningsService getRevenueService() {
+        return new MongodbBackedEarningsService();
     }
 
     @Bean(name="applicationsCollection")

@@ -1,4 +1,4 @@
-package uk.gov.digital.ho.proving.income.service;
+package uk.gov.digital.ho.proving.income.api;
 
 import uk.gov.digital.ho.proving.income.domain.Application;
 

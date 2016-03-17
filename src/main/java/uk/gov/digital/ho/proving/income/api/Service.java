@@ -1,14 +1,11 @@
-package uk.gov.digital.ho.proving.income.service;
+package uk.gov.digital.ho.proving.income.api;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mongodb.*;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.digital.ho.proving.income.acl.EarningsService;
 import uk.gov.digital.ho.proving.income.domain.Applicant;
 import uk.gov.digital.ho.proving.income.domain.Application;
 import uk.gov.digital.ho.proving.income.domain.TemporaryMigrationFamilyApplication;
@@ -32,8 +30,7 @@ public class Service {
     private ObjectMapper mapper;
 
     @Autowired
-    @Qualifier("applicationsCollection")
-    DBCollection applicationsCollection;
+    private EarningsService revenueService;
 
     @RequestMapping(value="/application", method= RequestMethod.GET)
     public ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> getTemporaryMigrationFamilyApplication(
@@ -46,6 +43,7 @@ public class Service {
         headers.set("Content-type","application/json");
 
         try {
+            nino = sanitiseNino(nino);
             validateNino(nino);
         } catch (RuntimeException e) {
             logger.error("NINO is not valid");
@@ -63,7 +61,7 @@ public class Service {
         }
 
         try {
-            String responseString = lookup(nino);
+            String responseString = revenueService.lookup(nino);
 
             Application application = mapper.readValue(responseString, TemporaryMigrationFamilyApplication.class);
             TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
@@ -76,6 +74,10 @@ public class Service {
             logger.error("Error building response.", e);
         }
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
+
+    private String sanitiseNino(String nino) {
+        return nino.replaceAll("\\s","");
     }
 
     private void validateNino(String nino) {
@@ -92,19 +94,6 @@ public class Service {
 
         TemporaryMigrationFamilyApplication application = new TemporaryMigrationFamilyApplication(applicant, new Date(), "A", true, new BigDecimal(18600.00));
         return application;
-    }
-
-    private String lookup(String nino) {
-        DBObject query = new QueryBuilder().start().put("applicant.nino").is(nino).get();
-        DBCursor cursor = applicationsCollection.find(query);
-
-        if (1 == cursor.size()) {
-            JSONObject jsonResponse = new JSONObject(cursor.next().toString());
-            jsonResponse.remove("_id");
-            return jsonResponse.toString();
-        } else {
-            throw new RuntimeException("did not find a unique match");
-        }
     }
 
 }

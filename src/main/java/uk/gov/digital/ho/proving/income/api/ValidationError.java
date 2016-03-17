@@ -1,4 +1,4 @@
-package uk.gov.digital.ho.proving.income.service;
+package uk.gov.digital.ho.proving.income.api;
 
 public class ValidationError {
     private String code;
