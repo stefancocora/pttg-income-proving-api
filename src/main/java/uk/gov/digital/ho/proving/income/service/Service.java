@@ -1,9 +1,8 @@
-package uk.gov.digital.ho.proving.income;
+package uk.gov.digital.ho.proving.income.service;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.mongodb.*;
 import com.mongodb.client.MongoDatabase;
 import org.json.JSONObject;
@@ -16,11 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.digital.ho.proving.income.domain.Applicant;
+import uk.gov.digital.ho.proving.income.domain.Application;
+import uk.gov.digital.ho.proving.income.domain.TemporaryMigrationFamilyApplication;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @RestController
@@ -28,7 +28,7 @@ public class Service {
 
     @RequestMapping(value="/application", method= RequestMethod.GET)
     public ResponseEntity<Application> getTemporaryMigrationFamilyApplication(@RequestParam(value="nino", required=false) String nino) {
-        Logger logger = LoggerFactory.getLogger(uk.gov.digital.ho.proving.income.Service.class);
+        Logger logger = LoggerFactory.getLogger(Service.class);
         logger.info("*************** Income Proving Service API starting.");
 
         Application application = null;
