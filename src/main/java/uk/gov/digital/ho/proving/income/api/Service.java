@@ -1,8 +1,5 @@
 package uk.gov.digital.ho.proving.income.api;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,23 +11,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.digital.ho.proving.income.acl.EarningsService;
-import uk.gov.digital.ho.proving.income.domain.Applicant;
 import uk.gov.digital.ho.proving.income.domain.Application;
-import uk.gov.digital.ho.proving.income.domain.TemporaryMigrationFamilyApplication;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.regex.Pattern;
 
 @RestController
 public class Service {
 
     @Autowired
-    private ObjectMapper mapper;
-
-    @Autowired
-    private EarningsService revenueService;
+    private EarningsService earningsService;
 
     @RequestMapping(value="/application", method= RequestMethod.GET)
     public ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> getTemporaryMigrationFamilyApplication(
@@ -53,26 +42,15 @@ public class Service {
             return new ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse>(response, headers, HttpStatus.BAD_REQUEST);
         }
 
-
-        if (nino.equalsIgnoreCase("XXX")) {
-            TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
-            response.setApplication(buildApplication(nino));
-            return new ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse>(response, HttpStatus.OK);
-        }
-
         try {
-            String responseString = revenueService.lookup(nino);
-
-            Application application = mapper.readValue(responseString, TemporaryMigrationFamilyApplication.class);
+            Application application = earningsService.lookup(nino);
             TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
             response.setApplication(application);
-
             return new ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse>(response, headers, HttpStatus.OK);
-        } catch (JsonMappingException | JsonParseException e) {
-            logger.error("Error building response.", e);
-        } catch (IOException e) {
-            logger.error("Error building response.", e);
+        } catch (RuntimeException e) {
+            logger.error("Could not retrieve earning details.");
         }
+
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
@@ -86,14 +64,5 @@ public class Service {
         if (!pattern.matcher(nino).matches()) {
             throw new IllegalArgumentException("Invalid String");
         }
-
     }
-
-    private Application buildApplication(String nino) {
-        Applicant applicant = new Applicant("Mr", "Brian", "Snail", nino);
-
-        TemporaryMigrationFamilyApplication application = new TemporaryMigrationFamilyApplication(applicant, new Date(), "A", true, new BigDecimal(18600.00));
-        return application;
-    }
-
 }

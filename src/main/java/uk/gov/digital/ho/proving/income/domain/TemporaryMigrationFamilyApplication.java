@@ -1,6 +1,5 @@
 package uk.gov.digital.ho.proving.income.domain;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 public class TemporaryMigrationFamilyApplication implements Application {
@@ -10,12 +9,12 @@ public class TemporaryMigrationFamilyApplication implements Application {
 
     private String category;
     private boolean meetsFinancialRequirements;
-    private BigDecimal threshold;
+    private MonetaryAmount threshold;
 
     public TemporaryMigrationFamilyApplication() {
     }
 
-    public TemporaryMigrationFamilyApplication(Applicant applicant, Date applicationDate, String category, boolean meetsFinancialRequirements, BigDecimal threshold) {
+    public TemporaryMigrationFamilyApplication(Applicant applicant, Date applicationDate, String category, boolean meetsFinancialRequirements, MonetaryAmount threshold) {
         this.applicant = applicant;
         this.applicationDate = applicationDate;
         this.category = category;
@@ -41,7 +40,7 @@ public class TemporaryMigrationFamilyApplication implements Application {
         return meetsFinancialRequirements;
     }
 
-    public BigDecimal getThreshold() {
+    public MonetaryAmount getThreshold() {
         return threshold;
     }
 
