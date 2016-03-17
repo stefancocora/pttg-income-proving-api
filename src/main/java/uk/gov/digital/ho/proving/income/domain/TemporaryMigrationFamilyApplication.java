@@ -44,4 +44,5 @@ public class TemporaryMigrationFamilyApplication implements Application {
     public BigDecimal getThreshold() {
         return threshold;
     }
+
 }
