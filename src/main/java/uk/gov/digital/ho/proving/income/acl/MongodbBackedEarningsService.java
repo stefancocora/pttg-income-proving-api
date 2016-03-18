@@ -5,7 +5,10 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.QueryBuilder;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.digital.ho.proving.income.domain.Application;
@@ -17,7 +20,6 @@ import java.io.IOException;
  * This class retrieves data from an external sources and converts it to Home Office domain classes. When the HMRC web
  * api is available this class will call the api via a delegate and then convert the response to Home Office
  * domain classes.
- *
  */
 public class MongodbBackedEarningsService implements EarningsService {
     @Autowired
@@ -27,6 +29,7 @@ public class MongodbBackedEarningsService implements EarningsService {
     @Autowired
     private ObjectMapper mapper;
 
+    private static Logger LOGGER = LoggerFactory.getLogger(MongodbBackedEarningsService.class);
 
     @Override
     public Application lookup(String nino) {
@@ -34,18 +37,18 @@ public class MongodbBackedEarningsService implements EarningsService {
         DBCursor cursor = applicationsCollection.find(query);
 
         if (1 == cursor.size()) {
-            JSONObject jsonResponse = new JSONObject(cursor.next().toString());
-            jsonResponse.remove("_id");
             try {
+                JSONObject jsonResponse = new JSONObject(cursor.next().toString());
+                jsonResponse.remove("_id");
                 Application application = mapper.readValue(jsonResponse.toString(), TemporaryMigrationFamilyApplication.class);
                 return application;
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (JSONException | IOException e) {
+                LOGGER.error("Could not map JSON from mongodb to Application domain class", e);
+                throw new EarningsServiceFailedToMapDataToDomainClass();
             }
-            throw new RuntimeException();
         } else {
-            throw new RuntimeException("did not find a unique match");
+            LOGGER.error("Could not retrieve a unique document from mongodb for criteria [" + nino + "]");
+            throw new EarningsServiceNoUniqueMatch();
         }
     }
-
 }

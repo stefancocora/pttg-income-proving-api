@@ -11,12 +11,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.digital.ho.proving.income.acl.EarningsService;
+import uk.gov.digital.ho.proving.income.acl.EarningsServiceFailedToMapDataToDomainClass;
+import uk.gov.digital.ho.proving.income.acl.EarningsServiceNoUniqueMatch;
 import uk.gov.digital.ho.proving.income.domain.Application;
 
 import java.util.regex.Pattern;
 
 @RestController
 public class Service {
+    private Logger LOGGER = LoggerFactory.getLogger(Service.class);
 
     @Autowired
     private EarningsService earningsService;
@@ -25,8 +28,7 @@ public class Service {
     public ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> getTemporaryMigrationFamilyApplication(
             @RequestParam(value="nino", required=false) String nino,
             @RequestParam(value="applicationReceivedDate", required=false) String applicationDate) {
-        Logger logger = LoggerFactory.getLogger(Service.class);
-        logger.info(String.format("Income Proving Service API for Temporary Migration Family Application invoked for %s application received on %s.", nino, applicationDate));
+        LOGGER.info(String.format("Income Proving Service API for Temporary Migration Family Application invoked for %s application received on %s.", nino, applicationDate));
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-type","application/json");
@@ -34,21 +36,18 @@ public class Service {
         try {
             nino = sanitiseNino(nino);
             validateNino(nino);
-        } catch (RuntimeException e) {
-            logger.error("NINO is not valid");
-            ValidationError error = new ValidationError("0001","NINO is invalid.");
-            TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
-            response.setError(error);
-            return new ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse>(response, headers, HttpStatus.BAD_REQUEST);
-        }
-
-        try {
             Application application = earningsService.lookup(nino);
             TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
             response.setApplication(application);
             return new ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse>(response, headers, HttpStatus.OK);
+        } catch (EarningsServiceFailedToMapDataToDomainClass | EarningsServiceNoUniqueMatch e) {
+            LOGGER.error("Could not retrieve earning details.");
         } catch (RuntimeException e) {
-            logger.error("Could not retrieve earning details.");
+            LOGGER.error("NINO is not valid");
+            ValidationError error = new ValidationError("0001","NINO is invalid.");
+            TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
+            response.setError(error);
+            return new ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse>(response, headers, HttpStatus.BAD_REQUEST);
         }
 
         return new ResponseEntity(HttpStatus.BAD_REQUEST);

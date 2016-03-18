@@ -32,14 +32,17 @@ public class TemporaryMigrationFamilyApplication implements Application {
         return applicationDate;
     }
 
+    @Override
     public String getCategory() {
         return category;
     }
 
+    @Override
     public boolean isMeetsFinancialRequirements() {
         return meetsFinancialRequirements;
     }
 
+    @Override
     public MonetaryAmount getThreshold() {
         return threshold;
     }
