@@ -1,5 +1,7 @@
 package uk.gov.digital.ho.proving.income.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -10,6 +12,7 @@ public class FinancialRequirementsCheck {
     private Boolean met;
     private Date checkedFrom;
     private Date checkedTo;
+    @JsonIgnore
     private Date applicationDate;
 
     public Date getApplicationDate() {

@@ -15,6 +15,8 @@ import uk.gov.digital.ho.proving.income.acl.EarningsServiceFailedToMapDataToDoma
 import uk.gov.digital.ho.proving.income.acl.EarningsServiceNoUniqueMatch;
 import uk.gov.digital.ho.proving.income.domain.Application;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Pattern;
 
@@ -38,7 +40,7 @@ public class Service {
             nino = sanitiseNino(nino);
             validateNino(nino);
             // validate applicationDate
-            Date applicationDate = new Date();
+            Date applicationDate = new SimpleDateFormat("yyyy-MM-dd").parse(applicationDateAsString);
             Application application = earningsService.lookup(nino, applicationDate);
             TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
             response.setApplication(application);
@@ -46,8 +48,14 @@ public class Service {
         } catch (EarningsServiceFailedToMapDataToDomainClass | EarningsServiceNoUniqueMatch e) {
             LOGGER.error("Could not retrieve earning details.");
             return new ResponseEntity(HttpStatus.NOT_FOUND);
+        } catch (ParseException e) {
+            LOGGER.error("Error parsing date", e);
+            ValidationError error = new ValidationError("0002","Application Date is invalid.");
+            TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
+            response.setError(error);
+            return new ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse>(response, headers, HttpStatus.BAD_REQUEST);
         } catch (RuntimeException e) {
-            LOGGER.error("NINO is not valid");
+            LOGGER.error("NINO is not valid", e);
             ValidationError error = new ValidationError("0001","NINO is invalid.");
             TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
             response.setError(error);

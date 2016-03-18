@@ -19,7 +19,7 @@ class ServiceSpec extends Specification {
 
         when:
 
-        ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456A", "")
+        ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456A", "2016-03-21")
 
         then:
 
@@ -30,7 +30,7 @@ class ServiceSpec extends Specification {
 
         when:
 
-        ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456AX", "")
+        ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456AX", "2016-03-21")
 
         then:
 
@@ -50,7 +50,7 @@ class ServiceSpec extends Specification {
 
         when:
 
-        ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456X", "")
+        ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456X", "2016-03-21")
 
         then:
 
