@@ -15,6 +15,7 @@ import uk.gov.digital.ho.proving.income.acl.EarningsServiceFailedToMapDataToDoma
 import uk.gov.digital.ho.proving.income.acl.EarningsServiceNoUniqueMatch;
 import uk.gov.digital.ho.proving.income.domain.Application;
 
+import java.util.Date;
 import java.util.regex.Pattern;
 
 @RestController
@@ -27,8 +28,8 @@ public class Service {
     @RequestMapping(value="/application", method= RequestMethod.GET)
     public ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> getTemporaryMigrationFamilyApplication(
             @RequestParam(value="nino", required=false) String nino,
-            @RequestParam(value="applicationReceivedDate", required=false) String applicationDate) {
-        LOGGER.info(String.format("Income Proving Service API for Temporary Migration Family Application invoked for %s application received on %s.", nino, applicationDate));
+            @RequestParam(value="applicationReceivedDate", required=false) String applicationDateAsString) {
+        LOGGER.info(String.format("Income Proving Service API for Temporary Migration Family Application invoked for %s application received on %s.", nino, applicationDateAsString));
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-type","application/json");
@@ -36,7 +37,9 @@ public class Service {
         try {
             nino = sanitiseNino(nino);
             validateNino(nino);
-            Application application = earningsService.lookup(nino);
+            // validate applicationDate
+            Date applicationDate = new Date();
+            Application application = earningsService.lookup(nino, applicationDate);
             TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
             response.setApplication(application);
             return new ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse>(response, headers, HttpStatus.OK);

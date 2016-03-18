@@ -4,21 +4,21 @@ import java.util.Date;
 
 public class TemporaryMigrationFamilyApplication implements Application {
     private Applicant applicant;
-//    @JsonFormat(pattern="dd MMM yyyy")
+    //    @JsonFormat(pattern="dd MMM yyyy")
     private Date applicationDate;
 
     private String category;
-    private boolean meetsFinancialRequirements;
+    private FinancialRequirementsCheck financialRequirementsCheck;
     private MonetaryAmount threshold;
 
     public TemporaryMigrationFamilyApplication() {
     }
 
-    public TemporaryMigrationFamilyApplication(Applicant applicant, Date applicationDate, String category, boolean meetsFinancialRequirements, MonetaryAmount threshold) {
+    public TemporaryMigrationFamilyApplication(Applicant applicant, Date applicationDate, String category, boolean meetsFinancialRequirements, FinancialRequirementsCheck financialRequirements, MonetaryAmount threshold) {
         this.applicant = applicant;
         this.applicationDate = applicationDate;
         this.category = category;
-        this.meetsFinancialRequirements = meetsFinancialRequirements;
+        this.financialRequirementsCheck = financialRequirements;
         this.threshold = threshold;
     }
 
@@ -33,13 +33,17 @@ public class TemporaryMigrationFamilyApplication implements Application {
     }
 
     @Override
+    public void setApplicationDate(Date applicationDate) {
+        this.applicationDate = applicationDate;
+    }
+
+    @Override
     public String getCategory() {
         return category;
     }
 
-    @Override
-    public boolean isMeetsFinancialRequirements() {
-        return meetsFinancialRequirements;
+    public FinancialRequirementsCheck getFinancialRequirementsCheck() {
+        return financialRequirementsCheck;
     }
 
     @Override

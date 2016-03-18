@@ -23,7 +23,7 @@ class MongodbBackedEarningsServiceSpec extends Specification {
 
         when:
 
-        Application result = sut.lookup("AA123456A")
+        Application result = sut.lookup("AA123456A", new Date())
 
         then:
 
@@ -36,7 +36,8 @@ class MongodbBackedEarningsServiceSpec extends Specification {
 
         result.category
 
-        result.meetsFinancialRequirements
+        result.financialRequirementsCheck.met
+        result.financialRequirementsCheck.applicationDate == result.applicationDate
 
         result.threshold
     }
@@ -53,7 +54,7 @@ class MongodbBackedEarningsServiceSpec extends Specification {
 
         when:
 
-        Application result = sut.lookup("AA123456A")
+        Application result = sut.lookup("AA123456A", new Date())
 
         then:
 
@@ -72,7 +73,7 @@ class MongodbBackedEarningsServiceSpec extends Specification {
 
         when:
 
-        sut.lookup("AA123456A")
+        sut.lookup("AA123456A", new Date())
 
         then:
 
@@ -95,7 +96,7 @@ class MongodbBackedEarningsServiceSpec extends Specification {
 
         when:
 
-        sut.lookup("AA123456A")
+        sut.lookup("AA123456A", new Date())
 
         then:
 

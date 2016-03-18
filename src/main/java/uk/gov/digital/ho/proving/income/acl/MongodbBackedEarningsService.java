@@ -15,6 +15,7 @@ import uk.gov.digital.ho.proving.income.domain.Application;
 import uk.gov.digital.ho.proving.income.domain.TemporaryMigrationFamilyApplication;
 
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * This class retrieves data from an external sources and converts it to Home Office domain classes. When the HMRC web
@@ -32,7 +33,7 @@ public class MongodbBackedEarningsService implements EarningsService {
     private static Logger LOGGER = LoggerFactory.getLogger(MongodbBackedEarningsService.class);
 
     @Override
-    public Application lookup(String nino) {
+    public Application lookup(String nino, Date applicationDate) {
         DBObject query = new QueryBuilder().start().put("applicant.nino").is(nino).get();
         DBCursor cursor = applicationsCollection.find(query);
 
@@ -41,6 +42,8 @@ public class MongodbBackedEarningsService implements EarningsService {
                 JSONObject jsonResponse = new JSONObject(cursor.next().toString());
                 jsonResponse.remove("_id");
                 Application application = mapper.readValue(jsonResponse.toString(), TemporaryMigrationFamilyApplication.class);
+                application.setApplicationDate(applicationDate);
+                application.getFinancialRequirementsCheck().setApplicationDate(applicationDate);
                 return application;
             } catch (JSONException | IOException e) {
                 LOGGER.error("Could not map JSON from mongodb to Application domain class", e);

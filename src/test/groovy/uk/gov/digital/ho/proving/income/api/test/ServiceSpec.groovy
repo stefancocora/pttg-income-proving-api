@@ -42,7 +42,7 @@ class ServiceSpec extends Specification {
         given:
 
         EarningsService stubEarningsService = Stub()
-        stubEarningsService.lookup(_) >> {
+        stubEarningsService.lookup(_,_) >> {
             throw new EarningsServiceNoUniqueMatch()
         }
 
