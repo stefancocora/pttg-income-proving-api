@@ -33,7 +33,7 @@ public class MongodbBackedEarningsService implements EarningsService {
     private static Logger LOGGER = LoggerFactory.getLogger(MongodbBackedEarningsService.class);
 
     @Override
-    public Application lookup(String nino, Date applicationDate) {
+    public Application lookup(String nino, Date applicationReceivedDate) {
         DBObject query = new QueryBuilder().start().put("applicant.nino").is(nino).get();
         DBCursor cursor = applicationsCollection.find(query);
 
@@ -42,8 +42,8 @@ public class MongodbBackedEarningsService implements EarningsService {
                 JSONObject jsonResponse = new JSONObject(cursor.next().toString());
                 jsonResponse.remove("_id");
                 Application application = mapper.readValue(jsonResponse.toString(), TemporaryMigrationFamilyApplication.class);
-                application.setApplicationDate(applicationDate);
-                application.getFinancialRequirementsCheck().setApplicationDate(applicationDate);
+                application.setApplicationReceivedDate(applicationReceivedDate);
+                application.getFinancialRequirementsCheck().setApplicationReceivedDate(applicationReceivedDate);
                 return application;
             } catch (JSONException | IOException e) {
                 LOGGER.error("Could not map JSON from mongodb to Application domain class", e);
