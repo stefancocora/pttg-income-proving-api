@@ -10,13 +10,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.digital.ho.proving.income.acl.ApplicantService;
 import uk.gov.digital.ho.proving.income.acl.EarningsService;
 import uk.gov.digital.ho.proving.income.acl.EarningsServiceFailedToMapDataToDomainClass;
 import uk.gov.digital.ho.proving.income.acl.EarningsServiceNoUniqueMatch;
 import uk.gov.digital.ho.proving.income.domain.Application;
+import uk.gov.digital.ho.proving.income.domain.IncomeProvingResponse;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.regex.Pattern;
 
@@ -26,6 +30,11 @@ public class Service {
 
     @Autowired
     private EarningsService earningsService;
+
+    @Autowired
+    private ApplicantService applicantService;
+
+    private static final int NUMBER_OF_MONTHS = 6;
 
     @RequestMapping(value="/application", method= RequestMethod.GET)
     public ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> getTemporaryMigrationFamilyApplication(
@@ -41,10 +50,18 @@ public class Service {
             validateNino(nino);
             // validate applicationDate
             Date applicationDate = new SimpleDateFormat("yyyy-MM-dd").parse(applicationDateAsString);
+            Date startSearchDate = subtractXMonths(applicationDate, NUMBER_OF_MONTHS);
+            IncomeProvingResponse incomeProvingResponse = applicantService.lookup(nino, startSearchDate, applicationDate);
+
+            boolean isCategoryAApplicant = IncomeValidator.isCategoryAApplicant(incomeProvingResponse, startSearchDate, applicationDate);
+            LOGGER.info("is %s a category A applicant %d".format(nino, isCategoryAApplicant));
+
             Application application = earningsService.lookup(nino, applicationDate);
+            application.getFinancialRequirementsCheck().setMet(isCategoryAApplicant);
             TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
             response.setApplication(application);
-            return new ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse>(response, headers, HttpStatus.OK);
+            return new ResponseEntity<>(response, headers, HttpStatus.OK);
+
         } catch (EarningsServiceFailedToMapDataToDomainClass | EarningsServiceNoUniqueMatch e) {
             LOGGER.error("Could not retrieve earning details.");
             return new ResponseEntity(HttpStatus.NOT_FOUND);
@@ -61,6 +78,11 @@ public class Service {
             response.setError(error);
             return new ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse>(response, headers, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    private Date subtractXMonths(Date date, int months) {
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return Date.from(localDate.minusMonths(months).atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
     private String sanitiseNino(String nino) {

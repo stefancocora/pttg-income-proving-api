@@ -31,4 +31,14 @@ public class Applicant {
     public String getNino() {
         return nino;
     }
+
+    @Override
+    public String toString() {
+        return "Applicant{" +
+                "title='" + title + '\'' +
+                ", forename='" + forename + '\'' +
+                ", surname='" + surname + '\'' +
+                ", nino='" + nino + '\'' +
+                '}';
+    }
 }

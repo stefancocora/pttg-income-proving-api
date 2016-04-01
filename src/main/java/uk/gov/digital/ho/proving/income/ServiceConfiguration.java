@@ -8,7 +8,9 @@ import com.mongodb.client.MongoDatabase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import uk.gov.digital.ho.proving.income.acl.ApplicantService;
 import uk.gov.digital.ho.proving.income.acl.EarningsService;
+import uk.gov.digital.ho.proving.income.acl.MongodbBackedApplicantService;
 import uk.gov.digital.ho.proving.income.acl.MongodbBackedEarningsService;
 
 import java.text.SimpleDateFormat;
@@ -38,11 +40,25 @@ public class ServiceConfiguration {
         return new MongodbBackedEarningsService();
     }
 
+    @Bean
+    public ApplicantService getApplicantService() {
+        return new MongodbBackedApplicantService();
+    }
+
     @Bean(name="applicationsCollection")
     public DBCollection getApplicationsCollection() {
         MongoClient mongoClient = new MongoClient();
         MongoDatabase db = mongoClient.getDatabase("test");
         DBCollection coll = mongoClient.getDB("test").getCollection("applications");
+
+        return coll;
+    }
+
+    @Bean(name="applicantCollection")
+    public DBCollection getApplicantCollection() {
+        MongoClient mongoClient = new MongoClient();
+        MongoDatabase db = mongoClient.getDatabase("test");
+        DBCollection coll = mongoClient.getDB("test").getCollection("applicants");
 
         return coll;
     }
