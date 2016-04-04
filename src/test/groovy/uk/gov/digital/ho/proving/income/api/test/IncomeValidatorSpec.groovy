@@ -5,7 +5,6 @@ import uk.gov.digital.ho.proving.income.domain.Applicant
 import uk.gov.digital.ho.proving.income.domain.Income
 import uk.gov.digital.ho.proving.income.domain.IncomeProvingResponse
 import uk.gov.digital.ho.proving.income.domain.Link
-
 import uk.gov.digital.ho.proving.income.api.IncomeValidator
 
 class IncomeValidatorSpec extends Specification {
@@ -21,7 +20,7 @@ class IncomeValidatorSpec extends Specification {
         IncomeProvingResponse incomeProvingResponse = new IncomeProvingResponse(applicant, incomes, new ArrayList<Link>(), "9600")
 
         when:
-        boolean isCategoryAApplicant = IncomeValidator.isCategoryAApplicant(incomeProvingResponse)
+        boolean isCategoryAApplicant = IncomeValidator.isCategoryAApplicant(incomeProvingResponse, getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23))
 
         then:
         isCategoryAApplicant == true
@@ -36,7 +35,7 @@ class IncomeValidatorSpec extends Specification {
         IncomeProvingResponse incomeProvingResponse = new IncomeProvingResponse(applicant, incomes, new ArrayList<Link>(), "9600")
 
         when:
-        boolean isCategoryAApplicant = IncomeValidator.isCategoryAApplicant(incomeProvingResponse)
+        boolean isCategoryAApplicant = IncomeValidator.isCategoryAApplicant(incomeProvingResponse,  getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23))
 
         then:
         isCategoryAApplicant == false
@@ -51,7 +50,7 @@ class IncomeValidatorSpec extends Specification {
         IncomeProvingResponse incomeProvingResponse = new IncomeProvingResponse(applicant, incomes, new ArrayList<Link>(), "9600")
 
         when:
-        boolean isCategoryAApplicant = IncomeValidator.isCategoryAApplicant(incomeProvingResponse)
+        boolean isCategoryAApplicant = IncomeValidator.isCategoryAApplicant(incomeProvingResponse, getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23))
 
         then:
         isCategoryAApplicant == false
@@ -66,7 +65,7 @@ class IncomeValidatorSpec extends Specification {
         IncomeProvingResponse incomeProvingResponse = new IncomeProvingResponse(applicant, incomes, new ArrayList<Link>(), "9600")
 
         when:
-        boolean isCategoryAApplicant = IncomeValidator.isCategoryAApplicant(incomeProvingResponse)
+        boolean isCategoryAApplicant = IncomeValidator.isCategoryAApplicant(incomeProvingResponse,  getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23))
 
         then:
         isCategoryAApplicant == false
@@ -81,7 +80,7 @@ class IncomeValidatorSpec extends Specification {
         IncomeProvingResponse incomeProvingResponse = new IncomeProvingResponse(applicant, incomes, new ArrayList<Link>(), "9600")
 
         when:
-        boolean isCategoryAApplicant = IncomeValidator.isCategoryAApplicant(incomeProvingResponse)
+        boolean isCategoryAApplicant = IncomeValidator.isCategoryAApplicant(incomeProvingResponse,  getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23))
 
         then:
         isCategoryAApplicant == false
@@ -107,7 +106,7 @@ class IncomeValidatorSpec extends Specification {
         incomes.add(new Income(getDate(2015, Calendar.JULY, 15),PIZZA_HUT , "1600" ))
         incomes.add(new Income(getDate(2015, Calendar.FEBRUARY, 15),BURGER_KING , "1600" ))
         incomes.add(new Income(getDate(2015, Calendar.AUGUST, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.SEPTEMBER, 5),PIZZA_HUT , "1600" ))
+        incomes.add(new Income(getDate(2015, Calendar.SEPTEMBER, 15),PIZZA_HUT , "1600" ))
         incomes
     }
 
