@@ -19,7 +19,7 @@ class IncomeValidator {
     private static final int NUMBER_OF_MONTHS = 6;
     private static final BigDecimal MONTHLY_THRESHOLD = new BigDecimal(1550);
 
-    private static Logger LOGGER = LoggerFactory.getLogger(IncomeValidator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(IncomeValidator.class);
 
     private IncomeValidator() {
     }

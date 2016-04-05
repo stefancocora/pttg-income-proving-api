@@ -73,7 +73,7 @@ class ServiceSpec extends Specification {
 
         when:
 
-        ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456X", "2016-03-21")
+        ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456C", "2016-03-21")
 
         then:
 
