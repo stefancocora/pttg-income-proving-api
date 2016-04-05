@@ -91,7 +91,7 @@ public class Service {
 
     private void validateNino(String nino) {
 //        final Pattern pattern = Pattern.compile("/^[A-CEGHJ-PR-TW-Z]{1}[A-CEGHJ-NPR-TW-Z]{1}[0-9]{6}[A-D]{1}$/i");
-        final Pattern pattern = Pattern.compile("^[a-zA-Z]{2}[0-9]{6}[a-zA-Z]{1}$");
+        final Pattern pattern = Pattern.compile("^[a-zA-Z]{2}[0-9]{6}[a-dA-D]{1}$");
         if (!pattern.matcher(nino).matches()) {
             throw new IllegalArgumentException("Invalid String");
         }
