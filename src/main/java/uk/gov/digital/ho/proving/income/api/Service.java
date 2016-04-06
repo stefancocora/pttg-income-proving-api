@@ -35,7 +35,7 @@ public class Service {
     private ApplicantService applicantService;
 
     private static final int NUMBER_OF_MONTHS = 6;
-    private final static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     @RequestMapping(value="/application", method= RequestMethod.GET)
     public ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> getTemporaryMigrationFamilyApplication(
@@ -72,13 +72,13 @@ public class Service {
             ValidationError error = new ValidationError("0002","Application Date is invalid.");
             TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
             response.setError(error);
-            return new ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse>(response, headers, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(response, headers, HttpStatus.BAD_REQUEST);
         } catch (RuntimeException e) {
             LOGGER.error("NINO is not valid", e);
             ValidationError error = new ValidationError("0001","NINO is invalid.");
             TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
             response.setError(error);
-            return new ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse>(response, headers, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(response, headers, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -88,7 +88,7 @@ public class Service {
     }
 
     private String sanitiseNino(String nino) {
-        return nino.replaceAll("\\s","");
+        return nino.replaceAll("\\s","").toUpperCase();
     }
 
     private void validateNino(String nino) {
