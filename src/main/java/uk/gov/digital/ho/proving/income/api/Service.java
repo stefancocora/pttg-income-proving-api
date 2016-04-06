@@ -35,6 +35,7 @@ public class Service {
     private ApplicantService applicantService;
 
     private static final int NUMBER_OF_MONTHS = 6;
+    private final static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     @RequestMapping(value="/application", method= RequestMethod.GET)
     public ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> getTemporaryMigrationFamilyApplication(
@@ -49,7 +50,8 @@ public class Service {
             nino = sanitiseNino(nino);
             validateNino(nino);
             // validate applicationDate
-            Date applicationDate = new SimpleDateFormat("yyyy-MM-dd").parse(applicationDateAsString);
+            sdf.setLenient(false);
+            Date applicationDate = sdf.parse(applicationDateAsString);
             Date startSearchDate = subtractXMonths(applicationDate, NUMBER_OF_MONTHS);
             IncomeProvingResponse incomeProvingResponse = applicantService.lookup(nino, startSearchDate, applicationDate);
 
