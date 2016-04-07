@@ -24,12 +24,12 @@ class IncomeValidator {
     private IncomeValidator() {
     }
 
-    static boolean isCategoryAApplicant(IncomeProvingResponse incomeProvingResponse, Date lower, Date upper) {
-        return hasSameEmployerForLastXMonths(incomeProvingResponse.getIncomes(), NUMBER_OF_MONTHS, MONTHLY_THRESHOLD, lower, upper);
+    static FinancialCheckValues validateCategoryAApplicant(IncomeProvingResponse incomeProvingResponse, Date lower, Date upper) {
+        return financialCheckForLastXMonths(incomeProvingResponse.getIncomes(), NUMBER_OF_MONTHS, MONTHLY_THRESHOLD, lower, upper);
     }
 
     //TODO Refactor date handling once we know more about the back end and test env
-    private static boolean hasSameEmployerForLastXMonths(List<Income> incomes, int numOfMonths, BigDecimal threshold, Date lower, Date upper) {
+    private static FinancialCheckValues financialCheckForLastXMonths(List<Income> incomes, int numOfMonths, BigDecimal threshold, Date lower, Date upper) {
         Stream<Income> applicantIncome = incomes.stream()
                 .sorted((income1, income2) -> income2.getPayDate().compareTo(income1.getPayDate()))
                 .filter(income -> isDateInRange(income.getPayDate(), lower, upper));
@@ -41,19 +41,19 @@ class IncomeValidator {
             for (int i = 0; i < numOfMonths - 1; i++) {
                 if (!isSuccessor(lastXMonths.get(i), lastXMonths.get(i + 1))) {
                     LOGGER.info("FAILED: Months not consecutive");
-                    return false;
+                    return FinancialCheckValues.NON_CONSECUTIVE_MONTHS;
                 }
             }
             // Check that each payment is passes the threshold check
             for (Income income : lastXMonths) {
-                LOGGER.info("income value: " + new BigDecimal(income.getIncome()));
                 if (threshold.compareTo(new BigDecimal(income.getIncome())) > 0) {
-                    return false;
+                    LOGGER.info("FAILED: Income value = " + new BigDecimal(income.getIncome()));
+                    return FinancialCheckValues.MONTHLY_VALUE_BELOW_THRESHOLD;
                 }
             }
-            return true;
+            return FinancialCheckValues.PASSED;
         } else {
-            return false;
+            return FinancialCheckValues.NOT_ENOUGH_RECORDS;
         }
     }
 
@@ -66,19 +66,20 @@ class IncomeValidator {
     }
 
     private static long getDifferenceInMonthsBetweenDates(Date date1, Date date2) {
+
         LocalDate toDate = date1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate fromDate = date2.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         long months = fromDate.until(toDate, ChronoUnit.MONTHS);
-        LOGGER.info("fromDate: " + fromDate);
-        LOGGER.info("toDate: " + toDate);
+        LOGGER.debug("fromDate: " + fromDate);
+        LOGGER.debug("toDate: " + toDate);
 
-        LOGGER.info("Months: " + months);
+        LOGGER.debug("Months: " + months);
         return months;
     }
 
     private static boolean isDateInRange(Date date, Date lower, Date upper) {
         boolean inRange =  !(date.before(lower) || date.after(upper));
-        LOGGER.info(String.format("%s: %s in range of %s & %s", inRange, date, lower, upper ));
+        LOGGER.debug(String.format("%s: %s in range of %s & %s", inRange, date, lower, upper ));
         return inRange;
     }
 

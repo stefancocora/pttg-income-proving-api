@@ -55,11 +55,17 @@ public class Service {
             Date startSearchDate = subtractXMonths(applicationDate, NUMBER_OF_MONTHS);
             IncomeProvingResponse incomeProvingResponse = applicantService.lookup(nino, startSearchDate, applicationDate);
 
-            boolean isCategoryAApplicant = IncomeValidator.isCategoryAApplicant(incomeProvingResponse, startSearchDate, applicationDate);
-            LOGGER.info("is %s a category A applicant %d".format(nino, isCategoryAApplicant));
+            FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAApplicant(incomeProvingResponse, startSearchDate, applicationDate);
 
             Application application = earningsService.lookup(nino, applicationDate);
-            application.getFinancialRequirementsCheck().setMet(isCategoryAApplicant);
+
+            if (categoryAApplicant.equals(FinancialCheckValues.PASSED)) {
+                application.getFinancialRequirementsCheck().setMet(true);
+                application.getFinancialRequirementsCheck().setFailureReason(null);
+            } else {
+                application.getFinancialRequirementsCheck().setMet(false);
+                application.getFinancialRequirementsCheck().setFailureReason(categoryAApplicant.toString());
+            }
             TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
             response.setApplication(application);
             return new ResponseEntity<>(response, headers, HttpStatus.OK);

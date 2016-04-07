@@ -1,13 +1,18 @@
 package uk.gov.digital.ho.proving.income.api.test
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import spock.lang.Specification
+import uk.gov.digital.ho.proving.income.api.FinancialCheckValues
+import uk.gov.digital.ho.proving.income.api.IncomeValidator
 import uk.gov.digital.ho.proving.income.domain.Applicant
 import uk.gov.digital.ho.proving.income.domain.Income
 import uk.gov.digital.ho.proving.income.domain.IncomeProvingResponse
 import uk.gov.digital.ho.proving.income.domain.Link
-import uk.gov.digital.ho.proving.income.api.IncomeValidator
 
 class IncomeValidatorSpec extends Specification {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(IncomeValidatorSpec.class);
 
     final String PIZZA_HUT = "Pizza Hut"
     final String BURGER_KING = "Burger King"
@@ -20,10 +25,10 @@ class IncomeValidatorSpec extends Specification {
         IncomeProvingResponse incomeProvingResponse = new IncomeProvingResponse(applicant, incomes, new ArrayList<Link>(), "9600")
 
         when:
-        boolean isCategoryAApplicant = IncomeValidator.isCategoryAApplicant(incomeProvingResponse, getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23))
+        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAApplicant(incomeProvingResponse, getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23))
 
         then:
-        isCategoryAApplicant == true
+        categoryAApplicant.equals(FinancialCheckValues.PASSED)
 
     }
 
@@ -35,10 +40,10 @@ class IncomeValidatorSpec extends Specification {
         IncomeProvingResponse incomeProvingResponse = new IncomeProvingResponse(applicant, incomes, new ArrayList<Link>(), "9600")
 
         when:
-        boolean isCategoryAApplicant = IncomeValidator.isCategoryAApplicant(incomeProvingResponse,  getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23))
+        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAApplicant(incomeProvingResponse, getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23))
 
         then:
-        isCategoryAApplicant == false
+        categoryAApplicant.equals(FinancialCheckValues.NON_CONSECUTIVE_MONTHS)
 
     }
 
@@ -50,10 +55,10 @@ class IncomeValidatorSpec extends Specification {
         IncomeProvingResponse incomeProvingResponse = new IncomeProvingResponse(applicant, incomes, new ArrayList<Link>(), "9600")
 
         when:
-        boolean isCategoryAApplicant = IncomeValidator.isCategoryAApplicant(incomeProvingResponse, getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23))
+        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAApplicant(incomeProvingResponse, getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23))
 
         then:
-        isCategoryAApplicant == false
+        categoryAApplicant.equals(FinancialCheckValues.NOT_ENOUGH_RECORDS)
 
     }
 
@@ -65,10 +70,10 @@ class IncomeValidatorSpec extends Specification {
         IncomeProvingResponse incomeProvingResponse = new IncomeProvingResponse(applicant, incomes, new ArrayList<Link>(), "9600")
 
         when:
-        boolean isCategoryAApplicant = IncomeValidator.isCategoryAApplicant(incomeProvingResponse,  getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23))
+        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAApplicant(incomeProvingResponse, getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23))
 
         then:
-        isCategoryAApplicant == false
+        categoryAApplicant.equals(FinancialCheckValues.NON_CONSECUTIVE_MONTHS)
 
     }
 
@@ -80,10 +85,10 @@ class IncomeValidatorSpec extends Specification {
         IncomeProvingResponse incomeProvingResponse = new IncomeProvingResponse(applicant, incomes, new ArrayList<Link>(), "9600")
 
         when:
-        boolean isCategoryAApplicant = IncomeValidator.isCategoryAApplicant(incomeProvingResponse,  getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23))
+        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAApplicant(incomeProvingResponse, getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23))
 
         then:
-        isCategoryAApplicant == false
+        categoryAApplicant.equals(FinancialCheckValues.MONTHLY_VALUE_BELOW_THRESHOLD)
 
     }
 
@@ -99,59 +104,61 @@ class IncomeValidatorSpec extends Specification {
 
     def getConsecutiveIncomes() {
         List<Income> incomes = new ArrayList()
-        incomes.add(new Income(getDate(2015, Calendar.JANUARY, 15),PIZZA_HUT , "1400" ))
-        incomes.add(new Income(getDate(2015, Calendar.MAY, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.JUNE, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.APRIL, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.JULY, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.FEBRUARY, 15),BURGER_KING , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.AUGUST, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.SEPTEMBER, 15),PIZZA_HUT , "1600" ))
+        incomes.add(new Income(getDate(2015, Calendar.JANUARY, 15), PIZZA_HUT, "1400"))
+        incomes.add(new Income(getDate(2015, Calendar.MAY, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.JUNE, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.APRIL, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.JULY, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.FEBRUARY, 15), BURGER_KING, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.AUGUST, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.SEPTEMBER, 15), PIZZA_HUT, "1600"))
         incomes
     }
 
     def getNotEnoughConsecutiveIncomes() {
         List<Income> incomes = new ArrayList()
-        incomes.add(new Income(getDate(2015, Calendar.MAY, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.JUNE, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.APRIL, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.JULY, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.AUGUST, 15),PIZZA_HUT , "1600" ))
+        incomes.add(new Income(getDate(2015, Calendar.MAY, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.JUNE, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.APRIL, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.JULY, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.AUGUST, 15), PIZZA_HUT, "1600"))
         incomes
     }
 
     def getNoneConsecutiveIncomes() {
         List<Income> incomes = new ArrayList()
-        incomes.add(new Income(getDate(2015, Calendar.JANUARY, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.MAY, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.JUNE, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.APRIL, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.AUGUST, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.SEPTEMBER, 5),PIZZA_HUT , "1600" ))
+        incomes.add(new Income(getDate(2015, Calendar.JANUARY, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.FEBRUARY, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.APRIL, 16), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.MAY, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.JUNE, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.APRIL, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.AUGUST, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.SEPTEMBER, 15), PIZZA_HUT, "1600"))
         incomes
     }
 
     def getConsecutiveIncomesButDifferentEmployers() {
         List<Income> incomes = new ArrayList()
-        incomes.add(new Income(getDate(2015, Calendar.JANUARY, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.MAY, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.JUNE, 15),BURGER_KING , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.APRIL, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.JULY, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.AUGUST, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.SEPTEMBER, 5),PIZZA_HUT , "1600" ))
+        incomes.add(new Income(getDate(2015, Calendar.JANUARY, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.MAY, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.JUNE, 15), BURGER_KING, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.APRIL, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.JULY, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.AUGUST, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.SEPTEMBER, 15), PIZZA_HUT, "1600"))
         incomes
     }
 
     def getConsecutiveIncomesButLowAmounts() {
         List<Income> incomes = new ArrayList()
-        incomes.add(new Income(getDate(2015, Calendar.JANUARY, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.MAY, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.JUNE, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.APRIL, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.JULY, 15),PIZZA_HUT , "1400" ))
-        incomes.add(new Income(getDate(2015, Calendar.AUGUST, 15),PIZZA_HUT , "1400" ))
-        incomes.add(new Income(getDate(2015, Calendar.SEPTEMBER, 5),PIZZA_HUT , "1600" ))
+        incomes.add(new Income(getDate(2015, Calendar.JANUARY, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.MAY, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.JUNE, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.APRIL, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.JULY, 15), PIZZA_HUT, "1400"))
+        incomes.add(new Income(getDate(2015, Calendar.AUGUST, 15), PIZZA_HUT, "1400"))
+        incomes.add(new Income(getDate(2015, Calendar.SEPTEMBER, 15), PIZZA_HUT, "1600"))
         incomes
     }
 
