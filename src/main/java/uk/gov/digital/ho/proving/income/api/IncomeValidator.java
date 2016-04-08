@@ -7,6 +7,7 @@ import uk.gov.digital.ho.proving.income.domain.IncomeProvingResponse;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -40,14 +41,14 @@ class IncomeValidator {
             // Do we have NUMBER_OF_MONTHS consecutive months with the same employer
             for (int i = 0; i < numOfMonths - 1; i++) {
                 if (!isSuccessor(lastXMonths.get(i), lastXMonths.get(i + 1))) {
-                    LOGGER.info("FAILED: Months not consecutive");
+                    LOGGER.debug("FAILED: Months not consecutive");
                     return FinancialCheckValues.NON_CONSECUTIVE_MONTHS;
                 }
             }
-            // Check that each payment is passes the threshold check
+            // Check that each payment passes the threshold check
             for (Income income : lastXMonths) {
                 if (threshold.compareTo(new BigDecimal(income.getIncome())) > 0) {
-                    LOGGER.info("FAILED: Income value = " + new BigDecimal(income.getIncome()));
+                    LOGGER.debug("FAILED: Income value = " + new BigDecimal(income.getIncome()));
                     return FinancialCheckValues.MONTHLY_VALUE_BELOW_THRESHOLD;
                 }
             }
@@ -65,21 +66,21 @@ class IncomeValidator {
         }
     }
 
-    private static long getDifferenceInMonthsBetweenDates(Date date1, Date date2) {
+    public static long getDifferenceInMonthsBetweenDates(Date date1, Date date2) {
 
         LocalDate toDate = date1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate fromDate = date2.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        long months = fromDate.until(toDate, ChronoUnit.MONTHS);
+        Period period = fromDate.until(toDate);
         LOGGER.debug("fromDate: " + fromDate);
         LOGGER.debug("toDate: " + toDate);
+        LOGGER.debug("Months: " + period.toTotalMonths());
+        return period.toTotalMonths();
 
-        LOGGER.debug("Months: " + months);
-        return months;
     }
 
     private static boolean isDateInRange(Date date, Date lower, Date upper) {
-        boolean inRange =  !(date.before(lower) || date.after(upper));
-        LOGGER.debug(String.format("%s: %s in range of %s & %s", inRange, date, lower, upper ));
+        boolean inRange = !(date.before(lower) || date.after(upper));
+        LOGGER.debug(String.format("%s: %s in range of %s & %s", inRange, date, lower, upper));
         return inRange;
     }
 
