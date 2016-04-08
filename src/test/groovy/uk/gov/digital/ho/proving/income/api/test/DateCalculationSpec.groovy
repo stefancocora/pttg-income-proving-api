@@ -12,11 +12,6 @@ import uk.gov.digital.ho.proving.income.domain.Link
 
 class DateCalculationSpec extends Specification {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(IncomeValidatorSpec.class);
-
-    final String PIZZA_HUT = "Pizza Hut"
-    final String BURGER_KING = "Burger King"
-
     def "Check we get 1 month difference between 23/01/2015 and 23/02/2015"() {
 
         given:
