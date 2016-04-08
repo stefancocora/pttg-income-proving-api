@@ -92,6 +92,20 @@ class IncomeValidatorSpec extends Specification {
 
     }
 
+    def "valid category A applicant is accepted with different monthly pay dates"() {
+
+        given:
+        Applicant applicant = getApplicant()
+        List<Income> incomes = getConsecutiveIncomesWithDifferentMonthlyPayDay()
+        IncomeProvingResponse incomeProvingResponse = new IncomeProvingResponse(applicant, incomes, new ArrayList<Link>(), "9600")
+
+        when:
+        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAApplicant(incomeProvingResponse, getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23))
+
+        then:
+        categoryAApplicant.equals(FinancialCheckValues.PASSED)
+
+    }
 
     def getApplicant() {
         Applicant applicant = new Applicant()
@@ -161,6 +175,20 @@ class IncomeValidatorSpec extends Specification {
         incomes.add(new Income(getDate(2015, Calendar.SEPTEMBER, 15), PIZZA_HUT, "1600"))
         incomes
     }
+
+    def getConsecutiveIncomesWithDifferentMonthlyPayDay() {
+        List<Income> incomes = new ArrayList()
+        incomes.add(new Income(getDate(2015, Calendar.JANUARY, 15), PIZZA_HUT, "1400"))
+        incomes.add(new Income(getDate(2015, Calendar.MAY, 16), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.JUNE, 17), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.APRIL, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.JULY, 14), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.FEBRUARY, 15), BURGER_KING, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.AUGUST, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Calendar.SEPTEMBER, 15), PIZZA_HUT, "1600"))
+        incomes
+    }
+
 
     Date getDate(int year, int month, int day) {
         Calendar cal = Calendar.getInstance();

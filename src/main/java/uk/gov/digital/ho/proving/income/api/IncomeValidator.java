@@ -10,6 +10,8 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalField;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -68,8 +70,10 @@ class IncomeValidator {
 
     public static long getDifferenceInMonthsBetweenDates(Date date1, Date date2) {
 
-        LocalDate toDate = date1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate fromDate = date2.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        // Period.toTotalMonths() only returns integer month differences so for 14/07/2015 and 17/06/2015 it returns 0
+        // We need it to return 1, so we set both dates to the first of the month
+        LocalDate toDate = date1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().withDayOfMonth(1);
+        LocalDate fromDate = date2.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().withDayOfMonth(1);
         Period period = fromDate.until(toDate);
         LOGGER.debug("fromDate: " + fromDate);
         LOGGER.debug("toDate: " + toDate);
