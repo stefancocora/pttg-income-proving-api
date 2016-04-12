@@ -75,7 +75,6 @@ public class Service {
             ValidationError error = new ValidationError("0003","Could not retrieve earning details.");
             TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
             response.setError(error);
-            headers.clear();
             return new ResponseEntity(response, headers, HttpStatus.NOT_FOUND);
         } catch (ParseException e) {
             LOGGER.error("Error parsing date", e);
