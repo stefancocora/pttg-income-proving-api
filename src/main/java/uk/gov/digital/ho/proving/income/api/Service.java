@@ -72,7 +72,11 @@ public class Service {
 
         } catch (EarningsServiceFailedToMapDataToDomainClass | EarningsServiceNoUniqueMatch e) {
             LOGGER.error("Could not retrieve earning details.");
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            ValidationError error = new ValidationError("0003","Could not retrieve earning details.");
+            TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
+            response.setError(error);
+            headers.clear();
+            return new ResponseEntity(response, headers, HttpStatus.NOT_FOUND);
         } catch (ParseException e) {
             LOGGER.error("Error parsing date", e);
             ValidationError error = new ValidationError("0002","Application Date is invalid.");
