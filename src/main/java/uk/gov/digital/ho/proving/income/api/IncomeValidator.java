@@ -14,18 +14,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-class IncomeValidator {
+public class IncomeValidator {
 
     private static final int NUMBER_OF_MONTHS = 6;
-    private static final BigDecimal MONTHLY_THRESHOLD = new BigDecimal(1550);
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IncomeValidator.class);
 
     private IncomeValidator() {
     }
 
-    static FinancialCheckValues validateCategoryAApplicant(IncomeProvingResponse incomeProvingResponse, Date lower, Date upper) {
-        return financialCheckForLastXMonths(incomeProvingResponse.getIncomes(), NUMBER_OF_MONTHS, MONTHLY_THRESHOLD, lower, upper);
+    public static FinancialCheckValues validateCategoryAApplicant(List<Income> incomes, Date lower, Date upper, int dependants) {
+        BigDecimal threshold = new MonthlyThresholdCalculator(dependants).getThreshold();
+        return financialCheckForLastXMonths(incomes, NUMBER_OF_MONTHS, threshold, lower, upper);
     }
 
     //TODO Refactor date handling once we know more about the back end and test env

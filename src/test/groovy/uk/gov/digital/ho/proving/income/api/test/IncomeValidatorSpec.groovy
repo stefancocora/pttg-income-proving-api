@@ -20,12 +20,10 @@ class IncomeValidatorSpec extends Specification {
     def "valid category A applicant is accepted"() {
 
         given:
-        Applicant applicant = getApplicant()
         List<Income> incomes = getConsecutiveIncomes()
-        IncomeProvingResponse incomeProvingResponse = new IncomeProvingResponse(applicant, incomes, new ArrayList<Link>(), "9600")
 
         when:
-        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAApplicant(incomeProvingResponse, getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23))
+        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAApplicant(incomes, getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23), 0)
 
         then:
         categoryAApplicant.equals(FinancialCheckValues.PASSED)
@@ -35,12 +33,10 @@ class IncomeValidatorSpec extends Specification {
     def "invalid category A applicant is rejected (non consecutive)"() {
 
         given:
-        Applicant applicant = getApplicant()
         List<Income> incomes = getNoneConsecutiveIncomes()
-        IncomeProvingResponse incomeProvingResponse = new IncomeProvingResponse(applicant, incomes, new ArrayList<Link>(), "9600")
 
         when:
-        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAApplicant(incomeProvingResponse, getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23))
+        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAApplicant(incomes, getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23), 0)
 
         then:
         categoryAApplicant.equals(FinancialCheckValues.NON_CONSECUTIVE_MONTHS)
@@ -50,12 +46,10 @@ class IncomeValidatorSpec extends Specification {
     def "invalid category A applicant is rejected (not enough records)"() {
 
         given:
-        Applicant applicant = getApplicant()
         List<Income> incomes = getNotEnoughConsecutiveIncomes()
-        IncomeProvingResponse incomeProvingResponse = new IncomeProvingResponse(applicant, incomes, new ArrayList<Link>(), "9600")
 
         when:
-        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAApplicant(incomeProvingResponse, getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23))
+        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAApplicant(incomes, getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23), 0)
 
         then:
         categoryAApplicant.equals(FinancialCheckValues.NOT_ENOUGH_RECORDS)
@@ -65,12 +59,10 @@ class IncomeValidatorSpec extends Specification {
     def "invalid category A applicant is rejected (consecutive but not same employer)"() {
 
         given:
-        Applicant applicant = getApplicant()
         List<Income> incomes = getConsecutiveIncomesButDifferentEmployers()
-        IncomeProvingResponse incomeProvingResponse = new IncomeProvingResponse(applicant, incomes, new ArrayList<Link>(), "9600")
 
         when:
-        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAApplicant(incomeProvingResponse, getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23))
+        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAApplicant(incomes, getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23), 0)
 
         then:
         categoryAApplicant.equals(FinancialCheckValues.NON_CONSECUTIVE_MONTHS)
@@ -80,12 +72,10 @@ class IncomeValidatorSpec extends Specification {
     def "invalid category A applicant is rejected (consecutive but not enough earnings)"() {
 
         given:
-        Applicant applicant = getApplicant()
         List<Income> incomes = getConsecutiveIncomesButLowAmounts()
-        IncomeProvingResponse incomeProvingResponse = new IncomeProvingResponse(applicant, incomes, new ArrayList<Link>(), "9600")
 
         when:
-        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAApplicant(incomeProvingResponse, getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23))
+        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAApplicant(incomes, getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23), 0)
 
         then:
         categoryAApplicant.equals(FinancialCheckValues.MONTHLY_VALUE_BELOW_THRESHOLD)
@@ -95,17 +85,29 @@ class IncomeValidatorSpec extends Specification {
     def "valid category A applicant is accepted with different monthly pay dates"() {
 
         given:
-        Applicant applicant = getApplicant()
         List<Income> incomes = getConsecutiveIncomesWithDifferentMonthlyPayDay()
-        IncomeProvingResponse incomeProvingResponse = new IncomeProvingResponse(applicant, incomes, new ArrayList<Link>(), "9600")
 
         when:
-        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAApplicant(incomeProvingResponse, getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23))
+        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAApplicant(incomes, getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23), 0)
 
         then:
         categoryAApplicant.equals(FinancialCheckValues.PASSED)
 
     }
+
+    def "valid category A applicant is accepted with exactly the threshold values"() {
+
+        given:
+        List<Income> incomes = getConsecutiveIncomesWithExactlyTheAmount()
+
+        when:
+        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAApplicant(incomes, getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23), 0)
+
+        then:
+        categoryAApplicant.equals(FinancialCheckValues.PASSED)
+
+    }
+
 
     def getApplicant() {
         Applicant applicant = new Applicant()
@@ -189,6 +191,18 @@ class IncomeValidatorSpec extends Specification {
         incomes
     }
 
+    def getConsecutiveIncomesWithExactlyTheAmount() {
+        List<Income> incomes = new ArrayList()
+        incomes.add(new Income(getDate(2015, Calendar.JANUARY, 15), PIZZA_HUT, "1550"))
+        incomes.add(new Income(getDate(2015, Calendar.MAY, 16), PIZZA_HUT, "1550"))
+        incomes.add(new Income(getDate(2015, Calendar.JUNE, 17), PIZZA_HUT, "1550"))
+        incomes.add(new Income(getDate(2015, Calendar.APRIL, 15), PIZZA_HUT, "1550"))
+        incomes.add(new Income(getDate(2015, Calendar.JULY, 14), PIZZA_HUT, "1550"))
+        incomes.add(new Income(getDate(2015, Calendar.FEBRUARY, 15), BURGER_KING, "1550"))
+        incomes.add(new Income(getDate(2015, Calendar.AUGUST, 15), PIZZA_HUT, "1550"))
+        incomes.add(new Income(getDate(2015, Calendar.SEPTEMBER, 15), PIZZA_HUT, "1550"))
+        incomes
+    }
 
     Date getDate(int year, int month, int day) {
         Calendar cal = Calendar.getInstance();

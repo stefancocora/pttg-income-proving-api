@@ -35,7 +35,7 @@ class ServiceSpec extends Specification {
 
         when:
 
-        ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456A", "2015-09-23")
+        ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456A", "2015-09-23", 0)
 
         then:
 
@@ -46,7 +46,7 @@ class ServiceSpec extends Specification {
 
         when:
 
-        ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456AX", "2016-03-21")
+        ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456AX", "2016-03-21", 0)
 
         then:
 
@@ -56,7 +56,6 @@ class ServiceSpec extends Specification {
 
     def "unknown nino yields HTTP Not Found (404)"() {
         given:
-
         ApplicantService stubApplicantService = Stub()
         Applicant applicant = getApplicant()
         List<Income> incomes = getConsecutiveIncomes()
@@ -72,13 +71,34 @@ class ServiceSpec extends Specification {
         sut.earningsService = stubEarningsService
 
         when:
-
-        ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456C", "2016-03-21")
-
+        ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456C", "2016-03-21", 0)
         then:
-
         result.statusCode == HttpStatus.NOT_FOUND
 
+    }
+
+    def "cannot submit less than zero dependants"() {
+        when:
+        ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456C", "2016-03-21", -1)
+        then:
+        result.statusCode == HttpStatus.BAD_REQUEST
+    }
+
+    def "can submit more than zero dependants"() {
+        given:
+        sut.earningsService = Stub(EarningsService)
+
+        ApplicantService stubApplicantService = Stub()
+        Applicant applicant = getApplicant()
+        List<Income> incomes = getConsecutiveIncomes()
+        stubApplicantService.lookup(_,_,_) >> {
+            new IncomeProvingResponse(applicant, incomes, new ArrayList<Link>(), "9600")
+        }
+        sut.applicantService = stubApplicantService
+        when:
+        ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456A", "2015-09-23", 1)
+        then:
+        result.statusCode == HttpStatus.OK
     }
 
 

@@ -37,25 +37,33 @@ public class Service {
     private static final int NUMBER_OF_MONTHS = 6;
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-    @RequestMapping(value="/application", method= RequestMethod.GET)
+    @RequestMapping(value = "/application", method = RequestMethod.GET)
     public ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> getTemporaryMigrationFamilyApplication(
-            @RequestParam(value="nino", required=false) String nino,
-            @RequestParam(value="applicationReceivedDate", required=false) String applicationDateAsString) {
+            @RequestParam(value = "nino", required = false) String nino,
+            @RequestParam(value = "applicationReceivedDate", required = false) String applicationDateAsString,
+            @RequestParam(value = "dependants", required = false) Integer dependants) {
+
         LOGGER.info(String.format("Income Proving Service API for Temporary Migration Family Application invoked for %s application received on %s.", nino, applicationDateAsString));
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-type","application/json");
+        headers.set("Content-type", "application/json");
 
         try {
             nino = sanitiseNino(nino);
             validateNino(nino);
-            // validate applicationDate
+
+            if (dependants == null) {
+                dependants = 0;
+            } else if (dependants < 0) {
+                throw new IllegalArgumentException("Dependants cannot be less than zero");
+            }
+
             sdf.setLenient(false);
             Date applicationDate = sdf.parse(applicationDateAsString);
             Date startSearchDate = subtractXMonths(applicationDate, NUMBER_OF_MONTHS);
             IncomeProvingResponse incomeProvingResponse = applicantService.lookup(nino, startSearchDate, applicationDate);
 
-            FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAApplicant(incomeProvingResponse, startSearchDate, applicationDate);
+            FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAApplicant(incomeProvingResponse.getIncomes(), startSearchDate, applicationDate, dependants);
 
             Application application = earningsService.lookup(nino, applicationDate);
 
@@ -70,25 +78,27 @@ public class Service {
             response.setApplication(application);
             return new ResponseEntity<>(response, headers, HttpStatus.OK);
 
-        } catch (EarningsServiceFailedToMapDataToDomainClass | EarningsServiceNoUniqueMatch e) {
-            LOGGER.error("Could not retrieve earning details.");
-            ValidationError error = new ValidationError("0003","Could not retrieve earning details.");
-            TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
-            response.setError(error);
-            return new ResponseEntity(response, headers, HttpStatus.NOT_FOUND);
+        } // TODO All this below is a mess of exceptions and needs to be refactored
+        catch (EarningsServiceFailedToMapDataToDomainClass | EarningsServiceNoUniqueMatch e) {
+            LOGGER.error("Could not retrieve earning details.", e);
+            return buildErrorResponse(headers, "0003", "Could not retrieve earning details", HttpStatus.NOT_FOUND);
         } catch (ParseException e) {
             LOGGER.error("Error parsing date", e);
-            ValidationError error = new ValidationError("0002","Application Date is invalid.");
-            TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
-            response.setError(error);
-            return new ResponseEntity<>(response, headers, HttpStatus.BAD_REQUEST);
+            return buildErrorResponse(headers, "0002", "Application Date is invalid.", HttpStatus.BAD_REQUEST);
+        } catch (IllegalArgumentException iae) {
+            LOGGER.error(iae.getMessage(), iae);
+            return buildErrorResponse(headers, "0004", iae.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         } catch (RuntimeException e) {
             LOGGER.error("NINO is not valid", e);
-            ValidationError error = new ValidationError("0001","NINO is invalid.");
-            TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
-            response.setError(error);
-            return new ResponseEntity<>(response, headers, HttpStatus.BAD_REQUEST);
+            return buildErrorResponse(headers, "0001", "NINO is invalid.", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    private ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> buildErrorResponse(HttpHeaders headers, String errorCode, String errorMessage, HttpStatus status) {
+        ValidationError error = new ValidationError(errorCode, errorMessage);
+        TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
+        response.setError(error);
+        return new ResponseEntity<>(response, headers, status);
     }
 
     private Date subtractXMonths(Date date, int months) {
@@ -97,11 +107,10 @@ public class Service {
     }
 
     private String sanitiseNino(String nino) {
-        return nino.replaceAll("\\s","").toUpperCase();
+        return nino.replaceAll("\\s", "").toUpperCase();
     }
 
     private void validateNino(String nino) {
-//        final Pattern pattern = Pattern.compile("/^[A-CEGHJ-PR-TW-Z]{1}[A-CEGHJ-NPR-TW-Z]{1}[0-9]{6}[A-D]{1}$/i");
         final Pattern pattern = Pattern.compile("^[a-zA-Z]{2}[0-9]{6}[a-dA-D]{1}$");
         if (!pattern.matcher(nino).matches()) {
             throw new IllegalArgumentException("Invalid String");
