@@ -14,7 +14,7 @@ public class MonthlyThresholdCalculator {
 
     private BigDecimal threshold = BigDecimal.ZERO;
 
-    public MonthlyThresholdCalculator(int dependants) throws IllegalArgumentException {
+    public MonthlyThresholdCalculator(int dependants) {
 
         if (dependants < 0) {
             throw new IllegalArgumentException("Number of dependants cannot be less than zero.");
