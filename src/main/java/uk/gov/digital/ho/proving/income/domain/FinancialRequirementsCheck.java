@@ -15,23 +15,23 @@ public class FinancialRequirementsCheck {
     private Date checkedFrom;
     private Date checkedTo;
     @JsonIgnore
-    private Date applicationReceivedDate;
+    private Date applicationRaisedDate;
 
     private String failureReason;
 
-    public Date getApplicationReceivedDate() {
-        return applicationReceivedDate;
+    public Date getApplicationRaisedDate() {
+        return applicationRaisedDate;
     }
 
-    public void setApplicationReceivedDate(Date applicationReceivedDate) {
-        this.applicationReceivedDate = applicationReceivedDate;
+    public void setApplicationRaisedDate(Date applicationRaisedDate) {
+        this.applicationRaisedDate = applicationRaisedDate;
     }
 
     public FinancialRequirementsCheck() {
     }
 
     public Date getCheckedFrom() {
-        Date referenceDate = applicationReceivedDate;
+        Date referenceDate = applicationRaisedDate;
         Calendar c = Calendar.getInstance();
         c.setTime(referenceDate);
         c.add(Calendar.MONTH, -6);
@@ -39,7 +39,7 @@ public class FinancialRequirementsCheck {
     }
 
     public Date getCheckedTo() {
-        return applicationReceivedDate;
+        return applicationRaisedDate;
     }
 
     public Boolean getMet() {

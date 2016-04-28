@@ -32,12 +32,12 @@ class MongodbBackedEarningsServiceSpec extends Specification {
         result.applicant.forename
         result.applicant.surname
 
-        result.applicationReceivedDate
+        result.applicationRaisedDate
 
         result.category
 
         result.financialRequirementsCheck.met
-        result.financialRequirementsCheck.applicationReceivedDate == result.applicationReceivedDate
+        result.financialRequirementsCheck.applicationRaisedDate == result.applicationRaisedDate
 
         result.threshold
     }

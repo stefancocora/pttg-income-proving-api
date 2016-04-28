@@ -37,10 +37,11 @@ public class Service {
     private static final int NUMBER_OF_MONTHS = 6;
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
+    // TODO Some of these parameters should be mandatory
     @RequestMapping(value = "/application", method = RequestMethod.GET)
     public ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> getTemporaryMigrationFamilyApplication(
             @RequestParam(value = "nino", required = false) String nino,
-            @RequestParam(value = "applicationReceivedDate", required = false) String applicationDateAsString,
+            @RequestParam(value = "applicationRaisedDate", required = false) String applicationDateAsString,
             @RequestParam(value = "dependants", required = false) Integer dependants) {
 
         LOGGER.info(String.format("Income Proving Service API for Temporary Migration Family Application invoked for %s application received on %s.", nino, applicationDateAsString));

@@ -4,8 +4,8 @@ import java.util.Date;
 
 public interface Application {
     public Applicant getApplicant();
-    public Date getApplicationReceivedDate();
-    public void setApplicationReceivedDate(Date applicationReceivedDate);
+    public Date getApplicationRaisedDate();
+    public void setApplicationRaisedDate(Date applicationRaisedDate);
     public String getCategory();
     public FinancialRequirementsCheck getFinancialRequirementsCheck();
     public MonetaryAmount getThreshold();
