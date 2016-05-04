@@ -7,26 +7,28 @@ import uk.gov.digital.ho.proving.income.api.FinancialCheckValues
 import uk.gov.digital.ho.proving.income.api.IncomeValidator
 import uk.gov.digital.ho.proving.income.domain.Applicant
 import uk.gov.digital.ho.proving.income.domain.Income
-import uk.gov.digital.ho.proving.income.domain.IncomeProvingResponse
-import uk.gov.digital.ho.proving.income.domain.Link
 
-class IncomeValidatorSpec extends Specification {
+class MonthlyIncomeValidatorSpec extends Specification {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(IncomeValidatorSpec.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MonthlyIncomeValidatorSpec.class);
 
     final String PIZZA_HUT = "Pizza Hut"
     final String BURGER_KING = "Burger King"
+
+    int months = 6
 
     def "valid category A applicant is accepted"() {
 
         given:
         List<Income> incomes = getConsecutiveIncomes()
+        Date raisedDate = getDate(2015, Calendar.SEPTEMBER, 23)
+        Date pastDate = subtractMonthsFromDate(raisedDate, months)
 
         when:
-        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAApplicant(incomes, getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23), 0)
+        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
 
         then:
-        categoryAApplicant.equals(FinancialCheckValues.PASSED)
+        categoryAApplicant.equals(FinancialCheckValues.MONTHLY_SALARIED_PASSED)
 
     }
 
@@ -34,9 +36,11 @@ class IncomeValidatorSpec extends Specification {
 
         given:
         List<Income> incomes = getNoneConsecutiveIncomes()
+        Date raisedDate = getDate(2015, Calendar.SEPTEMBER, 23)
+        Date pastDate = subtractMonthsFromDate(raisedDate, months)
 
         when:
-        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAApplicant(incomes, getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23), 0)
+        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
 
         then:
         categoryAApplicant.equals(FinancialCheckValues.NON_CONSECUTIVE_MONTHS)
@@ -47,9 +51,11 @@ class IncomeValidatorSpec extends Specification {
 
         given:
         List<Income> incomes = getNotEnoughConsecutiveIncomes()
+        Date raisedDate = getDate(2015, Calendar.SEPTEMBER, 23)
+        Date pastDate = subtractMonthsFromDate(raisedDate, months)
 
         when:
-        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAApplicant(incomes, getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23), 0)
+        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
 
         then:
         categoryAApplicant.equals(FinancialCheckValues.NOT_ENOUGH_RECORDS)
@@ -60,9 +66,11 @@ class IncomeValidatorSpec extends Specification {
 
         given:
         List<Income> incomes = getConsecutiveIncomesButDifferentEmployers()
+        Date raisedDate = getDate(2015, Calendar.SEPTEMBER, 23)
+        Date pastDate = subtractMonthsFromDate(raisedDate, months)
 
         when:
-        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAApplicant(incomes, getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23), 0)
+        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
 
         then:
         categoryAApplicant.equals(FinancialCheckValues.NON_CONSECUTIVE_MONTHS)
@@ -73,9 +81,11 @@ class IncomeValidatorSpec extends Specification {
 
         given:
         List<Income> incomes = getConsecutiveIncomesButLowAmounts()
+        Date raisedDate = getDate(2015, Calendar.SEPTEMBER, 23)
+        Date pastDate = subtractMonthsFromDate(raisedDate, months)
 
         when:
-        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAApplicant(incomes, getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23), 0)
+        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
 
         then:
         categoryAApplicant.equals(FinancialCheckValues.MONTHLY_VALUE_BELOW_THRESHOLD)
@@ -86,12 +96,14 @@ class IncomeValidatorSpec extends Specification {
 
         given:
         List<Income> incomes = getConsecutiveIncomesWithDifferentMonthlyPayDay()
+        Date raisedDate = getDate(2015, Calendar.SEPTEMBER, 23)
+        Date pastDate = subtractMonthsFromDate(raisedDate, months)
 
         when:
-        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAApplicant(incomes, getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23), 0)
+        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
 
         then:
-        categoryAApplicant.equals(FinancialCheckValues.PASSED)
+        categoryAApplicant.equals(FinancialCheckValues.MONTHLY_SALARIED_PASSED)
 
     }
 
@@ -99,12 +111,14 @@ class IncomeValidatorSpec extends Specification {
 
         given:
         List<Income> incomes = getConsecutiveIncomesWithExactlyTheAmount()
+        Date raisedDate = getDate(2015, Calendar.SEPTEMBER, 23)
+        Date pastDate = subtractMonthsFromDate(raisedDate, months)
 
         when:
-        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAApplicant(incomes, getDate(2015, Calendar.MARCH, 23), getDate(2015, Calendar.SEPTEMBER, 23), 0)
+        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
 
         then:
-        categoryAApplicant.equals(FinancialCheckValues.PASSED)
+        categoryAApplicant.equals(FinancialCheckValues.MONTHLY_SALARIED_PASSED)
 
     }
 
@@ -212,4 +226,11 @@ class IncomeValidatorSpec extends Specification {
         return cal.getTime()
     }
 
+
+    Date subtractMonthsFromDate(Date date, int months) {
+        Calendar cal = Calendar.getInstance()
+        cal.setTime(date)
+        cal.add(Calendar.MONTH, -months)
+        return cal.getTime()
+    }
 }

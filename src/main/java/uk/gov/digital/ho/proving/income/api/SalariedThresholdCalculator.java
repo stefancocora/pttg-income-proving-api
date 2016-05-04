@@ -2,7 +2,7 @@ package uk.gov.digital.ho.proving.income.api;
 
 import java.math.BigDecimal;
 
-public class MonthlyThresholdCalculator {
+public class SalariedThresholdCalculator {
 
     private BigDecimal dependants = BigDecimal.ZERO;
     private BigDecimal subsequentDependants = BigDecimal.ZERO;
@@ -11,17 +11,22 @@ public class MonthlyThresholdCalculator {
     private final BigDecimal FIRST_DEPENDANT_VALUE = new BigDecimal(3800);
     private final BigDecimal SUBSEQUENT_DEPENDANT_VALUE = new BigDecimal(2400);
     private final BigDecimal MONTHS = new BigDecimal(12);
+    private final BigDecimal WEEKS = new BigDecimal(52);
 
-    private BigDecimal threshold = BigDecimal.ZERO;
+    private BigDecimal monthlyThreshold = BigDecimal.ZERO;
+    private BigDecimal weeklyThreshold = BigDecimal.ZERO;
+    private BigDecimal yearlyThreshold = BigDecimal.ZERO;
 
-    public MonthlyThresholdCalculator(int dependants) {
+    public SalariedThresholdCalculator(int dependants) {
 
         if (dependants < 0) {
             throw new IllegalArgumentException("Number of dependants cannot be less than zero.");
         } else {
             this.dependants = new BigDecimal(dependants);
             this.subsequentDependants = new BigDecimal(dependants - 1);
-            threshold = calcThreshold();
+            yearlyThreshold =calcThreshold();
+            monthlyThreshold = yearlyThreshold.divide(MONTHS, 2, BigDecimal.ROUND_CEILING);;
+            weeklyThreshold = yearlyThreshold.divide(WEEKS, 2, BigDecimal.ROUND_CEILING);;
         }
     }
 
@@ -32,11 +37,21 @@ public class MonthlyThresholdCalculator {
         } else {
             thresholdValue = (BASE_THRESHOLD_VALUE.add(FIRST_DEPENDANT_VALUE).add(SUBSEQUENT_DEPENDANT_VALUE.multiply(subsequentDependants)));
         }
-        return thresholdValue.divide(MONTHS, 2, BigDecimal.ROUND_CEILING);
+        return thresholdValue;
     }
 
-    public BigDecimal getThreshold() {
-        return threshold;
+    public BigDecimal getMonthlyThreshold() {
+        return monthlyThreshold;
     }
+
+    public BigDecimal getWeeklyThreshold() {
+        return weeklyThreshold;
+    }
+
+    public BigDecimal yearlyThreshold() {
+        return yearlyThreshold;
+    }
+
+
 
 }

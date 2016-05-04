@@ -64,16 +64,23 @@ public class Service {
             Date startSearchDate = subtractXMonths(applicationDate, NUMBER_OF_MONTHS);
             IncomeProvingResponse incomeProvingResponse = applicantService.lookup(nino, startSearchDate, applicationDate);
 
-            FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAApplicant(incomeProvingResponse.getIncomes(), startSearchDate, applicationDate, dependants);
+            FinancialCheckValues categoryAMonthlySalaried = IncomeValidator.validateCategoryAMonthlySalaried(incomeProvingResponse.getIncomes(), startSearchDate, applicationDate, dependants);
 
             Application application = earningsService.lookup(nino, applicationDate);
 
-            if (categoryAApplicant.equals(FinancialCheckValues.PASSED)) {
+            if (categoryAMonthlySalaried.equals(FinancialCheckValues.MONTHLY_SALARIED_PASSED)) {
                 application.getFinancialRequirementsCheck().setMet(true);
                 application.getFinancialRequirementsCheck().setFailureReason(null);
             } else {
-                application.getFinancialRequirementsCheck().setMet(false);
-                application.getFinancialRequirementsCheck().setFailureReason(categoryAApplicant.toString());
+                FinancialCheckValues categoryAWeeklySalaried = IncomeValidator.validateCategoryAWeeklySalaried(incomeProvingResponse.getIncomes(), startSearchDate, applicationDate, dependants);
+
+                if (categoryAWeeklySalaried.equals(FinancialCheckValues.WEEKLY_SALARIED_PASSED)) {
+                    application.getFinancialRequirementsCheck().setMet(true);
+                    application.getFinancialRequirementsCheck().setFailureReason(null);
+                } else {
+                    application.getFinancialRequirementsCheck().setMet(false);
+                    application.getFinancialRequirementsCheck().setFailureReason(categoryAWeeklySalaried.toString());
+                }
             }
             TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
             response.setApplication(application);
@@ -105,6 +112,11 @@ public class Service {
     private Date subtractXMonths(Date date, int months) {
         LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         return Date.from(localDate.minusMonths(months).atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+
+    private Date subtractXDays(Date date, int days) {
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return Date.from(localDate.minusDays(days).atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
     private String sanitiseNino(String nino) {
