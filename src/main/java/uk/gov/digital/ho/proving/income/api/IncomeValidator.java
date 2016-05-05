@@ -26,7 +26,7 @@ public class IncomeValidator {
     public static FinancialCheckValues validateCategoryAMonthlySalaried(List<Income> incomes, Date lower, Date upper, int dependants) {
         SalariedThresholdCalculator thresholdCalculator = new SalariedThresholdCalculator(dependants);
         BigDecimal monthlyThreshold = thresholdCalculator.getMonthlyThreshold();
-        return financialCheckForLastXMonths(incomes, NUMBER_OF_MONTHS, monthlyThreshold, lower, upper);
+        return financialCheckForMonthlySalaried(incomes, NUMBER_OF_MONTHS, monthlyThreshold, lower, upper);
     }
 
     public static FinancialCheckValues validateCategoryAWeeklySalaried(List<Income> incomes, Date lower, Date upper, int dependants) {
@@ -36,7 +36,7 @@ public class IncomeValidator {
     }
 
     //TODO Refactor date handling once we know more about the back end and test env
-    private static FinancialCheckValues financialCheckForLastXMonths(List<Income> incomes, int numOfMonths, BigDecimal threshold, Date lower, Date upper) {
+    private static FinancialCheckValues financialCheckForMonthlySalaried(List<Income> incomes, int numOfMonths, BigDecimal threshold, Date lower, Date upper) {
         Stream<Income> individualIncome = filterIncomesByDates(incomes, lower, upper);
         List<Income> lastXMonths = individualIncome.limit(numOfMonths).collect(Collectors.toList());
         if (lastXMonths.size() >= numOfMonths) {
@@ -107,11 +107,7 @@ public class IncomeValidator {
     }
 
     private static boolean isSuccessiveMonths(Income first, Income second) {
-//        if (!first.getEmployer().toLowerCase().trim().equals(second.getEmployer().toLowerCase().trim())) {
-//            return false;
-//        } else {
         return getDifferenceInMonthsBetweenDates(first.getPayDate(), second.getPayDate()) == 1;
-//        }
     }
 
     public static long getDifferenceInMonthsBetweenDates(Date date1, Date date2) {
