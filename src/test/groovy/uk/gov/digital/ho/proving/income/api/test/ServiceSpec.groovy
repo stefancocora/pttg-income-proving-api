@@ -29,7 +29,7 @@ class ServiceSpec extends Specification {
         Applicant applicant = getApplicant()
         List<Income> incomes = getConsecutiveIncomes()
         stubApplicantService.lookup(_,_,_) >> {
-           new IncomeProvingResponse(applicant, incomes, new ArrayList<Link>(), "9600")
+           new IncomeProvingResponse(applicant, incomes, new ArrayList<Link>(), "9600", "M1")
         }
         sut.applicantService = stubApplicantService
 
@@ -60,7 +60,7 @@ class ServiceSpec extends Specification {
         Applicant applicant = getApplicant()
         List<Income> incomes = getConsecutiveIncomes()
         stubApplicantService.lookup(_,_,_) >> {
-           new IncomeProvingResponse(applicant, incomes, new ArrayList<Link>(), "9600")
+           new IncomeProvingResponse(applicant, incomes, new ArrayList<Link>(), "9600", "M1")
         }
         sut.applicantService = stubApplicantService
 
@@ -92,7 +92,7 @@ class ServiceSpec extends Specification {
         Applicant applicant = getApplicant()
         List<Income> incomes = getConsecutiveIncomes()
         stubApplicantService.lookup(_,_,_) >> {
-            new IncomeProvingResponse(applicant, incomes, new ArrayList<Link>(), "9600")
+            new IncomeProvingResponse(applicant, incomes, new ArrayList<Link>(), "9600", "M1")
         }
         sut.applicantService = stubApplicantService
         when:

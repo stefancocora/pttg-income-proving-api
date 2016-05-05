@@ -8,16 +8,17 @@ public class IncomeProvingResponse {
     private List<Income> incomes;
     private List<Link> links;
     private String total;
-
+    private String payFreq;
 
     public IncomeProvingResponse() {
     }
 
-    public IncomeProvingResponse(Applicant applicant, List<Income> incomes, List<Link> links, String total) {
+    public IncomeProvingResponse(Applicant applicant, List<Income> incomes, List<Link> links, String total, String payFreq) {
         this.applicant = applicant;
         this.incomes = incomes;
         this.links = links;
         this.total = total;
+        this.payFreq = payFreq;
     }
 
     public Applicant getApplicant() {
@@ -52,6 +53,14 @@ public class IncomeProvingResponse {
         this.total = total;
     }
 
+    public String getPayFreq() {
+        return payFreq;
+    }
+
+    public void setPayFreq(String payFreq) {
+        this.payFreq = payFreq;
+    }
+
     @Override
     public String toString() {
         return "IncomeProvingResponse{" +
@@ -59,6 +68,7 @@ public class IncomeProvingResponse {
                 ", incomes=" + incomes +
                 ", links=" + links +
                 ", total='" + total + '\'' +
+                ", payFreq='" + payFreq + '\'' +
                 '}';
     }
 }

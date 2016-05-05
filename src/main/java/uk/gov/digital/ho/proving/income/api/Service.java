@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.digital.ho.proving.income.acl.ApplicantService;
-import uk.gov.digital.ho.proving.income.acl.EarningsService;
-import uk.gov.digital.ho.proving.income.acl.EarningsServiceFailedToMapDataToDomainClass;
-import uk.gov.digital.ho.proving.income.acl.EarningsServiceNoUniqueMatch;
+import uk.gov.digital.ho.proving.income.acl.*;
 import uk.gov.digital.ho.proving.income.domain.Application;
 import uk.gov.digital.ho.proving.income.domain.IncomeProvingResponse;
 
@@ -64,24 +61,51 @@ public class Service {
             Date startSearchDate = subtractXMonths(applicationDate, NUMBER_OF_MONTHS);
             IncomeProvingResponse incomeProvingResponse = applicantService.lookup(nino, startSearchDate, applicationDate);
 
-            FinancialCheckValues categoryAMonthlySalaried = IncomeValidator.validateCategoryAMonthlySalaried(incomeProvingResponse.getIncomes(), startSearchDate, applicationDate, dependants);
-
             Application application = earningsService.lookup(nino, applicationDate);
 
-            if (categoryAMonthlySalaried.equals(FinancialCheckValues.MONTHLY_SALARIED_PASSED)) {
-                application.getFinancialRequirementsCheck().setMet(true);
-                application.getFinancialRequirementsCheck().setFailureReason(null);
-            } else {
-                FinancialCheckValues categoryAWeeklySalaried = IncomeValidator.validateCategoryAWeeklySalaried(incomeProvingResponse.getIncomes(), startSearchDate, applicationDate, dependants);
 
-                if (categoryAWeeklySalaried.equals(FinancialCheckValues.WEEKLY_SALARIED_PASSED)) {
-                    application.getFinancialRequirementsCheck().setMet(true);
-                    application.getFinancialRequirementsCheck().setFailureReason(null);
-                } else {
-                    application.getFinancialRequirementsCheck().setMet(false);
-                    application.getFinancialRequirementsCheck().setFailureReason(categoryAWeeklySalaried.toString());
-                }
+            switch (incomeProvingResponse.getPayFreq().toUpperCase()) {
+                case "M1":
+                    FinancialCheckValues categoryAMonthlySalaried = IncomeValidator.validateCategoryAMonthlySalaried(incomeProvingResponse.getIncomes(), startSearchDate, applicationDate, dependants);
+                    if (categoryAMonthlySalaried.equals(FinancialCheckValues.MONTHLY_SALARIED_PASSED)) {
+                        application.getFinancialRequirementsCheck().setMet(true);
+                        application.getFinancialRequirementsCheck().setFailureReason(null);
+                    } else {
+                        application.getFinancialRequirementsCheck().setMet(false);
+                        application.getFinancialRequirementsCheck().setFailureReason(categoryAMonthlySalaried.toString());
+                    }
+                    break;
+                case "W1":
+                    FinancialCheckValues categoryAWeeklySalaried = IncomeValidator.validateCategoryAWeeklySalaried(incomeProvingResponse.getIncomes(), startSearchDate, applicationDate, dependants);
+                    if (categoryAWeeklySalaried.equals(FinancialCheckValues.WEEKLY_SALARIED_PASSED)) {
+                        application.getFinancialRequirementsCheck().setMet(true);
+                        application.getFinancialRequirementsCheck().setFailureReason(null);
+                    } else {
+                        application.getFinancialRequirementsCheck().setMet(false);
+                        application.getFinancialRequirementsCheck().setFailureReason(categoryAWeeklySalaried.toString());
+                    }
+                    break;
+                default:
+                    throw new UnknownPaymentFrequencyType();
             }
+
+//            FinancialCheckValues categoryAMonthlySalaried = IncomeValidator.validateCategoryAMonthlySalaried(incomeProvingResponse.getIncomes(), startSearchDate, applicationDate, dependants);
+//
+//            if (categoryAMonthlySalaried.equals(FinancialCheckValues.MONTHLY_SALARIED_PASSED)) {
+//                application.getFinancialRequirementsCheck().setMet(true);
+//                application.getFinancialRequirementsCheck().setFailureReason(null);
+//            } else {
+//                FinancialCheckValues categoryAWeeklySalaried = IncomeValidator.validateCategoryAWeeklySalaried(incomeProvingResponse.getIncomes(), startSearchDate, applicationDate, dependants);
+//
+//                if (categoryAWeeklySalaried.equals(FinancialCheckValues.WEEKLY_SALARIED_PASSED)) {
+//                    application.getFinancialRequirementsCheck().setMet(true);
+//                    application.getFinancialRequirementsCheck().setFailureReason(null);
+//                } else {
+//                    application.getFinancialRequirementsCheck().setMet(false);
+//                    application.getFinancialRequirementsCheck().setFailureReason(categoryAWeeklySalaried.toString());
+//                }
+//            }
+
             TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
             response.setApplication(application);
             return new ResponseEntity<>(response, headers, HttpStatus.OK);
@@ -96,6 +120,9 @@ public class Service {
         } catch (IllegalArgumentException iae) {
             LOGGER.error(iae.getMessage(), iae);
             return buildErrorResponse(headers, "0004", iae.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+        } catch (UnknownPaymentFrequencyType upte) {
+            LOGGER.error("Unknown payment frequency type " + upte);
+            return buildErrorResponse(headers, "0004", "Unknown payment frequency type", HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (RuntimeException e) {
             LOGGER.error("NINO is not valid", e);
             return buildErrorResponse(headers, "0001", "NINO is invalid.", HttpStatus.BAD_REQUEST);
