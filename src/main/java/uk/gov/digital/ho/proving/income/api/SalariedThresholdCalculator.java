@@ -25,8 +25,8 @@ public class SalariedThresholdCalculator {
             this.dependants = new BigDecimal(dependants);
             this.subsequentDependants = new BigDecimal(dependants - 1);
             yearlyThreshold =calcThreshold();
-            monthlyThreshold = yearlyThreshold.divide(MONTHS, 2, BigDecimal.ROUND_CEILING);;
-            weeklyThreshold = yearlyThreshold.divide(WEEKS, 2, BigDecimal.ROUND_CEILING);;
+            monthlyThreshold = yearlyThreshold.divide(MONTHS, 2, BigDecimal.ROUND_HALF_UP);;
+            weeklyThreshold = yearlyThreshold.divide(WEEKS, 2, BigDecimal.ROUND_HALF_UP);;
         }
     }
 
