@@ -32,7 +32,10 @@ public class Service {
     private ApplicantService applicantService;
 
     private static final int NUMBER_OF_MONTHS = 6;
-    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    private static final int NUMBER_OF_DAYS = 182;
+
+    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HHmmss");
+    private final String END_OF_DAY = " 235959";
 
     // TODO Some of these parameters should be mandatory
     @RequestMapping(value = "/application", method = RequestMethod.GET)
@@ -57,16 +60,16 @@ public class Service {
             }
 
             sdf.setLenient(false);
-            Date applicationDate = sdf.parse(applicationDateAsString);
-            Date startSearchDate = subtractXMonths(applicationDate, NUMBER_OF_MONTHS);
-            IncomeProvingResponse incomeProvingResponse = applicantService.lookup(nino, startSearchDate, applicationDate);
+            Date applicationDate = sdf.parse(applicationDateAsString + END_OF_DAY);
+            Date startSearchDateDays = subtractXDays(applicationDate, NUMBER_OF_DAYS);
+            Date startSearchDateMonths = subtractXMonths(applicationDate, NUMBER_OF_MONTHS);
+            IncomeProvingResponse incomeProvingResponse = applicantService.lookup(nino, startSearchDateDays, applicationDate);
 
             Application application = earningsService.lookup(nino, applicationDate);
 
-
             switch (incomeProvingResponse.getPayFreq().toUpperCase()) {
                 case "M1":
-                    FinancialCheckValues categoryAMonthlySalaried = IncomeValidator.validateCategoryAMonthlySalaried(incomeProvingResponse.getIncomes(), startSearchDate, applicationDate, dependants);
+                    FinancialCheckValues categoryAMonthlySalaried = IncomeValidator.validateCategoryAMonthlySalaried(incomeProvingResponse.getIncomes(), startSearchDateMonths, applicationDate, dependants);
                     if (categoryAMonthlySalaried.equals(FinancialCheckValues.MONTHLY_SALARIED_PASSED)) {
                         application.getFinancialRequirementsCheck().setMet(true);
                         application.getFinancialRequirementsCheck().setFailureReason(null);
@@ -76,7 +79,7 @@ public class Service {
                     }
                     break;
                 case "W1":
-                    FinancialCheckValues categoryAWeeklySalaried = IncomeValidator.validateCategoryAWeeklySalaried(incomeProvingResponse.getIncomes(), startSearchDate, applicationDate, dependants);
+                    FinancialCheckValues categoryAWeeklySalaried = IncomeValidator.validateCategoryAWeeklySalaried(incomeProvingResponse.getIncomes(), startSearchDateDays, applicationDate, dependants);
                     if (categoryAWeeklySalaried.equals(FinancialCheckValues.WEEKLY_SALARIED_PASSED)) {
                         application.getFinancialRequirementsCheck().setMet(true);
                         application.getFinancialRequirementsCheck().setFailureReason(null);
@@ -88,23 +91,6 @@ public class Service {
                 default:
                     throw new UnknownPaymentFrequencyType();
             }
-
-//            FinancialCheckValues categoryAMonthlySalaried = IncomeValidator.validateCategoryAMonthlySalaried(incomeProvingResponse.getIncomes(), startSearchDate, applicationDate, dependants);
-//
-//            if (categoryAMonthlySalaried.equals(FinancialCheckValues.MONTHLY_SALARIED_PASSED)) {
-//                application.getFinancialRequirementsCheck().setMet(true);
-//                application.getFinancialRequirementsCheck().setFailureReason(null);
-//            } else {
-//                FinancialCheckValues categoryAWeeklySalaried = IncomeValidator.validateCategoryAWeeklySalaried(incomeProvingResponse.getIncomes(), startSearchDate, applicationDate, dependants);
-//
-//                if (categoryAWeeklySalaried.equals(FinancialCheckValues.WEEKLY_SALARIED_PASSED)) {
-//                    application.getFinancialRequirementsCheck().setMet(true);
-//                    application.getFinancialRequirementsCheck().setFailureReason(null);
-//                } else {
-//                    application.getFinancialRequirementsCheck().setMet(false);
-//                    application.getFinancialRequirementsCheck().setFailureReason(categoryAWeeklySalaried.toString());
-//                }
-//            }
 
             TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
             response.setApplication(application);

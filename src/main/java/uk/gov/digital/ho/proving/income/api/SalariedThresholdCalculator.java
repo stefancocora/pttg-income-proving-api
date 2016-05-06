@@ -1,5 +1,8 @@
 package uk.gov.digital.ho.proving.income.api;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.math.BigDecimal;
 
 public class SalariedThresholdCalculator {
@@ -17,6 +20,8 @@ public class SalariedThresholdCalculator {
     private BigDecimal weeklyThreshold = BigDecimal.ZERO;
     private BigDecimal yearlyThreshold = BigDecimal.ZERO;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SalariedThresholdCalculator.class);
+
     public SalariedThresholdCalculator(int dependants) {
 
         if (dependants < 0) {
@@ -25,8 +30,11 @@ public class SalariedThresholdCalculator {
             this.dependants = new BigDecimal(dependants);
             this.subsequentDependants = new BigDecimal(dependants - 1);
             yearlyThreshold =calcThreshold();
-            monthlyThreshold = yearlyThreshold.divide(MONTHS, 2, BigDecimal.ROUND_HALF_UP);;
-            weeklyThreshold = yearlyThreshold.divide(WEEKS, 2, BigDecimal.ROUND_HALF_UP);;
+            monthlyThreshold = yearlyThreshold.divide(MONTHS, 2, BigDecimal.ROUND_HALF_UP);
+            weeklyThreshold = yearlyThreshold.divide(WEEKS, 2, BigDecimal.ROUND_HALF_UP);
+            LOGGER.debug("yearlyThreshold: " + yearlyThreshold);
+            LOGGER.debug("monthlyThreshold: " + monthlyThreshold);
+            LOGGER.debug("weeklyThreshold: " + weeklyThreshold);
         }
     }
 
