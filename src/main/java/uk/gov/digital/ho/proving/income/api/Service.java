@@ -18,6 +18,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Pattern;
 
@@ -29,7 +30,7 @@ public class Service {
     private EarningsService earningsService;
 
     @Autowired
-    private ApplicantService applicantService;
+    private IndividualService individualService;
 
     private static final int NUMBER_OF_MONTHS = 6;
     private static final int NUMBER_OF_DAYS = 182;
@@ -60,40 +61,37 @@ public class Service {
             }
 
             sdf.setLenient(false);
-            Date applicationDate = sdf.parse(applicationDateAsString + END_OF_DAY);
-            Date startSearchDateDays = subtractXDays(applicationDate, NUMBER_OF_DAYS);
-            Date startSearchDateMonths = subtractXMonths(applicationDate, NUMBER_OF_MONTHS);
-            IncomeProvingResponse incomeProvingResponse = applicantService.lookup(nino, startSearchDateDays, applicationDate);
+            Date applicationRaisedDate = sdf.parse(applicationDateAsString + END_OF_DAY);
+            Date startSearchDateDays = subtractXDays(applicationRaisedDate, NUMBER_OF_DAYS);
+            Date startSearchDateMonths = subtractXMonths(applicationRaisedDate, NUMBER_OF_MONTHS);
+            IncomeProvingResponse incomeProvingResponse = individualService.lookup(nino, startSearchDateDays, applicationRaisedDate);
 
-            Application application = earningsService.lookup(nino, applicationDate);
+            Application application = earningsService.lookup(nino, applicationRaisedDate);
+
+            TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
+            response.setIndividual(application.getIndividual());
 
             switch (incomeProvingResponse.getPayFreq().toUpperCase()) {
                 case "M1":
-                    FinancialCheckValues categoryAMonthlySalaried = IncomeValidator.validateCategoryAMonthlySalaried(incomeProvingResponse.getIncomes(), startSearchDateMonths, applicationDate, dependants);
+                    FinancialCheckValues categoryAMonthlySalaried = IncomeValidator.validateCategoryAMonthlySalaried(incomeProvingResponse.getIncomes(), startSearchDateMonths, applicationRaisedDate, dependants);
                     if (categoryAMonthlySalaried.equals(FinancialCheckValues.MONTHLY_SALARIED_PASSED)) {
-                        application.getFinancialRequirementsCheck().setMet(true);
-                        application.getFinancialRequirementsCheck().setFailureReason(null);
+                        response.setCategoryCheck(new CategoryCheck("A",true, null, applicationRaisedDate, startSearchDateMonths));
                     } else {
-                        application.getFinancialRequirementsCheck().setMet(false);
-                        application.getFinancialRequirementsCheck().setFailureReason(categoryAMonthlySalaried.toString());
+                        response.setCategoryCheck(new CategoryCheck("A",false, categoryAMonthlySalaried, applicationRaisedDate, startSearchDateMonths));
                     }
                     break;
                 case "W1":
-                    FinancialCheckValues categoryAWeeklySalaried = IncomeValidator.validateCategoryAWeeklySalaried(incomeProvingResponse.getIncomes(), startSearchDateDays, applicationDate, dependants);
+                    FinancialCheckValues categoryAWeeklySalaried = IncomeValidator.validateCategoryAWeeklySalaried(incomeProvingResponse.getIncomes(), startSearchDateDays, applicationRaisedDate, dependants);
                     if (categoryAWeeklySalaried.equals(FinancialCheckValues.WEEKLY_SALARIED_PASSED)) {
-                        application.getFinancialRequirementsCheck().setMet(true);
-                        application.getFinancialRequirementsCheck().setFailureReason(null);
+                        response.setCategoryCheck(new CategoryCheck("A",true, null, applicationRaisedDate, startSearchDateDays));
                     } else {
-                        application.getFinancialRequirementsCheck().setMet(false);
-                        application.getFinancialRequirementsCheck().setFailureReason(categoryAWeeklySalaried.toString());
+                        response.setCategoryCheck(new CategoryCheck("A",false, categoryAWeeklySalaried, applicationRaisedDate, startSearchDateDays));
                     }
                     break;
                 default:
                     throw new UnknownPaymentFrequencyType();
             }
-
-            TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
-            response.setApplication(application);
+            response.setError(new ResponseStatus("100", "OK"));
             return new ResponseEntity<>(response, headers, HttpStatus.OK);
 
         } // TODO All this below is a mess of exceptions and needs to be refactored
@@ -116,20 +114,24 @@ public class Service {
     }
 
     private ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> buildErrorResponse(HttpHeaders headers, String errorCode, String errorMessage, HttpStatus status) {
-        ValidationError error = new ValidationError(errorCode, errorMessage);
+        ResponseStatus error = new ResponseStatus(errorCode, errorMessage);
         TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
         response.setError(error);
         return new ResponseEntity<>(response, headers, status);
     }
 
     private Date subtractXMonths(Date date, int months) {
-        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        return Date.from(localDate.minusMonths(months).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MONTH, -months);
+        return calendar.getTime();
     }
 
     private Date subtractXDays(Date date, int days) {
-        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        return Date.from(localDate.minusDays(days).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, -days);
+        return calendar.getTime();
     }
 
     private String sanitiseNino(String nino) {
@@ -139,7 +141,7 @@ public class Service {
     private void validateNino(String nino) {
         final Pattern pattern = Pattern.compile("^[a-zA-Z]{2}[0-9]{6}[a-dA-D]{1}$");
         if (!pattern.matcher(nino).matches()) {
-            throw new IllegalArgumentException("Invalid String");
+            throw new IllegalArgumentException("Invalid NINO");
         }
     }
 }

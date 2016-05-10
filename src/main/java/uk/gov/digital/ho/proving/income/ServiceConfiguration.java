@@ -8,7 +8,7 @@ import com.mongodb.client.MongoDatabase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import uk.gov.digital.ho.proving.income.acl.ApplicantService;
+import uk.gov.digital.ho.proving.income.acl.IndividualService;
 import uk.gov.digital.ho.proving.income.acl.EarningsService;
 import uk.gov.digital.ho.proving.income.acl.MongodbBackedApplicantService;
 import uk.gov.digital.ho.proving.income.acl.MongodbBackedEarningsService;
@@ -41,7 +41,7 @@ public class ServiceConfiguration {
     }
 
     @Bean
-    public ApplicantService getApplicantService() {
+    public IndividualService getApplicantService() {
         return new MongodbBackedApplicantService();
     }
 

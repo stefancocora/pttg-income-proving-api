@@ -4,6 +4,6 @@ import uk.gov.digital.ho.proving.income.domain.IncomeProvingResponse;
 
 import java.util.Date;
 
-public interface ApplicantService {
+public interface IndividualService {
     IncomeProvingResponse lookup(String nino, Date applicationFromDate, Date applicationToDate);
 }

@@ -34,16 +34,15 @@ public class MongodbBackedEarningsService implements EarningsService {
 
     @Override
     public Application lookup(String nino, Date applicationRaisedDate) {
-        DBObject query = new QueryBuilder().start().put("applicant.nino").is(nino).get();
+        DBObject query = new QueryBuilder().start().put("individual.nino").is(nino).get();
         DBCursor cursor = applicationsCollection.find(query);
 
         if (1 == cursor.size()) {
             try {
                 JSONObject jsonResponse = new JSONObject(cursor.next().toString());
                 jsonResponse.remove("_id");
+
                 Application application = mapper.readValue(jsonResponse.toString(), TemporaryMigrationFamilyApplication.class);
-                application.setApplicationRaisedDate(applicationRaisedDate);
-                application.getFinancialRequirementsCheck().setApplicationRaisedDate(applicationRaisedDate);
                 return application;
             } catch (JSONException | IOException e) {
                 LOGGER.error("Could not map JSON from mongodb to Application domain class", e);

@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory
 import spock.lang.Specification
 import uk.gov.digital.ho.proving.income.api.FinancialCheckValues
 import uk.gov.digital.ho.proving.income.api.IncomeValidator
-import uk.gov.digital.ho.proving.income.domain.Applicant
+import uk.gov.digital.ho.proving.income.domain.Individual
 import uk.gov.digital.ho.proving.income.domain.Income
 
 class WeeklyIncomeValidatorSpec extends Specification {
@@ -22,7 +22,7 @@ class WeeklyIncomeValidatorSpec extends Specification {
 
     int days = 182
 
-    def "valid category A applicant is accepted"() {
+    def "valid category A individual is accepted"() {
 
         given:
         List<Income> incomes = getIncomesAboveThreshold()
@@ -31,15 +31,15 @@ class WeeklyIncomeValidatorSpec extends Specification {
 
 
         when:
-        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAWeeklySalaried(incomes, pastDate, raisedDate , 0)
+        FinancialCheckValues categoryAIndividual = IncomeValidator.validateCategoryAWeeklySalaried(incomes, pastDate, raisedDate , 0)
 
         then:
-        categoryAApplicant.equals(FinancialCheckValues.WEEKLY_SALARIED_PASSED)
+        categoryAIndividual.equals(FinancialCheckValues.WEEKLY_SALARIED_PASSED)
 
     }
 
 
-    def "valid category A applicant is accepted with exactly 26 records"() {
+    def "valid category A individual is accepted with exactly 26 records"() {
 
         given:
         List<Income> incomes = getIncomesExactly26AboveThreshold()
@@ -48,14 +48,14 @@ class WeeklyIncomeValidatorSpec extends Specification {
         Date pastDate = subtractDaysFromDate(raisedDate, days)
 
         when:
-        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAWeeklySalaried(incomes, pastDate, raisedDate , 0)
+        FinancialCheckValues categoryAIndividual = IncomeValidator.validateCategoryAWeeklySalaried(incomes, pastDate, raisedDate , 0)
 
         then:
-        categoryAApplicant.equals(FinancialCheckValues.WEEKLY_SALARIED_PASSED)
+        categoryAIndividual.equals(FinancialCheckValues.WEEKLY_SALARIED_PASSED)
 
     }
 
-    def "invalid category A applicant is rejected with exactly 26 records as raised date is before last payday"() {
+    def "invalid category A individual is rejected with exactly 26 records as raised date is before last payday"() {
 
         given:
         List<Income> incomes = getIncomesExactly26AboveThreshold()
@@ -64,10 +64,10 @@ class WeeklyIncomeValidatorSpec extends Specification {
 
 
         when:
-        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAWeeklySalaried(incomes, pastDate, raisedDate , 0)
+        FinancialCheckValues categoryAIndividual = IncomeValidator.validateCategoryAWeeklySalaried(incomes, pastDate, raisedDate , 0)
 
         then:
-        categoryAApplicant.equals(FinancialCheckValues.NOT_ENOUGH_RECORDS)
+        categoryAIndividual.equals(FinancialCheckValues.NOT_ENOUGH_RECORDS)
 
     }
 
@@ -81,10 +81,10 @@ class WeeklyIncomeValidatorSpec extends Specification {
 
 
         when:
-        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAWeeklySalaried(incomes, pastDate, raisedDate , 0)
+        FinancialCheckValues categoryAIndividual = IncomeValidator.validateCategoryAWeeklySalaried(incomes, pastDate, raisedDate , 0)
 
         then:
-        categoryAApplicant.equals(FinancialCheckValues.NOT_ENOUGH_RECORDS)
+        categoryAIndividual.equals(FinancialCheckValues.NOT_ENOUGH_RECORDS)
 
     }
 
@@ -97,21 +97,21 @@ class WeeklyIncomeValidatorSpec extends Specification {
 
 
         when:
-        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAWeeklySalaried(incomes, pastDate, raisedDate , 0)
+        FinancialCheckValues categoryAIndividual = IncomeValidator.validateCategoryAWeeklySalaried(incomes, pastDate, raisedDate , 0)
 
         then:
-        categoryAApplicant.equals(FinancialCheckValues.WEEKLY_VALUE_BELOW_THRESHOLD)
+        categoryAIndividual.equals(FinancialCheckValues.WEEKLY_VALUE_BELOW_THRESHOLD)
 
     }
 
 
-    def getApplicant() {
-        Applicant applicant = new Applicant()
-        applicant.title = "Mr"
-        applicant.forename = "Duncan"
-        applicant.surname = "Sinclair"
-        applicant.nino = "AA123456A"
-        applicant
+    def getIndividual() {
+        Individual individual = new Individual()
+        individual.title = "Mr"
+        individual.forename = "Duncan"
+        individual.surname = "Sinclair"
+        individual.nino = "AA123456A"
+        individual
     }
 
     def getIncomesAboveThreshold() {

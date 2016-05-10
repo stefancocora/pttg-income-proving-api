@@ -1,19 +1,19 @@
 package uk.gov.digital.ho.proving.income.domain;
 
-public class Applicant {
+public class Individual {
     private String title;
     private String forename;
     private String surname;
     private String nino;
 
-    public Applicant(String title, String forename, String surname, String nino) {
+    public Individual(String title, String forename, String surname, String nino) {
         this.title = title;
         this.forename = forename;
         this.surname = surname;
         this.nino = nino;
     }
 
-    public Applicant() {
+    public Individual() {
     }
 
     public String getTitle() {

@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory
 import spock.lang.Specification
 import uk.gov.digital.ho.proving.income.api.FinancialCheckValues
 import uk.gov.digital.ho.proving.income.api.IncomeValidator
-import uk.gov.digital.ho.proving.income.domain.Applicant
+import uk.gov.digital.ho.proving.income.domain.Individual
 import uk.gov.digital.ho.proving.income.domain.Income
 
 class MonthlyIncomeValidatorSpec extends Specification {
@@ -17,7 +17,7 @@ class MonthlyIncomeValidatorSpec extends Specification {
 
     int months = 6
 
-    def "valid category A applicant is accepted"() {
+    def "valid category A individual is accepted"() {
 
         given:
         List<Income> incomes = getConsecutiveIncomes()
@@ -25,14 +25,14 @@ class MonthlyIncomeValidatorSpec extends Specification {
         Date pastDate = subtractMonthsFromDate(raisedDate, months)
 
         when:
-        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
+        FinancialCheckValues categoryAIndividual = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
 
         then:
-        categoryAApplicant.equals(FinancialCheckValues.MONTHLY_SALARIED_PASSED)
+        categoryAIndividual.equals(FinancialCheckValues.MONTHLY_SALARIED_PASSED)
 
     }
 
-    def "invalid category A applicant is rejected (non consecutive)"() {
+    def "invalid category A individual is rejected (non consecutive)"() {
 
         given:
         List<Income> incomes = getNoneConsecutiveIncomes()
@@ -40,14 +40,14 @@ class MonthlyIncomeValidatorSpec extends Specification {
         Date pastDate = subtractMonthsFromDate(raisedDate, months)
 
         when:
-        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
+        FinancialCheckValues categoryAIndividual = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
 
         then:
-        categoryAApplicant.equals(FinancialCheckValues.NON_CONSECUTIVE_MONTHS)
+        categoryAIndividual.equals(FinancialCheckValues.NON_CONSECUTIVE_MONTHS)
 
     }
 
-    def "invalid category A applicant is rejected (not enough records)"() {
+    def "invalid category A individual is rejected (not enough records)"() {
 
         given:
         List<Income> incomes = getNotEnoughConsecutiveIncomes()
@@ -55,14 +55,14 @@ class MonthlyIncomeValidatorSpec extends Specification {
         Date pastDate = subtractMonthsFromDate(raisedDate, months)
 
         when:
-        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
+        FinancialCheckValues categoryAIndividual = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
 
         then:
-        categoryAApplicant.equals(FinancialCheckValues.NOT_ENOUGH_RECORDS)
+        categoryAIndividual.equals(FinancialCheckValues.NOT_ENOUGH_RECORDS)
 
     }
 
-    def "invalid category A applicant is rejected (consecutive but not same employer)"() {
+    def "invalid category A individual is rejected (consecutive but not same employer)"() {
 
         given:
         List<Income> incomes = getConsecutiveIncomesButDifferentEmployers()
@@ -70,14 +70,14 @@ class MonthlyIncomeValidatorSpec extends Specification {
         Date pastDate = subtractMonthsFromDate(raisedDate, months)
 
         when:
-        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
+        FinancialCheckValues categoryAIndividual = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
 
         then:
-        categoryAApplicant.equals(FinancialCheckValues.NON_CONSECUTIVE_MONTHS)
+        categoryAIndividual.equals(FinancialCheckValues.NON_CONSECUTIVE_MONTHS)
 
     }
 
-    def "invalid category A applicant is rejected (consecutive but not enough earnings)"() {
+    def "invalid category A individual is rejected (consecutive but not enough earnings)"() {
 
         given:
         List<Income> incomes = getConsecutiveIncomesButLowAmounts()
@@ -85,14 +85,14 @@ class MonthlyIncomeValidatorSpec extends Specification {
         Date pastDate = subtractMonthsFromDate(raisedDate, months)
 
         when:
-        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
+        FinancialCheckValues categoryAIndividual = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
 
         then:
-        categoryAApplicant.equals(FinancialCheckValues.MONTHLY_VALUE_BELOW_THRESHOLD)
+        categoryAIndividual.equals(FinancialCheckValues.MONTHLY_VALUE_BELOW_THRESHOLD)
 
     }
 
-    def "valid category A applicant is accepted with different monthly pay dates"() {
+    def "valid category A individual is accepted with different monthly pay dates"() {
 
         given:
         List<Income> incomes = getConsecutiveIncomesWithDifferentMonthlyPayDay()
@@ -100,14 +100,14 @@ class MonthlyIncomeValidatorSpec extends Specification {
         Date pastDate = subtractMonthsFromDate(raisedDate, months)
 
         when:
-        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
+        FinancialCheckValues categoryAIndividual = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
 
         then:
-        categoryAApplicant.equals(FinancialCheckValues.MONTHLY_SALARIED_PASSED)
+        categoryAIndividual.equals(FinancialCheckValues.MONTHLY_SALARIED_PASSED)
 
     }
 
-    def "valid category A applicant is accepted with exactly the threshold values"() {
+    def "valid category A individual is accepted with exactly the threshold values"() {
 
         given:
         List<Income> incomes = getConsecutiveIncomesWithExactlyTheAmount()
@@ -115,21 +115,21 @@ class MonthlyIncomeValidatorSpec extends Specification {
         Date pastDate = subtractMonthsFromDate(raisedDate, months)
 
         when:
-        FinancialCheckValues categoryAApplicant = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
+        FinancialCheckValues categoryAIndividual = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
 
         then:
-        categoryAApplicant.equals(FinancialCheckValues.MONTHLY_SALARIED_PASSED)
+        categoryAIndividual.equals(FinancialCheckValues.MONTHLY_SALARIED_PASSED)
 
     }
 
 
-    def getApplicant() {
-        Applicant applicant = new Applicant()
-        applicant.title = "Mr"
-        applicant.forename = "Duncan"
-        applicant.surname = "Sinclair"
-        applicant.nino = "AA123456A"
-        applicant
+    def getIndividual() {
+        Individual individual = new Individual()
+        individual.title = "Mr"
+        individual.forename = "Duncan"
+        individual.surname = "Sinclair"
+        individual.nino = "AA123456A"
+        individual
     }
 
     def getConsecutiveIncomes() {

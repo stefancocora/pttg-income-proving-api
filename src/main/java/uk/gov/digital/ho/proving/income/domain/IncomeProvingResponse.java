@@ -4,29 +4,28 @@ import java.util.List;
 
 // TODO rename this class
 public class IncomeProvingResponse {
-    private Applicant applicant;
+    private Individual individual;
     private List<Income> incomes;
-    private List<Link> links;
     private String total;
     private String payFreq;
 
     public IncomeProvingResponse() {
     }
 
-    public IncomeProvingResponse(Applicant applicant, List<Income> incomes, List<Link> links, String total, String payFreq) {
-        this.applicant = applicant;
+    public IncomeProvingResponse(Individual individual, List<Income> incomes, String total, String payFreq) {
+        this.individual = individual;
         this.incomes = incomes;
-        this.links = links;
+
         this.total = total;
         this.payFreq = payFreq;
     }
 
-    public Applicant getApplicant() {
-        return applicant;
+    public Individual getindividual() {
+        return individual;
     }
 
-    public void setApplicant(Applicant applicant) {
-        this.applicant = applicant;
+    public void setindividual(Individual individual) {
+        this.individual = individual;
     }
 
     public List<Income> getIncomes() {
@@ -35,14 +34,6 @@ public class IncomeProvingResponse {
 
     public void setIncomes(List<Income> incomes) {
         this.incomes = incomes;
-    }
-
-    public List<Link> getLinks() {
-        return links;
-    }
-
-    public void setLinks(List<Link> links) {
-        this.links = links;
     }
 
     public String getTotal() {
@@ -64,9 +55,8 @@ public class IncomeProvingResponse {
     @Override
     public String toString() {
         return "IncomeProvingResponse{" +
-                "applicant=" + applicant +
+                "individual=" + individual +
                 ", incomes=" + incomes +
-                ", links=" + links +
                 ", total='" + total + '\'' +
                 ", payFreq='" + payFreq + '\'' +
                 '}';

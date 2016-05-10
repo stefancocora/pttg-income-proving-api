@@ -22,7 +22,7 @@ import java.util.Date;
  * api is available this class will call the api via a delegate and then convert the response to Home Office
  * domain classes.
  */
-public class MongodbBackedApplicantService implements ApplicantService {
+public class MongodbBackedApplicantService implements IndividualService {
     @Autowired
     @Qualifier("applicantCollection")
     DBCollection applicantCollection;
@@ -41,9 +41,7 @@ public class MongodbBackedApplicantService implements ApplicantService {
         String fromDate = sdf.format(applicationFromDate);
         String toDate = sdf.format(applicationToDate);
 
-        DBObject query = new QueryBuilder().start().put("applicant.nino").is(nino)
-//                .put("incomes.payDate").greaterThanEquals(fromDate)
-//                .put("incomes.payDate").lessThanEquals(toDate)
+        DBObject query = new QueryBuilder().start().put("individual.nino").is(nino)
                 .get();
         DBCursor cursor = applicantCollection.find(query);
 

@@ -1,14 +1,8 @@
 package uk.gov.digital.ho.proving.income.api.test
 
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import spock.lang.Specification
-import uk.gov.digital.ho.proving.income.api.FinancialCheckValues
 import uk.gov.digital.ho.proving.income.api.IncomeValidator
-import uk.gov.digital.ho.proving.income.domain.Applicant
-import uk.gov.digital.ho.proving.income.domain.Income
-import uk.gov.digital.ho.proving.income.domain.IncomeProvingResponse
-import uk.gov.digital.ho.proving.income.domain.Link
+
 
 class DateCalculationSpec extends Specification {
 

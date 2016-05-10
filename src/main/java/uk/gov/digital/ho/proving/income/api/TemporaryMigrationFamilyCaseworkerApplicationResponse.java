@@ -1,24 +1,41 @@
 package uk.gov.digital.ho.proving.income.api;
 
-import uk.gov.digital.ho.proving.income.domain.Application;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import uk.gov.digital.ho.proving.income.domain.Individual;
+
 
 public class TemporaryMigrationFamilyCaseworkerApplicationResponse {
-    private Application application;
-    private ValidationError error;
 
-    public void setApplication(Application application) {
-        this.application = application;
+    @JsonInclude(Include.NON_NULL)
+    private Individual individual;
+
+    @JsonInclude(Include.NON_NULL)
+    private CategoryCheck categoryCheck;
+
+    private ResponseStatus status;
+
+    public Individual getIndividual() {
+        return individual;
     }
 
-    public void setError(ValidationError error) {
-        this.error = error;
+    public void setIndividual(Individual individual) {
+        this.individual = individual;
     }
 
-    public Application getApplication() {
-        return application;
+    public CategoryCheck getCategoryCheck() {
+        return categoryCheck;
     }
 
-    public ValidationError getError() {
-        return error;
+    public void setCategoryCheck(CategoryCheck categoryCheck) {
+        this.categoryCheck = categoryCheck;
+    }
+
+    public ResponseStatus getError() {
+        return status;
+    }
+
+    public void setError(ResponseStatus error) {
+        this.status = error;
     }
 }
