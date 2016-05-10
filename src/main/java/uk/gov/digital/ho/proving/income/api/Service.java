@@ -35,8 +35,7 @@ public class Service {
     private static final int NUMBER_OF_MONTHS = 6;
     private static final int NUMBER_OF_DAYS = 182;
 
-    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HHmmss");
-    private final String END_OF_DAY = " 235959";
+    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     // TODO Some of these parameters should be mandatory
     @RequestMapping(value = "/application", method = RequestMethod.GET)
@@ -61,7 +60,7 @@ public class Service {
             }
 
             sdf.setLenient(false);
-            Date applicationRaisedDate = sdf.parse(applicationDateAsString + END_OF_DAY);
+            Date applicationRaisedDate = sdf.parse(applicationDateAsString);
             Date startSearchDateDays = subtractXDays(applicationRaisedDate, NUMBER_OF_DAYS);
             Date startSearchDateMonths = subtractXMonths(applicationRaisedDate, NUMBER_OF_MONTHS);
             IncomeProvingResponse incomeProvingResponse = individualService.lookup(nino, startSearchDateDays, applicationRaisedDate);
