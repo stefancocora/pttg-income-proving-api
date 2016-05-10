@@ -37,7 +37,7 @@ public class Service {
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     // TODO Some of these parameters should be mandatory
-    @RequestMapping(value = "/individual/{nino}/financialcheck", method = RequestMethod.GET)
+    @RequestMapping(value = "/individual/{nino}/financialstatus", method = RequestMethod.GET)
     public ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> getTemporaryMigrationFamilyApplication(
             @PathVariable(value = "nino") String nino,
             @RequestParam(value = "applicationRaisedDate") String applicationDateAsString,
