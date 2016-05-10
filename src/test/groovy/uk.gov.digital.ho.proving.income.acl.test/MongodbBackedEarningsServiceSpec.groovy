@@ -31,14 +31,6 @@ class MongodbBackedEarningsServiceSpec extends Specification {
         result.individual.forename
         result.individual.surname
 
-//        result.applicationRaisedDate
-//
-//        result.category
-//
-//        result.financialRequirementsCheck.met
-//        result.financialRequirementsCheck.applicationRaisedDate == result.applicationRaisedDate
-//
-//        result.threshold
     }
 
     def "multiple records exist for applicant"() {
