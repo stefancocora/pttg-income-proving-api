@@ -6,10 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.annotation.*;
 import uk.gov.digital.ho.proving.income.acl.*;
 import uk.gov.digital.ho.proving.income.domain.Application;
 import uk.gov.digital.ho.proving.income.domain.IncomeProvingResponse;
@@ -20,6 +18,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.regex.Pattern;
 
 @RestController
@@ -38,10 +37,10 @@ public class Service {
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     // TODO Some of these parameters should be mandatory
-    @RequestMapping(value = "/application", method = RequestMethod.GET)
+    @RequestMapping(value = "/individual/{nino}/financialcheck", method = RequestMethod.GET)
     public ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> getTemporaryMigrationFamilyApplication(
-            @RequestParam(value = "nino", required = false) String nino,
-            @RequestParam(value = "applicationRaisedDate", required = false) String applicationDateAsString,
+            @PathVariable(value = "nino") String nino,
+            @RequestParam(value = "applicationRaisedDate") String applicationDateAsString,
             @RequestParam(value = "dependants", required = false) Integer dependants) {
 
         LOGGER.info(String.format("Income Proving Service API for Temporary Migration Family Application invoked for %s application received on %s.", nino, applicationDateAsString));
@@ -142,5 +141,13 @@ public class Service {
         if (!pattern.matcher(nino).matches()) {
             throw new IllegalArgumentException("Invalid NINO");
         }
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public Object missingParamterHandler(MissingServletRequestParameterException exception) {
+        LOGGER.debug(exception.getMessage());
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-type", "application/json");
+        return buildErrorResponse(headers, "0008", "Missing parameter: " + exception.getParameterName() , HttpStatus.BAD_REQUEST);
     }
 }
