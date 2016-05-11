@@ -31,11 +31,11 @@ public class TemporaryMigrationFamilyCaseworkerApplicationResponse {
         this.categoryCheck = categoryCheck;
     }
 
-    public ResponseStatus getError() {
+    public ResponseStatus getStatus() {
         return status;
     }
 
-    public void setError(ResponseStatus error) {
-        this.status = error;
+    public void setStatus(ResponseStatus status) {
+        this.status = status;
     }
 }

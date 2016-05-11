@@ -37,7 +37,7 @@ public class Service {
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     // TODO Some of these parameters should be mandatory
-    @RequestMapping(value = "/individual/{nino}/financialstatus", method = RequestMethod.GET)
+    @RequestMapping(value = "/incomeproving/v1/individual/{nino}/financialstatus", method = RequestMethod.GET)
     public ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> getTemporaryMigrationFamilyApplication(
             @PathVariable(value = "nino") String nino,
             @RequestParam(value = "applicationRaisedDate") String applicationDateAsString,
@@ -89,7 +89,7 @@ public class Service {
                 default:
                     throw new UnknownPaymentFrequencyType();
             }
-            response.setError(new ResponseStatus("100", "OK"));
+            response.setStatus(new ResponseStatus("100", "OK"));
             return new ResponseEntity<>(response, headers, HttpStatus.OK);
 
         } // TODO All this below is a mess of exceptions and needs to be refactored
@@ -111,10 +111,10 @@ public class Service {
         }
     }
 
-    private ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> buildErrorResponse(HttpHeaders headers, String errorCode, String errorMessage, HttpStatus status) {
-        ResponseStatus error = new ResponseStatus(errorCode, errorMessage);
+    private ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> buildErrorResponse(HttpHeaders headers, String statusCode, String statusMessage, HttpStatus status) {
+        ResponseStatus error = new ResponseStatus(statusCode, statusMessage);
         TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
-        response.setError(error);
+        response.setStatus(error);
         return new ResponseEntity<>(response, headers, status);
     }
 
