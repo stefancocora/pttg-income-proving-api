@@ -98,11 +98,11 @@ class ProvingThingsApiSteps {
 
         for(String s : tableKey){
 
-            if(s.equalsIgnoreCase("status code")){
+            if(s.equalsIgnoreCase("HTTP Status")){
                 assert entries.get(s) == resp.getStatusCode().toString()
             }
 
-            if(s.equalsIgnoreCase("outcome box individual forename")){
+            if(s.equalsIgnoreCase("Individual forename")){
                 assert entries.get(s) == json.getJSONObject("individual").getString("forename")
             }
 
