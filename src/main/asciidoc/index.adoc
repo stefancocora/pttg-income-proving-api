@@ -13,6 +13,7 @@ This is version 1 of the income proving API. In this version all resource URIs a
 `/incomeproving/v1/`
 
 
+
 == HTTP Conventions
 include::common/http-conventions.adoc[]
 
