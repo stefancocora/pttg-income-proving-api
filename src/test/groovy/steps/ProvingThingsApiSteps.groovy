@@ -106,6 +106,35 @@ class ProvingThingsApiSteps {
                 assert entries.get(s) == json.getJSONObject("individual").getString("forename")
             }
 
+            if(s.equalsIgnoreCase("Individual surname")){
+                assert entries.get(s) == json.getJSONObject("individual").getString("surname")
+            }
+
+            if(s.equalsIgnoreCase("Financial requirement met")){
+             //  assert json.getJSONObject("categoryCheck").getBoolean("passed") == entries.get(s.toBoolean())
+            }
+
+            if(s.equalsIgnoreCase("Failure reason")){
+                assert entries.get(s) == json.getJSONObject("categoryCheck").getString("failureReason")
+            }
+
+            if(s.equalsIgnoreCase("Individual title")){
+                assert entries.get(s) == json.getJSONObject("individual").getString("title")
+            }
+
+            if(s.equalsIgnoreCase("Application received date")){
+                assert changeDateFormat(entries.get(s)) == json.getJSONObject("categoryCheck").getString("applicationRaisedDate")
+
+            }
+
+            if(s.equalsIgnoreCase("Application received to date")){
+                assert changeDateFormat(entries.get(s)) == json.getJSONObject("categoryCheck").getString("assessmentStartDate")
+            }
+
+            if(s.equalsIgnoreCase("National Insurance Number")){
+                assert entries.get(s) == json.getJSONObject("individual").getString("nino")
+            }
+
 
         }
 
@@ -126,11 +155,12 @@ class ProvingThingsApiSteps {
 
               jsonAsString = resp.asString();
              println ""+ jsonAsString
+
     }
 
     @Then("^The Income Proving TM Family API provides the following result:\$")
     public void the_Income_Proving_TM_Family_API_provides_the_following_result(DataTable arg1) {
-
+        validateResult(arg1)
     }
 
 

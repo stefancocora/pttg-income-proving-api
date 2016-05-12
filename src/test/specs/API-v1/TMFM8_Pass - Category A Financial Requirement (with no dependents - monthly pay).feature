@@ -48,7 +48,7 @@ Feature: Pass - Category A Financial Requirement (with no dependents - monthly p
       | Individual surname                    | Taylor     |
       | Application received to date          | 10/07/2014 |
       | Application received date             | 10/01/2015 |
-      | National Insurance Number             | AA345678A  |
+      | National Insurance Number             | AA123456B  |
 
 #New Scenario - 
   Scenario: Jon meets the Category A Financial Requirement (2)
@@ -130,7 +130,7 @@ Feature: Pass - Category A Financial Requirement (with no dependents - monthly p
     Given A service is consuming the Income Proving TM Family API
     When the Income Proving TM Family API is invoked with the following:
       | NINO                    | AA123456A |
-      | Application Raised Date | 9/1/2015    |
+      | Application Raised Date | 23/1/2015    |
 
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status                           | 200        |

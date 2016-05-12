@@ -67,13 +67,13 @@ Feature: Failure - Category A Financial Requirement (with no dependents - monthl
       | Application Raised Date | 03/07/2015 |
 
     Then The Income Proving TM Family API provides the following result:
-      | HTTP Status                  | 200                           |
-      | Financial requirement met    | False                         |
-      | Failure reason               | MONTHLY_VALUE_BELOW_THRESHOLD |
-      | Individual title             | Mr                            |
-      | Individual forename          | Kumar                         |
-      | Individual surname           | Sangakkara Dilshan            |
-      | Application received to date | 02/01/2015                    |
-      | Application received date    | 03/07/2015                    |
-      | National Insurance Number    | KS123456C                     |
+      | HTTP Status                  | 200                |
+      | Financial requirement met    | False              |
+      | Failure reason               | NOT_ENOUGH_RECORDS |
+      | Individual title             | Mr                 |
+      | Individual forename          | Kumar Sangakkara   |
+      | Individual surname           | Dilshan            |
+      | Application received to date | 02/01/2015         |
+      | Application received date    | 03/07/2015         |
+      | National Insurance Number    | KS123456C          |
 
