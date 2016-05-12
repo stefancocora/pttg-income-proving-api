@@ -2,6 +2,7 @@ package uk.gov.digital.ho.proving.income.api;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.builder.RequestSpecBuilder;
+import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.specification.RequestSpecification;
 import org.junit.Before;
 import org.junit.Rule;
@@ -38,6 +39,8 @@ public class ApiDocumentation {
     private int port;
 
     private RequestSpecification documentationSpec;
+
+    private RequestSpecification requestSpec;
 
     private RestDocumentationFilter document = document(
             "{method-name}",
@@ -78,6 +81,10 @@ public class ApiDocumentation {
         RestAssured.port = this.port;
         RestAssured.basePath = "/incomeproving/v1";
 
+        requestSpec = new RequestSpecBuilder()
+                .setAccept(ContentType.JSON)
+                .build();
+
         this.documentationSpec =
                 new RequestSpecBuilder()
                         .addFilter(documentationConfiguration(this.restDocumentationRule))
@@ -90,8 +97,8 @@ public class ApiDocumentation {
 
         // to do - write good documentation
 
-        given(this.documentationSpec)
-                .accept("application/json") // to do - do this once in setup
+        given(documentationSpec)
+                .spec(requestSpec)
                 .param("applicationRaisedDate", "2015-09-23")
                 .filter(document.snippets(
                         responseFields(individualModelFields)
