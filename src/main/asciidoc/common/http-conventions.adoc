@@ -1,0 +1,6 @@
+=== HTTP verbs
+To do - document standard policy for HTTP Verbs across the API
+
+
+=== HTTP status codes
+To do - document standard policy for HTTP Status code across the API
