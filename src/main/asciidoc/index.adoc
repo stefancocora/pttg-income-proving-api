@@ -1,0 +1,121 @@
+= Income Proving API Guide
+Home Office Digital;
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+[[overview]]
+= Overview
+
+To Do
+
+[[overview-http-verbs]]
+== HTTP verbs
+
+To do - document standard policy for HTTP Verbs across the API
+
+
+
+[[overview-http-status-codes]]
+== HTTP status codes
+
+To do - document standard policy for HTTP Status code across the API:
+
+meaning
+
+conventions for additional info supplied with 400s etc
+
+status codes likely to emerge from any resource interaction (404, 400, 500)
+
+
+[[overview-headers]]
+== Headers
+
+=== Request Headers
+to do - document standard request headers
+
+
+=== Response Headers
+to do - document standard response headers
+
+
+
+[[overview-errors]]
+== Errors
+
+to do - document standard error response contents
+
+
+
+[[overview-hypermedia]]
+== Hypermedia
+
+to do - document use of hypermedia across the API
+
+
+[[a-and-a]]
+== Authentication and Authorization
+
+to do - document A&A stuff
+
+
+[[resources]]
+= Resources
+
+[.lead]
+Some introductory stuff about the overall relationships between these resources.
+
+Possibly also links to other material such as glossary etc.
+
+Maybe some other stuff.
+
+
+[[resources-financial-status]]
+== Financial Status
+
+The financial status resource is used to discover financial status of an applicant.
+
+
+[[resources-financial-status-bynino]]
+=== Finding Financial Status by NINO
+
+To get the financial status for a given applicant you need to know their NINO, which should be
+provided as part of the URI.
+
+
+[[resources-financial-status-bynino-request-sample]]
+==== Example request
+
+include::{snippets}/status-nino-example/http-request.adoc[]
+
+include::{snippets}/status-nino-example/curl-request.adoc[]
+
+
+[[resources-financial-status-bynino-request-params]]
+==== Request Parameters
+
+include::{snippets}/status-nino-example/path-parameters.adoc[]
+
+include::{snippets}/status-nino-example/request-parameters.adoc[]
+
+
+[[resources-financial-status-bynino-response-sample]]
+==== Example of a successful response
+
+include::{snippets}/status-nino-example/http-response.adoc[]
+
+
+[[resources-financial-status-bynino-response-fields]]
+==== Financial Status response content
+
+include::{snippets}/status-nino-example/response-fields.adoc[]
+
+
+
+[[resources-something-else]]
+== Resource Type Two
+
+Eventually.
