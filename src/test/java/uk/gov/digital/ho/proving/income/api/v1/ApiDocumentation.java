@@ -1,4 +1,4 @@
-package uk.gov.digital.ho.proving.income.api;
+package uk.gov.digital.ho.proving.income.api.v1;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.builder.RequestSpecBuilder;
@@ -26,12 +26,15 @@ import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
 import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.restassured.operation.preprocess.RestAssuredPreprocessors.modifyUris;
+import static org.springframework.restdocs.snippet.Attributes.attributes;
+import static org.springframework.restdocs.snippet.Attributes.key;
 
 @SpringApplicationConfiguration(classes = ServiceRunner.class)
 @WebIntegrationTest("server.port=0")
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ApiDocumentation {
 
+    public static final String BASEPATH = "/incomeproving/v1";
     @Rule
     public JUnitRestDocumentation restDocumentationRule = new JUnitRestDocumentation("build/generated-snippets");
 
@@ -79,7 +82,7 @@ public class ApiDocumentation {
     public void setUp() {
 
         RestAssured.port = this.port;
-        RestAssured.basePath = "/incomeproving/v1";
+        RestAssured.basePath = BASEPATH;
 
         requestSpec = new RequestSpecBuilder()
                 .setAccept(ContentType.JSON)
