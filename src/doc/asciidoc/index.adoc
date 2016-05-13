@@ -45,13 +45,14 @@ include::common/auth.adoc[]
 [.lead]
 to do - introductory details about the overall relationships between these resources.
 
+Individual +
+Individual - Financial Status
 
-== Financial Status
+== Individual
 
-The financial status resource is used to discover financial status of an applicant.
+The Individual resource represents a person, typically identified by their National Insurance Number (NINO).
 
-
-=== Finding Financial Status by NINO
+=== Find individual's financial status
 
 To get the financial status for a given applicant you need to know their NINO, which should be
 provided as part of the URI.
@@ -59,30 +60,35 @@ provided as part of the URI.
 
 ==== Example request
 
-include::{snippets}/status-nino-example/http-request.adoc[]
+include::{snippets}/financial-status/http-request.adoc[]
 
-include::{snippets}/status-nino-example/curl-request.adoc[]
+include::{snippets}/financial-status/curl-request.adoc[]
 
 
 ==== Request Parameters
 
-include::{snippets}/status-nino-example/path-parameters.adoc[]
+include::{snippets}/financial-status/path-parameters.adoc[]
 
-include::{snippets}/status-nino-example/request-parameters.adoc[]
+include::{snippets}/financial-status/request-parameters.adoc[]
 
 
 ==== Example of a successful response
 
-include::{snippets}/status-nino-example/http-response.adoc[]
+include::{snippets}/financial-status/http-response.adoc[]
 
 
 ==== Financial Status response content
 
-include::{snippets}/status-nino-example/response-fields.adoc[]
+include::{snippets}/financial-status/response-fields.adoc[]
 
 
 
 = Supplementary
+
+== Support
+include::common/contact.adoc[]
+
+include::common/licence.adoc[]
 
 == Glossary
 include::common/glossary.adoc[]
