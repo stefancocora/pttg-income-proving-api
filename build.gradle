@@ -24,16 +24,24 @@ targetCompatibility = 1.8
 jar {
     baseName = 'uk.gov.digital.ho.proving.income.api'
     version = '0.1.0'
-    dependsOn asciidoctor
-    from("${asciidoctor.outputDir}/html5") {
-        into 'static/docs'
-    }
 }
 
 repositories {
     mavenCentral()
     mavenLocal()    // Pick up the domain jar locally until we have a central repo server.
     maven { url 'https://repo.spring.io/libs-milestone' }
+}
+
+// API documentation tests are separated from unit tests and are not run automatically.
+// Use the asciidoctor task to execute tests and generate HTML documentation (output to build/asciidoc)
+// Use the apiDocTests task to execute tests (output to build/generated-snippets)
+sourceSets {
+    doc {
+        java.srcDir file('src/doc/java')
+        resources.srcDir file('src/doc/resources')
+        compileClasspath += main.output + test.output + configurations.testRuntime
+        runtimeClasspath += output + compileClasspath
+    }
 }
 
 dependencies {
@@ -62,22 +70,25 @@ dependencies {
     testCompile 'org.mockito:mockito-all:1.10.19:'
 }
 
+task apiDocTests(type: Test) {
+    description = 'Runs the API documentation tests'
+    group = 'documentation'
+    testClassesDir = sourceSets.doc.output.classesDir
+    classpath = sourceSets.doc.runtimeClasspath
+    reports.junitXml.destination = 'build/doc-test-results'
+    reports.html.destination = 'build/reports/documentationTest'
+}
+
 ext {
     snippetsDir = file('build/generated-snippets')
 }
-
-
-test {
-    outputs.dir snippetsDir
-}
-
 
 asciidoctor {
     attributes 'snippets': snippetsDir
     inputs.dir snippetsDir
     outputDir "build/asciidoc"
-    dependsOn test
-    sourceDir 'src/main/asciidoc'
+    dependsOn apiDocTests
+    sourceDir 'src/doc/asciidoc'
 }
 
 mainClassName = "uk.gov.digital.ho.proving.income.ServiceRunner"

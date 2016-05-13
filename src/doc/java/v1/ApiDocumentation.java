@@ -35,6 +35,7 @@ import static org.springframework.restdocs.snippet.Attributes.key;
 public class ApiDocumentation {
 
     public static final String BASEPATH = "/incomeproving/v1";
+
     @Rule
     public JUnitRestDocumentation restDocumentationRule = new JUnitRestDocumentation("build/generated-snippets");
 
