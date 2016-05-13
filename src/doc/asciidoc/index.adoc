@@ -5,13 +5,22 @@ include::common/config.adoc[]
 = API Overview
 
 == Introduction
-To Do - document the high-level view of this API
+This document describes the Income Proving API, a REST service that exchanges JSON over HTTP and exposes information
+relating to an individual's financial status and income. This guide has three main sections:
+
+ . <<API Overview>> - Information, guidance, and conventions that apply across this API, such as access control or the use of HTTP verbs.
+ . <<Resources>> - Details of the resources exposed through this API and the operations available against those resources.
+ . <<Supplementary>> - Supporting information such as contact details and key terms.
+
+For further assistance see the <<Contact>> section.
 
 == Versioning
 This is version 1 of the income proving API. In this version all resource URIs are prefixed with:
 
 `/incomeproving/v1/`
 
+== Schema
+include::common/schema.adoc[]
 
 == HTTP Conventions
 include::common/http-conventions.adoc[]
@@ -20,11 +29,17 @@ include::common/http-conventions.adoc[]
 == Headers
 
 === Request Headers
-to do - document standard request headers common across the API
+
+This API accepts the following headers on all requests. See individual resource documentation for any specific header
+requirements or support.
+
+include::{snippets}/common-headers/request-headers.adoc[]
 
 === Response Headers
-to do - document standard response headers common across the API
+All responses from this API will include the following headers. See individual resource documentation for any additional
+headers.
 
+include::{snippets}/common-headers/response-headers.adoc[]
 
 == Errors
 to do - document standard error response contents common across the API
@@ -43,10 +58,12 @@ include::common/auth.adoc[]
 = Resources
 
 [.lead]
-to do - introductory details about the overall relationships between these resources.
+This API exposes financial status information relating to an individual. The central resource is the
+`Individual`, which represents a person and is typically identified by National Insurance Number. For a given
+`Individual`, this API provides access to a child resource describing details of the individual's financial status, the
+`Financial Status` resource.
 
-Individual +
-Individual - Financial Status
+
 
 == Individual
 

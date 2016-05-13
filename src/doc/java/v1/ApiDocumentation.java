@@ -19,6 +19,9 @@ import uk.gov.digital.ho.proving.income.ServiceRunner;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.core.Is.is;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
@@ -91,6 +94,25 @@ public class ApiDocumentation {
                         .addFilter(documentationConfiguration(this.restDocumentationRule))
                         .addFilter(document)
                         .build();
+    }
+
+    @Test
+    public void commonHeaders() throws Exception {
+
+        given(documentationSpec)
+                .spec(requestSpec)
+                .param("applicationRaisedDate", "2015-09-23")
+                .filter(document.snippets(
+                        requestHeaders(
+                                headerWithName("Accept").description("The requested media type eg application/json. See <<Schema>> for supported media types.")
+                        ),
+                        responseHeaders(
+                                headerWithName("Content-Type").description("The Content-Type of the payload, e.g. `application/json`")
+                        )
+                ))
+
+                .when().get("/individual/{nino}/financialstatus", "AA123456A")
+                .then().assertThat().statusCode(is(200));
     }
 
     @Test

@@ -1,1 +1,1 @@
-to do - document A&A stuff
+This API is not secured.
