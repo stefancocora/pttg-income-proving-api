@@ -22,7 +22,7 @@ import static org.hamcrest.core.Is.is;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
@@ -48,13 +48,20 @@ public class ApiDocumentation {
 
     private RequestSpecification requestSpec;
 
-    private RestDocumentationFilter document = document(
-            "{method-name}",
-            preprocessRequest(modifyUris()
-                    .scheme("https")
-                    .host("api.host.address")
-                    .removePort())
-    );
+    private RestDocumentationFilter document =
+            document("{method-name}",
+                    preprocessRequest(
+                            prettyPrint(),
+                            modifyUris()
+                                    .scheme("https")
+                                    .host("api.host.address")
+                                    .removePort()
+                    ),
+                    preprocessResponse(
+                            prettyPrint(),
+                            removeHeaders("Date", "Connection")
+                    )
+            );
 
     private FieldDescriptor[] individualModelFields = new FieldDescriptor[]{
             fieldWithPath("individual").description("The individual corresponding to this request"),
@@ -116,7 +123,7 @@ public class ApiDocumentation {
     }
 
     @Test
-    public void missingParameterError() throws Exception{
+    public void missingParameterError() throws Exception {
 
         given(documentationSpec)
                 .spec(requestSpec)
