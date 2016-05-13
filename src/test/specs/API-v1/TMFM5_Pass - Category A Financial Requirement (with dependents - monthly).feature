@@ -78,7 +78,7 @@ Feature: Pass - Category A Financial Requirement (with dependants - monthly)
     Given A service is consuming the Income Proving TM Family API
     When the Income Proving TM Family API is invoked with the following:
       | NINO                    | WA987654B  |
-      | Application raised date | 30/05/2015 |
+      | Application raised date | 28/02/2015 |
       | Dependent               | 5          |
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status                  | 200        |
@@ -86,7 +86,7 @@ Feature: Pass - Category A Financial Requirement (with dependants - monthly)
       | Individual title             | Mr         |
       | Individual forename          | Wasim      |
       | Individual surname           | Mohammed   |
-      | Application received to date | 30/11/2014 |
-      | Application received date    | 30/05/2015 |
+      | Application received to date | 28/08/2014 |
+      | Application received date    | 28/02/2015 |
       | dependent                    | 5          |
       | National Insurance Number    | WA987654B  |
