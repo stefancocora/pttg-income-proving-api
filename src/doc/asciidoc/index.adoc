@@ -1,6 +1,7 @@
 = Income Proving API Guide
 include::common/config.adoc[]
 
+(uk.gov.digital.ho.proving.income.service)
 
 = API Overview
 
@@ -37,8 +38,8 @@ include::common/hypermedia.adoc[]
 == Authentication and Authorization
 include::common/auth.adoc[]
 
-
 '''
+<<<
 
 = Resources
 
@@ -84,7 +85,7 @@ include::{snippets}/financial-status/http-response.adoc[]
 include::{snippets}/financial-status/response-fields.adoc[]
 
 
-
+<<<
 = Supplementary
 
 == Support
