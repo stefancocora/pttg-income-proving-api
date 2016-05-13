@@ -25,29 +25,14 @@ include::common/schema.adoc[]
 == HTTP Conventions
 include::common/http-conventions.adoc[]
 
-
 == Headers
-
-=== Request Headers
-
-This API accepts the following headers on all requests. See individual resource documentation for any specific header
-requirements or support.
-
-include::{snippets}/common-headers/request-headers.adoc[]
-
-=== Response Headers
-All responses from this API will include the following headers. See individual resource documentation for any additional
-headers.
-
-include::{snippets}/common-headers/response-headers.adoc[]
+include::common/headers.adoc[]
 
 == Errors
-to do - document standard error response contents common across the API
-
+include::common/errors.adoc[]
 
 == Hypermedia
 include::common/hypermedia.adoc[]
-
 
 == Authentication and Authorization
 include::common/auth.adoc[]

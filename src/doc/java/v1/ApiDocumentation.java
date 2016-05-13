@@ -116,6 +116,22 @@ public class ApiDocumentation {
     }
 
     @Test
+    public void missingParameterError() throws Exception{
+
+        given(documentationSpec)
+                .spec(requestSpec)
+                .filter(document.snippets(
+                        responseFields(
+                                fieldWithPath("status.code").description("A specific error code to identify further details of this error"),
+                                fieldWithPath("status.message").description("A description of the error, in this case identifying the missing mandatory parameter")
+                        )
+                ))
+
+                .when().get("/individual/{nino}/financialstatus", "AA123456A")
+                .then().assertThat().statusCode(is(400));
+    }
+
+    @Test
     public void financialStatus() throws Exception {
 
         given(documentationSpec)
