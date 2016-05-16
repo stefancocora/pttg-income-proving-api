@@ -82,7 +82,7 @@ class ProvingThingsApiSteps {
 
                 nino = entries.get(s)
             }
-            if(s.equalsIgnoreCase("dependant")){
+            if(s.equalsIgnoreCase("dependants")){
                 dependants = entries.get(s)
             }
         }
