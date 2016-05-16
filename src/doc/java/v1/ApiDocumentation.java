@@ -144,6 +144,7 @@ public class ApiDocumentation {
         given(documentationSpec)
                 .spec(requestSpec)
                 .param("applicationRaisedDate", "2015-09-23")
+                .param("dependants", "2")
                 .filter(document.snippets(
                         responseFields(individualModelFields)
                                 .and(categoryCheckModelFields)
@@ -154,8 +155,8 @@ public class ApiDocumentation {
                                         .attributes(key("optional").value(false)),
                                 parameterWithName("dependants")
                                         .description("Number of dependants declared at time of application. Optional. Must be 0 or higher.")
-                                        .optional()
-                                        // to do - remove following when springrestdocs fixes support for documenting optional
+//                                        .optional()
+//                                         to do - remove following when springrestdocs fixes support for documenting optional
                                         .attributes(key("optional").value(true))
                         ),
                         pathParameters(
