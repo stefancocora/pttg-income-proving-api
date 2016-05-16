@@ -4,9 +4,12 @@ version '1.0-SNAPSHOT'
 buildscript {
     repositories {
         mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.3.3.RELEASE")
+        classpath("org.asciidoctor:asciidoctor-gradle-plugin:1.5.3")
+        classpath("org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.11")
         classpath 'net.serenity-bdd:serenity-gradle-plugin:1.1.31'
     }
 }
@@ -15,6 +18,7 @@ apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'spring-boot'
 apply plugin: 'application'
+apply plugin: 'org.asciidoctor.convert'
 apply plugin: 'net.serenity-bdd.aggregator'
 
 sourceCompatibility = 1.8
@@ -25,9 +29,32 @@ jar {
     version =  '0.1.0'
 }
 
+test {
+    exclude 'acceptance/**'
+}
+
+task accept(type: Test) {
+    include 'acceptance/**'
+}
+
+accept.finalizedBy aggregate
+
 repositories {
     mavenCentral()
     mavenLocal()    // Pick up the domain jar locally until we have a central repo server.
+    maven { url 'https://repo.spring.io/libs-milestone' }
+}
+
+// API documentation tests are separated from unit tests and are not run automatically.
+// Use the asciidoctor task to execute tests and generate HTML documentation (output to build/asciidoc)
+// Use the apiDocTests task to execute tests (output to build/generated-snippets)
+sourceSets {
+    doc {
+        java.srcDir file('src/doc/java')
+        resources.srcDir file('src/doc/resources')
+        compileClasspath += main.output + test.output + configurations.testRuntime
+        runtimeClasspath += output + compileClasspath
+    }
 }
 
 dependencies {
@@ -49,6 +76,7 @@ dependencies {
     testCompile 'org.springframework:spring-test:4.2.5.RELEASE'
     testCompile 'cglib:cglib-nodep:3.2.1'
     testCompile 'org.objenesis:objenesis:2.2'
+
     testCompile  'org.json:json:20090211'
     testCompile 'com.jayway.restassured:rest-assured:2.9.0'
     testCompile 'com.jayway.restassured:json-schema-validator:2.9.0'
@@ -61,8 +89,33 @@ dependencies {
     testCompile 'info.cukes:cucumber-junit:1.2.4'
     testCompile 'junit:junit:4.12'
     testCompile 'info.cukes:gherkin:2.12.2'
-
-
+    
+    testCompile 'com.jayway.jsonpath:json-path'
+    testCompile 'org.springframework.restdocs:spring-restdocs-core:1.1.0.RC1'
+    testCompile 'org.springframework.restdocs:spring-restdocs-restassured:1.1.0.RC1'
+    testCompile 'org.mockito:mockito-all:1.10.19:'
 }
 
-mainClassName="uk.gov.digital.ho.proving.income.ServiceRunner"
+task apiDocTests(type: Test) {
+    description = 'Runs the API documentation tests'
+    group = 'documentation'
+    testClassesDir = sourceSets.doc.output.classesDir
+    classpath = sourceSets.doc.runtimeClasspath
+    reports.junitXml.destination = 'build/doc-test-results'
+    reports.html.destination = 'build/reports/documentationTest'
+}
+
+ext {
+    snippetsDir = file('build/generated-snippets')
+}
+
+asciidoctor {
+    backends    'pdf', 'html5'
+    attributes 'snippets': snippetsDir
+    inputs.dir snippetsDir
+    outputDir "build/asciidoc"
+    dependsOn apiDocTests
+    sourceDir 'src/doc/asciidoc'
+}
+
+mainClassName = "uk.gov.digital.ho.proving.income.ServiceRunner"

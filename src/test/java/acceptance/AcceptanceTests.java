@@ -1,9 +1,6 @@
 package acceptance;
-/**
- * Created by mitchell on 11/05/16.
- */
 
-import cucumber.api.*;
+import cucumber.api.CucumberOptions;
 import net.serenitybdd.cucumber.*;
 import org.junit.runner.*;
 
