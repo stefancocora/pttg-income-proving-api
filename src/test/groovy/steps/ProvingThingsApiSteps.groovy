@@ -2,7 +2,6 @@ package steps
 
 import com.jayway.restassured.response.Response
 import cucumber.api.DataTable
-import cucumber.api.PendingException
 import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
@@ -83,7 +82,7 @@ class ProvingThingsApiSteps {
 
                 nino = entries.get(s)
             }
-            if(s.equalsIgnoreCase("dependants")){
+            if(s.equalsIgnoreCase("dependant")){
                 dependants = entries.get(s)
             }
         }
@@ -122,12 +121,12 @@ class ProvingThingsApiSteps {
                 assert entries.get(s) == json.getJSONObject("individual").getString("title")
             }
 
-            if(s.equalsIgnoreCase("Application received date")){
+            if(s.equalsIgnoreCase("Application raised date")){
                 assert changeDateFormat(entries.get(s)) == json.getJSONObject("categoryCheck").getString("applicationRaisedDate")
 
             }
 
-            if(s.equalsIgnoreCase("Application received to date")){
+            if(s.equalsIgnoreCase("Application raised to date")){
                 assert changeDateFormat(entries.get(s)) == json.getJSONObject("categoryCheck").getString("assessmentStartDate")
             }
 
