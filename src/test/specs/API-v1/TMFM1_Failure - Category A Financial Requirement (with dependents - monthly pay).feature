@@ -31,7 +31,7 @@ Feature: Failure - Category A Financial Requirement (with dependents - monthly p
     		When the Income Proving TM Family API is invoked with the following:
       			| NINO                    | SP123456B  |
       			| Application Raised Date | 03/02/2015 |
-      			| Dependant               | 4 |
+      			| Dependants              | 4 |
 
     		Then The Income Proving TM Family API provides the following result:
       			| HTTP Status                           | 200        |
@@ -42,7 +42,7 @@ Feature: Failure - Category A Financial Requirement (with dependents - monthly p
       			| Individual surname                    | Patel      |
       			| Application received to date          | 03/08/2014 |
       			| Application received date             | 03/02/2015 |
-			| Dependant                             | 4          |
+			    | Dependant                             | 4          |
       			| National Insurance Number             | SP123456B  |
 
 #New scenario - Added in
@@ -57,7 +57,7 @@ Feature: Failure - Category A Financial Requirement (with dependents - monthly p
     		When the Income Proving TM Family API is invoked with the following:
       			| NINO                    | BS123456B  |
       			| Application Raised Date | 10/02/2015 |
-      			| Dependant               | 2 |
+      			| Dependants              | 2 |
 
     		Then The Income Proving TM Family API provides the following result:
       			| HTTP Status                           | 200        |
@@ -68,7 +68,7 @@ Feature: Failure - Category A Financial Requirement (with dependents - monthly p
       			| Individual surname                    | Sinclair   |
       			| Application received to date          | 10/08/2014 |
       			| Application received date             | 10/02/2015 |
-			| Dependant                             | 2          |
+			    | Dependant                             | 2          |
       			| National Insurance Number             | BS123456B  |
 
 
@@ -85,7 +85,7 @@ Feature: Failure - Category A Financial Requirement (with dependents - monthly p
     		When the Income Proving TM Family API is invoked with the following:
       			| NINO                    | SY987654C  |
       			| Application Raised Date | 03/09/2015 |
-      			| Dependant               | 3          |
+      			| Dependants              | 3          |
 
     		Then The Income Proving TM Family API provides the following result:
       			| HTTP Status                           | 200        |
@@ -96,7 +96,7 @@ Feature: Failure - Category A Financial Requirement (with dependents - monthly p
       			| Individual surname                    | Yu         |
       			| Application received to date          | 03/03/2015 |
       			| Application received date             | 03/09/2015 |
-			| Dependant                             | 3          |
+			    | Dependant                             | 3          |
       			| National Insurance Number             | SY987654C  |
 
 
@@ -108,16 +108,16 @@ Feature: Failure - Category A Financial Requirement (with dependents - monthly p
   He earns £3333.33 Monthly Gross Income EVERY of the 6 months prior to the Application Received Date
   He has 3 Dependants Child
 
-    Given Caseworker is using the Income Proving Service Case Worker Tool
-    When Robert submits a query to IPS Family TM Case Worker Tool (with dependants):
-      | NINO                    | SJ123456C |
-      | Application Raised Date | 3/1/2016  |
-      | Dependants              | 3         |
-    Then The IPS Family TM Case Worker Tool provides the following error result (with dependants):
-      | Page dynamic heading                  | Scarlett Jones doesn't meet the Category A salaried requirement |
-      | Category A check failure reason       | they haven't been with their current employer for 6 months.     |
+            Given A service is consuming the Income Proving TM Family API
+            When the Income Proving TM Family API is invoked with the following:
+              | NINO                    | SJ123456C |
+              | Application Raised Date | 3/1/2016  |
+              | Dependants              | 3         |
+            Then The Income Proving TM Family API provides the following result:
+              | Page dynamic heading                  | Scarlett Jones doesn't meet the Category A salaried requirement |
+              | Category A check failure reason       | they haven't been with their current employer for 6 months.     |
 
-      | Your Search Individual Name           | Scarlett Jones                                                  |
-      | Your Search Dependants                | 3                                                               |
-      | Your Search National Insurance Number | SJ123456C                                                       |
-      | Your Search Application Raised Date   | 03/01/2016                                                      |
+              | Your Search Individual Name           | Scarlett Jones                                                  |
+              | Your Search Dependants                | 3                                                               |
+              | Your Search National Insurance Number | SJ123456C                                                       |
+              | Your Search Application Raised Date   | 03/01/2016                                                      |
