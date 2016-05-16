@@ -14,11 +14,8 @@ import uk.gov.digital.ho.proving.income.domain.IncomeProvingResponse;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.regex.Pattern;
 
 @RestController
@@ -31,7 +28,6 @@ public class Service {
     @Autowired
     private IndividualService individualService;
 
-    private static final int NUMBER_OF_MONTHS = 6;
     private static final int NUMBER_OF_DAYS = 182;
 
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -39,9 +35,9 @@ public class Service {
     // TODO Some of these parameters should be mandatory
     @RequestMapping(value = "/incomeproving/v1/individual/{nino}/financialstatus", method = RequestMethod.GET)
     public ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> getTemporaryMigrationFamilyApplication(
-            @PathVariable(value = "nino") String nino,
-            @RequestParam(value = "applicationRaisedDate") String applicationDateAsString,
-            @RequestParam(value = "dependants", required = false) Integer dependants) {
+        @PathVariable(value = "nino") String nino,
+        @RequestParam(value = "applicationRaisedDate") String applicationDateAsString,
+        @RequestParam(value = "dependants", required = false) Integer dependants) {
 
         LOGGER.info(String.format("Income Proving Service API for Temporary Migration Family Application invoked for %s application received on %s.", nino, applicationDateAsString));
 
@@ -61,7 +57,6 @@ public class Service {
             sdf.setLenient(false);
             Date applicationRaisedDate = sdf.parse(applicationDateAsString);
             Date startSearchDateDays = subtractXDays(applicationRaisedDate, NUMBER_OF_DAYS);
-            Date startSearchDateMonths = subtractXMonths(applicationRaisedDate, NUMBER_OF_MONTHS);
             IncomeProvingResponse incomeProvingResponse = individualService.lookup(nino, startSearchDateDays, applicationRaisedDate);
 
             Application application = earningsService.lookup(nino, applicationRaisedDate);
@@ -71,11 +66,11 @@ public class Service {
 
             switch (incomeProvingResponse.getPayFreq().toUpperCase()) {
                 case "M1":
-                    FinancialCheckValues categoryAMonthlySalaried = IncomeValidator.validateCategoryAMonthlySalaried(incomeProvingResponse.getIncomes(), startSearchDateMonths, applicationRaisedDate, dependants);
+                    FinancialCheckValues categoryAMonthlySalaried = IncomeValidator.validateCategoryAMonthlySalaried(incomeProvingResponse.getIncomes(), startSearchDateDays, applicationRaisedDate, dependants);
                     if (categoryAMonthlySalaried.equals(FinancialCheckValues.MONTHLY_SALARIED_PASSED)) {
-                        response.setCategoryCheck(new CategoryCheck("A",true, null, applicationRaisedDate, startSearchDateMonths));
+                        response.setCategoryCheck(new CategoryCheck("A",true, null, applicationRaisedDate, startSearchDateDays));
                     } else {
-                        response.setCategoryCheck(new CategoryCheck("A",false, categoryAMonthlySalaried, applicationRaisedDate, startSearchDateMonths));
+                        response.setCategoryCheck(new CategoryCheck("A",false, categoryAMonthlySalaried, applicationRaisedDate, startSearchDateDays));
                     }
                     break;
                 case "W1":
@@ -118,12 +113,6 @@ public class Service {
         return new ResponseEntity<>(response, headers, status);
     }
 
-    private Date subtractXMonths(Date date, int months) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.add(Calendar.MONTH, -months);
-        return calendar.getTime();
-    }
 
     private Date subtractXDays(Date date, int days) {
         Calendar calendar = Calendar.getInstance();
