@@ -9,7 +9,6 @@ import net.thucydides.core.annotations.Managed
 import org.json.JSONObject
 
 import static com.jayway.restassured.RestAssured.get
-
 /**
  * Created by mitchell on 11/05/16.
  */
@@ -111,7 +110,7 @@ class ProvingThingsApiSteps {
             }
 
             if(s.equalsIgnoreCase("Financial requirement met")){
-             //  assert json.getJSONObject("categoryCheck").getBoolean("passed") == entries.get(s.toBoolean())
+               assert json.getJSONObject("categoryCheck").getBoolean("passed")== entries.get(s).toBoolean()
             }
 
             if(s.equalsIgnoreCase("Failure reason")){
