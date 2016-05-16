@@ -108,34 +108,21 @@ Feature: Failure - Category A Financial Requirement (with dependents - monthly p
   He earns £3333.33 Monthly Gross Income EVERY of the 6 months prior to the Application Raised Date
   He has 3 Dependants Child
 
-            Given A service is consuming the Income Proving TM Family API
-            When the Income Proving TM Family API is invoked with the following:
-              | NINO                    | SJ123456C |
-              | Application Raised Date | 3/1/2016  |
-              | Dependants              | 3         |
-            Then The Income Proving TM Family API provides the following result:
-              | Page dynamic heading                  | Scarlett Jones doesn't meet the Category A salaried requirement |
-              | Category A check failure reason       | they haven't been with their current employer for 6 months.     |
 
-              | Your Search Individual Name           | Scarlett Jones                                                  |
-              | Your Search Dependants                | 3                                                               |
-              | Your Search National Insurance Number | SJ123456C                                                       |
-              | Your Search Application Raised Date   | 03/01/2016                                                      |
+                Given A service is consuming the Income Proving TM Family API
+                When the Income Proving TM Family API is invoked with the following:
+                    | NINO                    | SJ123456C  |
+                    | Application Raised Date | 03/01/2016 |
+                    | Dependants              | 3          |
 
-              Given A service is consuming the Income Proving TM Family API
-          		When the Income Proving TM Family API is invoked with the following:
-            			| NINO                    | SJ123456C  |
-            			| Application Raised Date | 03/01/2016 |
-            			| Dependants              | 3          |
-
-          		Then The Income Proving TM Family API provides the following result:
-            			| HTTP Status                           | 200        |
-            			| Financial requirement met             | False      |
-            			| Failure reason                        | NON_CONSECUTIVE_MONTHS      |
-            			| Individual title                      | Mr         |
-            			| Individual forename                   | Steve      |
-            			| Individual surname                    | Yu         |
-            			| Application Raised to date          | 03/06/2015 |
-            			| Application Raised date             | 03/01/2016 |
-      			    | Dependant                             | 3          |
-            			| National Insurance Number             | SJ123456C  |
+                Then The Income Proving TM Family API provides the following result:
+                    | HTTP Status                           | 200        |
+                    | Financial requirement met             | False      |
+                    | Failure reason                        | NON_CONSECUTIVE_MONTHS      |
+                    | Individual title                      | Mr         |
+                    | Individual forename                   | Steve      |
+                    | Individual surname                    | Yu         |
+                    | Application Raised to date            | 03/06/2015 |
+                    | Application Raised date               | 03/01/2016 |
+                    | Dependant                             | 3          |
+                    | National Insurance Number             | SJ123456C  |
