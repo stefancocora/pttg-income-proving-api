@@ -130,4 +130,27 @@ class ServiceSpec extends Specification {
         cal.set(Calendar.DATE, day);
         return cal.getTime()
     }
+
+    def "monthly payment uses 182 days in start date calculation"() {
+        given:
+
+        sut.earningsService = Stub(EarningsService)
+
+        IndividualService stubIndividualService = Stub()
+        Individual individual = getIndividual()
+        List<Income> incomes = getConsecutiveIncomes()
+        stubIndividualService.lookup(_,_,_) >> {
+            new IncomeProvingResponse(individual, incomes, "9600", "M1")
+        }
+        sut.individualService = stubIndividualService
+
+        when:
+
+        ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456A", "2015-09-23", 0)
+
+        then:
+
+        result.statusCode == HttpStatus.OK
+        result.body.categoryCheck.assessmentStartDate == "2015-03-25"
+    }
 }
