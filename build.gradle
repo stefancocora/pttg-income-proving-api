@@ -25,6 +25,16 @@ jar {
     version =  '0.1.0'
 }
 
+test {
+    exclude 'acceptance/**'
+}
+
+task accept(type: Test) {
+    include 'acceptance/**'
+}
+
+accept.finalizedBy aggregate
+
 repositories {
     mavenCentral()
     mavenLocal()    // Pick up the domain jar locally until we have a central repo server.
