@@ -1,0 +1,21 @@
+Financial Status:: to do
+
+NINO:: National Insurance Number. +
+Must conform to the pattern: `to do`
+
+
+Payment Frequency:: One of the following codes
+[caption=]
+.Payment Frequency Codes
+|===
+|Code|Meaning
+
+|M1
+|Calendar Monthly
+|?
+| to do
+
+|===
+
+
+Sponsor:: to do
