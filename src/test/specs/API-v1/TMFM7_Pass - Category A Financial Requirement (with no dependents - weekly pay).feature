@@ -41,7 +41,7 @@ Feature: Pass - Category A Financial Requirement (with no dependents - weekly pa
       | Individual title             | Mr         |
       | Individual forename          | Fernando   |
       | Individual surname           | Sanchez    |
-      | Application Raised to date   | 10/04/2015 |
+      | Application Raised to date   | 10/10/2014 |
       | Application Raised date      | 10/04/2015 |
       | National Insurance Number    | FS123456C  |
 
