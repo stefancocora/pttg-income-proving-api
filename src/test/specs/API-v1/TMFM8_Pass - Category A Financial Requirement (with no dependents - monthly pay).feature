@@ -6,7 +6,7 @@ Feature: Pass - Category A Financial Requirement (with no dependents - monthly p
       Financial employment income regulation to pass this Feature File
       Applicant or Sponsor has earned 6 monthly payments => £1550 Monthly Gross Income in the 182 days prior to the Application Raised Date
 
-#New Scenario - 
+#New Scenario -
   Scenario: Jon meets the Category A Financial Requirement (1)
 
       Pay date 15th of the month
@@ -24,11 +24,11 @@ Feature: Pass - Category A Financial Requirement (with no dependents - monthly p
       | Individual title                      | Mr         |
       | Individual forename                   | Jon        |
       | Individual surname                    | Taylor     |
-      | Application received to date          | 23/07/2014 |
-      | Application received date             | 23/01/2015 |
+      | Application Raised to date          | 23/07/2014 |
+      | Application Raised date             | 23/01/2015 |
       | National Insurance Number             | AA345678A  |
 
-#New Scenario - 
+#New Scenario -
   Scenario: Jon meets the Category A Financial Requirement (Caseworker enters the National Insurance Number with spaces)
 
       Pay date 1st of the month
@@ -46,11 +46,11 @@ Feature: Pass - Category A Financial Requirement (with no dependents - monthly p
       | Individual title                      | Mr         |
       | Individual forename                   | Jon        |
       | Individual surname                    | Taylor     |
-      | Application received to date          | 10/07/2014 |
-      | Application received date             | 10/01/2015 |
+      | Application Raised to date          | 10/07/2014 |
+      | Application Raised date             | 10/01/2015 |
       | National Insurance Number             | AA123456B  |
 
-#New Scenario - 
+#New Scenario -
   Scenario: Jon meets the Category A Financial Requirement (2)
 
       Pay date 28th of the month
@@ -68,12 +68,12 @@ Feature: Pass - Category A Financial Requirement (with no dependents - monthly p
       | Individual title                      | Mr         |
       | Individual forename                   | Jon        |
       | Individual surname                    | Taylor     |
-      | Application received to date          | 23/07/2014 |
-      | Application received date             | 23/01/2015 |
+      | Application Raised to date          | 23/07/2014 |
+      | Application Raised date             | 23/01/2015 |
       | National Insurance Number             | BB123456B  |
 
 
-#New Scenario - 
+#New Scenario -
   Scenario: Jon meets the Category A Financial Requirement (3)
 
       Pay date 23rd of the month
@@ -91,12 +91,12 @@ Feature: Pass - Category A Financial Requirement (with no dependents - monthly p
       | Individual title                      | Mr         |
       | Individual forename                   | Jon        |
       | Individual surname                    | Taylor     |
-      | Application received to date          | 23/07/2014 |
-      | Application received date             | 23/01/2015 |
+      | Application Raised to date          | 23/07/2014 |
+      | Application Raised date             | 23/01/2015 |
       | National Insurance Number             | CC123456C  |
 
 
-#New Scenario - 
+#New Scenario -
   Scenario: Jon meets the Category A Financial Requirement (Application Raised Date provided with single numbers for the day and month)
 
       Pay date 1st of the month
@@ -114,11 +114,11 @@ Feature: Pass - Category A Financial Requirement (with no dependents - monthly p
       | Individual title                      | Mr         |
       | Individual forename                   | Jon        |
       | Individual surname                    | Taylor     |
-      | Application received to date          | 09/07/2014 |
-      | Application received date             | 09/01/2015 |
+      | Application Raised to date          | 09/07/2014 |
+      | Application Raised date             | 09/01/2015 |
       | National Insurance Number             | CC123456B  |
 
-#New Scenario - 
+#New Scenario -
   Scenario: Mark meets the Category A Financial Requirement
 
       Pay date 17th, for December 2014
@@ -138,7 +138,6 @@ Feature: Pass - Category A Financial Requirement (with no dependents - monthly p
       | Individual title                      | Mr         |
       | Individual forename                   | Mark       |
       | Individual surname                    | Jones      |
-      | Application received to date          | 23/07/2014 |
-      | Application received date             | 23/01/2015 |
+      | Application Raised to date          | 23/07/2014 |
+      | Application Raised date             | 23/01/2015 |
       | National Insurance Number             | AA123456A  |
-

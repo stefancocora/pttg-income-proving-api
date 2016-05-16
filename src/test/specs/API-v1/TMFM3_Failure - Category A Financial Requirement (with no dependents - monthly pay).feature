@@ -26,8 +26,8 @@ Feature: Failure - Category A Financial Requirement (with no dependents - monthl
       | Individual title             | Mrs                           |
       | Individual forename          | Jill                          |
       | Individual surname           | Lewondoski                    |
-      | Application received to date | 15/07/2014                    |
-      | Application received date    | 15/01/2015                    |
+      | Application Raised to date | 15/07/2014                    |
+      | Application Raised date    | 15/01/2015                    |
       | National Insurance Number    | JL123456A                     |
 
 #New Scenario -
@@ -49,8 +49,8 @@ Feature: Failure - Category A Financial Requirement (with no dependents - monthl
       | Individual title             | Mr                            |
       | Individual forename          | Francois                      |
       | Individual surname           | Leblanc                       |
-      | Application received to date | 28/09/2014                    |
-      | Application received date    | 28/03/2015                    |
+      | Application Raised to date | 28/09/2014                    |
+      | Application Raised date    | 28/03/2015                    |
       | National Insurance Number    | FL123456B                     |
 
 #New Scenario -
@@ -73,7 +73,6 @@ Feature: Failure - Category A Financial Requirement (with no dependents - monthl
       | Individual title             | Mr                 |
       | Individual forename          | Kumar Sangakkara   |
       | Individual surname           | Dilshan            |
-      | Application received to date | 02/01/2015         |
-      | Application received date    | 03/07/2015         |
+      | Application Raised to date | 02/01/2015         |
+      | Application Raised date    | 03/07/2015         |
       | National Insurance Number    | KS123456C          |
-

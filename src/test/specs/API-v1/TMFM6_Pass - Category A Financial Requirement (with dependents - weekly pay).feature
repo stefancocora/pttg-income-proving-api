@@ -21,7 +21,7 @@ Feature: Pass - Category A Financial Requirement (with Dependants - weekly pay)
 #New scenario - Added
   Scenario: Tony Singh meets the Category A Financial Requirement with 1 Dependants
 
-		He has received 26 Weekly Gross Income payments of £466.01 
+		He has received 26 Weekly Gross Income payments of £466.01
 		He has 1 Dependants child
 
     Given A service is consuming the Income Proving TM Family API
@@ -35,8 +35,8 @@ Feature: Pass - Category A Financial Requirement (with Dependants - weekly pay)
       | Individual title             | Mr         |
       | Individual forename          | Tony       |
       | Individual surname           | Singh      |
-      | Application received to date | 25/08/2014 |
-      | Application received date    | 23/02/2015 |
+      | Application Raised to date | 25/08/2014 |
+      | Application Raised date    | 23/02/2015 |
       | Dependant                    | 1          |
       | National Insurance Number    | TS123456A  |
 
@@ -58,8 +58,8 @@ Feature: Pass - Category A Financial Requirement (with Dependants - weekly pay)
       | Individual title             | Miss       |
       | Individual forename          | Jennifer   |
       | Individual surname           | Toure      |
-      | Application received to date | 05/06/2015 |
-      | Application received date    | 04/12/2015 |
+      | Application Raised to date | 05/06/2015 |
+      | Application Raised date    | 04/12/2015 |
       | Dependant                    | 3          |
       | National Insurance Number    | JT123456C  |
 
@@ -81,7 +81,7 @@ Feature: Pass - Category A Financial Requirement (with Dependants - weekly pay)
       | Individual title             | Mrs        |
       | Individual forename          | Lela       |
       | Individual surname           | Vasquez    |
-      | Application received to date | 22/01/2015 |
-      | Application received date    | 22/07/2015 |
+      | Application Raised to date | 22/01/2015 |
+      | Application Raised date    | 22/07/2015 |
       | Dependant                    | 5          |
       | National Insurance Number    | LV987654B  |

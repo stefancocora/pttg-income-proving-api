@@ -40,9 +40,9 @@ Feature: Failure - Category A Financial Requirement (with dependents - monthly p
       			| Individual title                      | Ms         |
       			| Individual forename                   | Shelly     |
       			| Individual surname                    | Patel      |
-      			| Application received to date          | 03/08/2014 |
-      			| Application received date             | 03/02/2015 |
-			    | Dependant                             | 4          |
+      			| Application Raised to date          | 03/08/2014 |
+      			| Application Raised date             | 03/02/2015 |
+			| Dependant                             | 4          |
       			| National Insurance Number             | SP123456B  |
 
 #New scenario - Added in
@@ -66,8 +66,8 @@ Feature: Failure - Category A Financial Requirement (with dependents - monthly p
       			| Individual title                      | Mr         |
       			| Individual forename                   | Brian      |
       			| Individual surname                    | Sinclair   |
-      			| Application received to date          | 10/08/2014 |
-      			| Application received date             | 10/02/2015 |
+      			| Application Raised to date          | 10/08/2014 |
+      			| Application Raised date             | 10/02/2015 |
 			    | Dependant                             | 2          |
       			| National Insurance Number             | BS123456B  |
 
@@ -78,7 +78,7 @@ Feature: Failure - Category A Financial Requirement (with dependents - monthly p
   Pay date 3rd of the month
   On same day of Application Raised Date
   He has 3 Thai dependants
-  He earns £2916.67 Monthly Gross Income BUT for only 5 months prior to the Application Received Date
+  He earns £2916.67 Monthly Gross Income BUT for only 5 months prior to the Application Raised Date
   He worked for a different employer before his current employer
 
     		Given A service is consuming the Income Proving TM Family API
@@ -94,8 +94,8 @@ Feature: Failure - Category A Financial Requirement (with dependents - monthly p
       			| Individual title                      | Mr         |
       			| Individual forename                   | Steve      |
       			| Individual surname                    | Yu         |
-      			| Application received to date          | 03/03/2015 |
-      			| Application received date             | 03/09/2015 |
+      			| Application Raised to date          | 03/03/2015 |
+      			| Application Raised date             | 03/09/2015 |
 			    | Dependant                             | 3          |
       			| National Insurance Number             | SY987654C  |
 
@@ -105,7 +105,7 @@ Feature: Failure - Category A Financial Requirement (with dependents - monthly p
 
   Pay date 2nd of the month
   Before day of Application Raised Date
-  He earns £3333.33 Monthly Gross Income EVERY of the 6 months prior to the Application Received Date
+  He earns £3333.33 Monthly Gross Income EVERY of the 6 months prior to the Application Raised Date
   He has 3 Dependants Child
 
             Given A service is consuming the Income Proving TM Family API
@@ -121,3 +121,21 @@ Feature: Failure - Category A Financial Requirement (with dependents - monthly p
               | Your Search Dependants                | 3                                                               |
               | Your Search National Insurance Number | SJ123456C                                                       |
               | Your Search Application Raised Date   | 03/01/2016                                                      |
+
+              Given A service is consuming the Income Proving TM Family API
+          		When the Income Proving TM Family API is invoked with the following:
+            			| NINO                    | SJ123456C  |
+            			| Application Raised Date | 03/01/2016 |
+            			| Dependants              | 3          |
+
+          		Then The Income Proving TM Family API provides the following result:
+            			| HTTP Status                           | 200        |
+            			| Financial requirement met             | False      |
+            			| Failure reason                        | NON_CONSECUTIVE_MONTHS      |
+            			| Individual title                      | Mr         |
+            			| Individual forename                   | Steve      |
+            			| Individual surname                    | Yu         |
+            			| Application Raised to date          | 03/06/2015 |
+            			| Application Raised date             | 03/01/2016 |
+      			    | Dependant                             | 3          |
+            			| National Insurance Number             | SJ123456C  |

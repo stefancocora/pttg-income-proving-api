@@ -22,7 +22,7 @@ Feature: Pass - Category A Financial Requirement (with dependants - monthly)
   Scenario: Tony Ledo meets the Category A Financial Requirement with 1 dependant
 
   Pay date 15th of the month
-  Before day of application received date
+  Before day of Application Raised date
   He earns £4166.67 Monthly Gross Income EVERY of the 6 months
   He has 1 dependant child
 
@@ -37,8 +37,8 @@ Feature: Pass - Category A Financial Requirement (with dependants - monthly)
       | Individual title             | Mr         |
       | Individual forename          | Tony       |
       | Individual surname           | Ledo       |
-      | Application received to date | 23/07/2014 |
-      | Application received date    | 23/01/2015 |
+      | Application Raised to date | 23/07/2014 |
+      | Application Raised date    | 23/01/2015 |
       | Dependant                    | 1          |
       | National Insurance Number    | TL123456A  |
 
@@ -62,8 +62,8 @@ Feature: Pass - Category A Financial Requirement (with dependants - monthly)
       | Individual title             | Ms         |
       | Individual forename          | Scarlett   |
       | Individual surname           | Jones      |
-      | Application received to date | 08/06/2015 |
-      | Application received date    | 08/12/2015 |
+      | Application Raised to date | 08/06/2015 |
+      | Application Raised date    | 08/12/2015 |
       | dependent                    | 3          |
       | National Insurance Number    | SJ123456C  |
 
@@ -86,7 +86,7 @@ Feature: Pass - Category A Financial Requirement (with dependants - monthly)
       | Individual title             | Mr         |
       | Individual forename          | Wasim      |
       | Individual surname           | Mohammed   |
-      | Application received to date | 28/08/2014 |
-      | Application received date    | 28/02/2015 |
+      | Application Raised to date | 28/08/2014 |
+      | Application Raised date    | 28/02/2015 |
       | dependent                    | 5          |
       | National Insurance Number    | WA987654B  |
