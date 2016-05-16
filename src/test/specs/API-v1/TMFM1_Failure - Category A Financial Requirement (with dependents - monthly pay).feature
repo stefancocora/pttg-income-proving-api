@@ -90,7 +90,7 @@ Feature: Failure - Category A Financial Requirement (with dependents - monthly p
     		Then The Income Proving TM Family API provides the following result:
       			| HTTP Status                           | 200        |
       			| Financial requirement met             | False      |
-      			| Failure reason                        | NON_CONSECUTIVE_MONTHS      |
+      			| Failure reason                        | NOT_ENOUGH_RECORDS      |
       			| Individual title                      | Mr         |
       			| Individual forename                   | Steve      |
       			| Individual surname                    | Yu         |
