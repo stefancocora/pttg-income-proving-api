@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import uk.gov.digital.ho.proving.income.acl.*;
 import uk.gov.digital.ho.proving.income.domain.Application;
 import uk.gov.digital.ho.proving.income.domain.IncomeProvingResponse;
@@ -19,6 +20,7 @@ import java.util.Date;
 import java.util.regex.Pattern;
 
 @RestController
+@ControllerAdvice
 public class Service {
     private Logger LOGGER = LoggerFactory.getLogger(Service.class);
 
@@ -27,6 +29,13 @@ public class Service {
 
     @Autowired
     private IndividualService individualService;
+
+    private static final String CONTENT_TYPE = "Content-type";
+    private static final String APPLICATION_JSON = "application/json";
+
+
+    private static final int MINIMUM_DEPENDANTS = 0;
+    private static final int MAXIMUM_DEPENDANTS = 99;
 
     private static final int NUMBER_OF_DAYS = 182;
 
@@ -42,7 +51,7 @@ public class Service {
         LOGGER.info(String.format("Income Proving Service API for Temporary Migration Family Application invoked for %s application received on %s.", nino, applicationDateAsString));
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-type", "application/json");
+        headers.set(CONTENT_TYPE, APPLICATION_JSON);
 
         try {
             nino = sanitiseNino(nino);
@@ -50,8 +59,10 @@ public class Service {
 
             if (dependants == null) {
                 dependants = 0;
-            } else if (dependants < 0) {
-                throw new IllegalArgumentException("Dependants cannot be less than zero");
+            } else if (dependants < MINIMUM_DEPENDANTS) {
+                throw new IllegalArgumentException("Dependants cannot be less than " + MINIMUM_DEPENDANTS);
+            } else if (dependants > MAXIMUM_DEPENDANTS) {
+                throw new IllegalArgumentException("Dependants cannot be more than " + MAXIMUM_DEPENDANTS);
             }
 
             sdf.setLenient(false);
@@ -93,16 +104,16 @@ public class Service {
             return buildErrorResponse(headers, "0003", "Could not retrieve earning details", HttpStatus.NOT_FOUND);
         } catch (ParseException e) {
             LOGGER.error("Error parsing date", e);
-            return buildErrorResponse(headers, "0002", "Application Date is invalid.", HttpStatus.BAD_REQUEST);
+            return buildErrorResponse(headers, "0002", "Parameter error: Application raised date is invalid", HttpStatus.BAD_REQUEST);
         } catch (IllegalArgumentException iae) {
             LOGGER.error(iae.getMessage(), iae);
-            return buildErrorResponse(headers, "0004", iae.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+            return buildErrorResponse(headers, "0004", "Parameter error: " + iae.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         } catch (UnknownPaymentFrequencyType upte) {
             LOGGER.error("Unknown payment frequency type " + upte);
             return buildErrorResponse(headers, "0004", "Unknown payment frequency type", HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (RuntimeException e) {
             LOGGER.error("NINO is not valid", e);
-            return buildErrorResponse(headers, "0001", "NINO is invalid.", HttpStatus.BAD_REQUEST);
+            return buildErrorResponse(headers, "0001", "Parameter error: NINO is invalid", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -128,7 +139,7 @@ public class Service {
     private void validateNino(String nino) {
         final Pattern pattern = Pattern.compile("^[a-zA-Z]{2}[0-9]{6}[a-dA-D]{1}$");
         if (!pattern.matcher(nino).matches()) {
-            throw new IllegalArgumentException("Invalid NINO");
+            throw new IllegalArgumentException("Parameter error: Invalid NINO");
         }
     }
 
@@ -136,7 +147,15 @@ public class Service {
     public Object missingParamterHandler(MissingServletRequestParameterException exception) {
         LOGGER.debug(exception.getMessage());
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-type", "application/json");
+        headers.set(CONTENT_TYPE, APPLICATION_JSON);
         return buildErrorResponse(headers, "0008", "Missing parameter: " + exception.getParameterName() , HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public Object requestHandlingNoHandlerFound(NoHandlerFoundException exception) {
+        LOGGER.debug(exception.getMessage());
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(CONTENT_TYPE, APPLICATION_JSON);
+        return buildErrorResponse(headers, "0008", "Resource not found: " + exception.getRequestURL() , HttpStatus.NOT_FOUND);
     }
 }
