@@ -38,7 +38,7 @@ public class ProvingThingsApiStepsTest {
 
     private DataTable withFeatureTableData() {
         List<List<String>> infoInTheRaw = Arrays.asList(Arrays.asList("National Insurance Number", "AA121212A"),
-                Arrays.asList("Individual forename", "Lucy"), Arrays.asList("Financial requirement met", "false"), Arrays.asList("Failure reason", "ALL_WRONG"), Arrays.asList("Application received to date", "2014-04-05"));
+                Arrays.asList("Individual forename", "Lucy"), Arrays.asList("Financial requirement met", "false"), Arrays.asList("Failure reason", "ALL_WRONG"), Arrays.asList("Application Raised to date", "2014-04-05"));
         return DataTable.create(infoInTheRaw);
     }
 
