@@ -6,7 +6,7 @@ Feature: Pass - Category A Financial Requirement (with no dependents - weekly pa
 		Financial employment income regulation to pass this Feature File
 			Applicant or Sponsor has received 26 weekly Gross Income payments of => £357.69 in the 182 day period prior to the Application Raised Date
 
-#New Scenario - 
+#New Scenario -
   Scenario: Molly Henry meets the Category A Financial Requirement
 
 		He has received 26 Weekly Gross Income payments of £470.43
@@ -17,16 +17,16 @@ Feature: Pass - Category A Financial Requirement (with no dependents - weekly pa
       | Application raised date | 29/11/2015 |
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status                  | 200        |
-      | Financial requirement met    | True       |
+      | Financial requirement met    | true       |
       | Individual title             | Ms         |
       | Individual forename          | Molly      |
       | Individual surname           | Henry      |
-      | Application Raised to date   | 29/05/2015 |
-      | Application Raised date      | 29/11/2015 |
+      | Application Raised to date   | 2015-05-31 |
+      | Application Raised date      | 2015-11-29 |
       | National Insurance Number    | MH123456A  |
 
 
-#New Scenario - 
+#New Scenario -
   Scenario: Fernando Sanchez meets the Category A Financial Requirement
 
     He has received 26 Weekly Gross Income payments of £357.69
@@ -37,32 +37,19 @@ Feature: Pass - Category A Financial Requirement (with no dependents - weekly pa
       | Application raised date | 10/04/2015 |
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status                  | 200        |
-      | Financial requirement met    | True       |
+      | Financial requirement met    | true       |
       | Individual title             | Mr         |
       | Individual forename          | Fernando   |
       | Individual surname           | Sanchez    |
-      | Application Raised to date   | 10/04/2015 |
-      | Application Raised date      | 10/04/2015 |
+      | Application Raised to date   | 2014-10-10 |
+      | Application Raised date      | 2015-04-10 |
       | National Insurance Number    | FS123456C  |
 
 
-#New Scenario - 
+#New Scenario -
   Scenario: Jonathan Odometey meets the Category A Financial Requirement
 
-		He has received 26 Weekly Gross Income payments of £1000.00
-
-   Given Caseworker is using the Income Proving Service Case Worker Tool
-    When Robert submits a query to IPS Family TM Case Worker Tool:
-      | NINO      | JO123456A  |
-      | Application Raised date | 28/06/2015 |
-    Then The IPS Family TM Case Worker Tool provides the following result:
-		| Outcome                               | Success    |
-		| Outcome Box Individual Name           | Jonathan Odometey  |
-		| Outcome From Date                     | 28/12/2014 |
-		| Outcome To Date                       | 28/06/2015 |
-		| Your Search Individual Name           | Jonathan Odometey  |
-		| Your Search National Insurance Number | JO123456A     |
-		| Your Search Application Raised Date   | 28/06/2015 |
+	He has received 26 Weekly Gross Income payments of £1000.00
 
     Given A service is consuming the Income Proving TM Family API
     When the Income Proving TM Family API is invoked with the following:
@@ -70,11 +57,11 @@ Feature: Pass - Category A Financial Requirement (with no dependents - weekly pa
       | Application raised date | 28/06/2015 |
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status                  | 200        |
-      | Financial requirement met    | True       |
+      | Financial requirement met    | true       |
       | Individual title             | Mr         |
       | Individual forename          | John       |
       | Individual surname           | Odometey   |
-      | Application Raised to date   | 28/12/2014 |
-      | Application Raised date      | 28/06/2015 |
+      | Application Raised to date   | 2014-12-28 |
+      | Application Raised date      | 2015-06-28 |
       | National Insurance Number    | JO123456A  |
 

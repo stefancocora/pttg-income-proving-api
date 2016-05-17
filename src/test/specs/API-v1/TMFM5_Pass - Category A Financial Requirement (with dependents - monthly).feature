@@ -22,7 +22,7 @@ Feature: Pass - Category A Financial Requirement (with dependants - monthly)
   Scenario: Tony Ledo meets the Category A Financial Requirement with 1 dependant
 
   Pay date 15th of the month
-  Before day of Application Raised date
+  Before day of application received date
   He earns £4166.67 Monthly Gross Income EVERY of the 6 months
   He has 1 dependant child
 
@@ -33,13 +33,12 @@ Feature: Pass - Category A Financial Requirement (with dependants - monthly)
       | Dependent               | 1          |
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status                  | 200        |
-      | Financial requirement met    | True       |
+      | Financial requirement met    | true       |
       | Individual title             | Mr         |
       | Individual forename          | Tony       |
       | Individual surname           | Ledo       |
-      | Application Raised to date | 23/07/2014 |
-      | Application Raised date    | 23/01/2015 |
-      | Dependant                    | 1          |
+      | Application Raised to date   | 2014-07-25 |
+      | Application Raised date      | 2015-01-23 |
       | National Insurance Number    | TL123456A  |
 
 
@@ -58,13 +57,12 @@ Feature: Pass - Category A Financial Requirement (with dependants - monthly)
       | Dependent               | 3         |
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status                  | 200        |
-      | Financial requirement met    | True       |
+      | Financial requirement met    | true       |
       | Individual title             | Ms         |
       | Individual forename          | Scarlett   |
       | Individual surname           | Jones      |
-      | Application Raised to date | 08/06/2015 |
-      | Application Raised date    | 08/12/2015 |
-      | dependent                    | 3          |
+      | Application Raised to date   | 2015-06-09 |
+      | Application Raised date      | 2015-12-08 |
       | National Insurance Number    | SJ123456C  |
 
 #New scenario -
@@ -73,7 +71,7 @@ Feature: Pass - Category A Financial Requirement (with dependants - monthly)
   Pay date 30th of the month
   On the same day of Application Raised Date
   He earns £5833.33 Monthly Gross Income EVERY of the 6 months
-  He has 5 dependant child
+  He has 5 dependant child23/07/
 
     Given A service is consuming the Income Proving TM Family API
     When the Income Proving TM Family API is invoked with the following:
@@ -82,11 +80,10 @@ Feature: Pass - Category A Financial Requirement (with dependants - monthly)
       | Dependent               | 5          |
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status                  | 200        |
-      | Financial requirement met    | True       |
+      | Financial requirement met    | true       |
       | Individual title             | Mr         |
       | Individual forename          | Wasim      |
       | Individual surname           | Mohammed   |
-      | Application Raised to date | 28/08/2014 |
-      | Application Raised date    | 28/02/2015 |
-      | dependent                    | 5          |
+      | Application Raised to date   | 2014-08-30 |
+      | Application Raised date      | 2015-02-28 |
       | National Insurance Number    | WA987654B  |

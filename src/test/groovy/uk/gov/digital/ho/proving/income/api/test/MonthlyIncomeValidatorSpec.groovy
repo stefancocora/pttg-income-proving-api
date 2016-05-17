@@ -15,14 +15,14 @@ class MonthlyIncomeValidatorSpec extends Specification {
     final String PIZZA_HUT = "Pizza Hut"
     final String BURGER_KING = "Burger King"
 
-    int months = 6
+    int days = 182
 
     def "valid category A individual is accepted"() {
 
         given:
         List<Income> incomes = getConsecutiveIncomes()
         Date raisedDate = getDate(2015, Calendar.SEPTEMBER, 23)
-        Date pastDate = subtractMonthsFromDate(raisedDate, months)
+        Date pastDate = subtractDaysFromDate(raisedDate, days)
 
         when:
         FinancialCheckValues categoryAIndividual = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
@@ -37,7 +37,7 @@ class MonthlyIncomeValidatorSpec extends Specification {
         given:
         List<Income> incomes = getNoneConsecutiveIncomes()
         Date raisedDate = getDate(2015, Calendar.SEPTEMBER, 23)
-        Date pastDate = subtractMonthsFromDate(raisedDate, months)
+        Date pastDate = subtractDaysFromDate(raisedDate, days)
 
         when:
         FinancialCheckValues categoryAIndividual = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
@@ -52,7 +52,7 @@ class MonthlyIncomeValidatorSpec extends Specification {
         given:
         List<Income> incomes = getNotEnoughConsecutiveIncomes()
         Date raisedDate = getDate(2015, Calendar.SEPTEMBER, 23)
-        Date pastDate = subtractMonthsFromDate(raisedDate, months)
+        Date pastDate = subtractDaysFromDate(raisedDate, days)
 
         when:
         FinancialCheckValues categoryAIndividual = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
@@ -67,7 +67,7 @@ class MonthlyIncomeValidatorSpec extends Specification {
         given:
         List<Income> incomes = getConsecutiveIncomesButDifferentEmployers()
         Date raisedDate = getDate(2015, Calendar.SEPTEMBER, 23)
-        Date pastDate = subtractMonthsFromDate(raisedDate, months)
+        Date pastDate = subtractDaysFromDate(raisedDate, days)
 
         when:
         FinancialCheckValues categoryAIndividual = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
@@ -82,7 +82,7 @@ class MonthlyIncomeValidatorSpec extends Specification {
         given:
         List<Income> incomes = getConsecutiveIncomesButLowAmounts()
         Date raisedDate = getDate(2015, Calendar.SEPTEMBER, 23)
-        Date pastDate = subtractMonthsFromDate(raisedDate, months)
+        Date pastDate = subtractDaysFromDate(raisedDate, days)
 
         when:
         FinancialCheckValues categoryAIndividual = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
@@ -97,7 +97,7 @@ class MonthlyIncomeValidatorSpec extends Specification {
         given:
         List<Income> incomes = getConsecutiveIncomesWithDifferentMonthlyPayDay()
         Date raisedDate = getDate(2015, Calendar.SEPTEMBER, 23)
-        Date pastDate = subtractMonthsFromDate(raisedDate, months)
+        Date pastDate = subtractDaysFromDate(raisedDate, days)
 
         when:
         FinancialCheckValues categoryAIndividual = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
@@ -112,7 +112,7 @@ class MonthlyIncomeValidatorSpec extends Specification {
         given:
         List<Income> incomes = getConsecutiveIncomesWithExactlyTheAmount()
         Date raisedDate = getDate(2015, Calendar.SEPTEMBER, 23)
-        Date pastDate = subtractMonthsFromDate(raisedDate, months)
+        Date pastDate = subtractDaysFromDate(raisedDate, days)
 
         when:
         FinancialCheckValues categoryAIndividual = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
@@ -227,10 +227,10 @@ class MonthlyIncomeValidatorSpec extends Specification {
     }
 
 
-    Date subtractMonthsFromDate(Date date, int months) {
+    Date subtractDaysFromDate(Date date, int days) {
         Calendar cal = Calendar.getInstance()
         cal.setTime(date)
-        cal.add(Calendar.MONTH, -months)
+        cal.add(Calendar.DAY_OF_YEAR, -days)
         return cal.getTime()
     }
 }

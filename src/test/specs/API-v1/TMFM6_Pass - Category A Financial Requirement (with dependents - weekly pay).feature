@@ -31,13 +31,12 @@ Feature: Pass - Category A Financial Requirement (with Dependants - weekly pay)
       | Dependent               | 1          |
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status                  | 200        |
-      | Financial requirement met    | True       |
+      | Financial requirement met    | true       |
       | Individual title             | Mr         |
       | Individual forename          | Tony       |
       | Individual surname           | Singh      |
-      | Application Raised to date | 25/08/2014 |
-      | Application Raised date    | 23/02/2015 |
-      | Dependant                    | 1          |
+      | Application Raised to date   | 2014-08-25 |
+      | Application Raised date      | 2015-02-23 |
       | National Insurance Number    | TS123456A  |
 
 
@@ -54,13 +53,12 @@ Feature: Pass - Category A Financial Requirement (with Dependants - weekly pay)
       | Dependent               | 3          |
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status                  | 200        |
-      | Financial requirement met    | True       |
+      | Financial requirement met    | true       |
       | Individual title             | Miss       |
       | Individual forename          | Jennifer   |
       | Individual surname           | Toure      |
-      | Application Raised to date | 05/06/2015 |
-      | Application Raised date    | 04/12/2015 |
-      | Dependant                    | 3          |
+      | Application Raised to date   | 2015-06-05 |
+      | Application Raised date      | 2015-12-04 |
       | National Insurance Number    | JT123456C  |
 
 
@@ -77,11 +75,10 @@ Feature: Pass - Category A Financial Requirement (with Dependants - weekly pay)
       | Dependent               | 5          |
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status                  | 200        |
-      | Financial requirement met    | True       |
+      | Financial requirement met    | true       |
       | Individual title             | Mrs        |
       | Individual forename          | Lela       |
       | Individual surname           | Vasquez    |
-      | Application Raised to date | 22/01/2015 |
-      | Application Raised date    | 22/07/2015 |
-      | Dependant                    | 5          |
+      | Application Raised to date   | 2015-01-21 |
+      | Application Raised date      | 2015-07-22 |
       | National Insurance Number    | LV987654B  |

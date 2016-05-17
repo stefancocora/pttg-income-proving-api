@@ -20,12 +20,12 @@ Feature: Pass - Category A Financial Requirement (with no dependents - monthly p
 
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status                           | 200        |
-      | Financial requirement met             | True       |
+      | Financial requirement met             | true       |
       | Individual title                      | Mr         |
       | Individual forename                   | Jon        |
       | Individual surname                    | Taylor     |
-      | Application Raised to date          | 23/07/2014 |
-      | Application Raised date             | 23/01/2015 |
+      | Application Raised to date            | 2014-07-25 |
+      | Application Raised date               | 2015-01-23 |
       | National Insurance Number             | AA345678A  |
 
 #New Scenario -
@@ -42,12 +42,12 @@ Feature: Pass - Category A Financial Requirement (with no dependents - monthly p
 
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status                           | 200        |
-      | Financial requirement met             | True       |
+      | Financial requirement met             | true       |
       | Individual title                      | Mr         |
       | Individual forename                   | Jon        |
       | Individual surname                    | Taylor     |
-      | Application Raised to date          | 10/07/2014 |
-      | Application Raised date             | 10/01/2015 |
+      | Application Raised to date            | 2014-07-12 |
+      | Application Raised date               | 2015-01-10 |
       | National Insurance Number             | AA123456B  |
 
 #New Scenario -
@@ -64,12 +64,12 @@ Feature: Pass - Category A Financial Requirement (with no dependents - monthly p
 
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status                           | 200        |
-      | Financial requirement met             | True       |
+      | Financial requirement met             | true       |
       | Individual title                      | Mr         |
       | Individual forename                   | Jon        |
       | Individual surname                    | Taylor     |
-      | Application Raised to date          | 23/07/2014 |
-      | Application Raised date             | 23/01/2015 |
+      | Application Raised to date            | 2014-07-25 |
+      | Application Raised date               | 2015-01-23 |
       | National Insurance Number             | BB123456B  |
 
 
@@ -87,12 +87,12 @@ Feature: Pass - Category A Financial Requirement (with no dependents - monthly p
 
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status                           | 200        |
-      | Financial requirement met             | True       |
+      | Financial requirement met             | true       |
       | Individual title                      | Mr         |
       | Individual forename                   | Jon        |
       | Individual surname                    | Taylor     |
-      | Application Raised to date          | 23/07/2014 |
-      | Application Raised date             | 23/01/2015 |
+      | Application Raised to date            | 2014-07-25 |
+      | Application Raised date               | 2015-01-23 |
       | National Insurance Number             | CC123456C  |
 
 
@@ -110,12 +110,12 @@ Feature: Pass - Category A Financial Requirement (with no dependents - monthly p
 
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status                           | 200        |
-      | Financial requirement met             | True       |
+      | Financial requirement met             | true       |
       | Individual title                      | Mr         |
       | Individual forename                   | Jon        |
       | Individual surname                    | Taylor     |
-      | Application Raised to date          | 09/07/2014 |
-      | Application Raised date             | 09/01/2015 |
+      | Application Raised to date            | 2014-07-11 |
+      | Application Raised date               | 2015-01-09 |
       | National Insurance Number             | CC123456B  |
 
 #New Scenario -
@@ -134,10 +134,10 @@ Feature: Pass - Category A Financial Requirement (with no dependents - monthly p
 
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status                           | 200        |
-      | Financial requirement met             | True       |
+      | Financial requirement met             | true       |
       | Individual title                      | Mr         |
       | Individual forename                   | Mark       |
       | Individual surname                    | Jones      |
-      | Application Raised to date          | 23/07/2014 |
-      | Application Raised date             | 23/01/2015 |
+      | Application Raised to date            | 2014-07-25 |
+      | Application Raised date               | 2015-01-23 |
       | National Insurance Number             | AA123456A  |

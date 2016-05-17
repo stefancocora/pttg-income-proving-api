@@ -2,22 +2,24 @@ package steps
 
 import com.jayway.restassured.response.Response
 import cucumber.api.DataTable
-import cucumber.api.PendingException
 import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
 import net.thucydides.core.annotations.Managed
 import org.json.JSONObject
 
+import static com.jayway.jsonpath.JsonPath.read
 import static com.jayway.restassured.RestAssured.get
+
 /**
  * Created by mitchell on 11/05/16.
  */
 class ProvingThingsApiSteps {
 
+
+
     @Managed
     public Response resp
-    JSONObject jsonResponse
     String jsonAsString
     String nino
     String dependants = " "
@@ -31,7 +33,7 @@ class ProvingThingsApiSteps {
         String firstString
         String nextString
         String combinedString
-        String finalString
+        String finalString = null
         char firstChar
 
         String[] f = g.split(" ")
@@ -39,7 +41,6 @@ class ProvingThingsApiSteps {
         for (int e = 0; e < f.length; e++) {
 
             if (e == 0) {
-
                 firstString = f[0].toLowerCase()
                 sbl.append(firstString)
 
@@ -51,7 +52,6 @@ class ProvingThingsApiSteps {
                 nextString = nextString.replaceFirst(firstChar.toString(), firstChar.toString().toUpperCase())
                 sbl.append(nextString)
             }
-
             finalString = sbl.toString()
 
         }
@@ -59,110 +59,130 @@ class ProvingThingsApiSteps {
 
     }
 
-
-    def changeDateFormat(String oldDateFormat){
-
-        Date date =  Date.parse( 'dd/mm/yyyy', oldDateFormat)
+    def changeDateFormat(String oldDateFormat) {
+        Date date = Date.parse('dd/mm/yyyy', oldDateFormat)
         String newFormat = date.format("yyyy-mm-dd")
         println "" + newFormat
         newFormat
 
     }
 
-    def String getTableData(DataTable arg){
+    def String getTableData(DataTable arg) {
 
         Map<String, String> entries = arg.asMap(String.class, String.class)
         String[] tableKey = entries.keySet()
 
-        for(String s:tableKey){
+        for (String s : tableKey) {
 
-            if(s.equalsIgnoreCase("application raised date")){
+            if (s.equalsIgnoreCase("application raised date")) {
                 applicationRaisedDate = changeDateFormat(entries.get(s))
             }
-            if(s.equalsIgnoreCase("nino")){
-
+            if (s.equalsIgnoreCase("nino")) {
                 nino = entries.get(s)
             }
-            if(s.equalsIgnoreCase("dependants")){
+            if (s.equalsIgnoreCase("dependants")) {
                 dependants = entries.get(s)
             }
         }
     }
 
-    def validateResult(DataTable arg){
+
+
+    def validateResult(DataTable arg) {
         Map<String, String> entries = arg.asMap(String.class, String.class)
         String[] tableKey = entries.keySet()
 
         jsonAsString = resp.asString();
         JSONObject json = new JSONObject(jsonAsString);
+        for (String s : tableKey) {
 
-        for(String s : tableKey){
-
-            if(s.equalsIgnoreCase("HTTP Status")){
+            if (s.equalsIgnoreCase("HTTP Status")) {
                 assert entries.get(s) == resp.getStatusCode().toString()
             }
 
-            if(s.equalsIgnoreCase("Individual forename")){
+            if (s.equalsIgnoreCase("Individual forename")) {
                 assert entries.get(s) == json.getJSONObject("individual").getString("forename")
             }
 
-            if(s.equalsIgnoreCase("Individual surname")){
+            if (s.equalsIgnoreCase("Individual surname")) {
                 assert entries.get(s) == json.getJSONObject("individual").getString("surname")
             }
 
-            if(s.equalsIgnoreCase("Financial requirement met")){
-               assert json.getJSONObject("categoryCheck").getBoolean("passed")== entries.get(s).toBoolean()
+            if (s.equalsIgnoreCase("Financial requirement met")) {
+                assert json.getJSONObject("categoryCheck").getBoolean("passed") == entries.get(s).toBoolean()
             }
 
-            if(s.equalsIgnoreCase("Failure reason")){
+            if (s.equalsIgnoreCase("Failure reason")) {
                 assert entries.get(s) == json.getJSONObject("categoryCheck").getString("failureReason")
             }
 
-            if(s.equalsIgnoreCase("Individual title")){
+            if (s.equalsIgnoreCase("Individual title")) {
                 assert entries.get(s) == json.getJSONObject("individual").getString("title")
             }
 
-            if(s.equalsIgnoreCase("Application received date")){
+            if(s.equalsIgnoreCase("Application raised date")){
                 assert changeDateFormat(entries.get(s)) == json.getJSONObject("categoryCheck").getString("applicationRaisedDate")
 
             }
 
-            if(s.equalsIgnoreCase("Application received to date")){
+            if(s.equalsIgnoreCase("Application raised to date")){
                 assert changeDateFormat(entries.get(s)) == json.getJSONObject("categoryCheck").getString("assessmentStartDate")
             }
 
-            if(s.equalsIgnoreCase("National Insurance Number")){
+            if (s.equalsIgnoreCase("National Insurance Number")) {
                 assert entries.get(s) == json.getJSONObject("individual").getString("nino")
             }
 
 
         }
-
     }
 
 
+    /*
+        prerequisites:
+        - BDD key can be transformed to valid jsonpath OR entry to map key name has been added to FeatureKeyMapper.java
+        - Date values are in the format yyyy-mm-dd
+        - boolean values are lowercase
+     */
+    public void validateJsonResult(DataTable arg) {
+        Map<String, String> entries = arg.asMap(String.class, String.class);
+        String[] tableKey = entries.keySet();
+
+        for (String key : tableKey) {
+            //System.out.println("***" + key);
+            switch (key) {
+                case "HTTP Status":
+                    assert entries.get(key) == resp.getStatusCode().toString();
+                    break;
+                default:
+                    String jsonPath = FeatureKeyMapper.buildJsonPath(key);
+                    assert entries.get(key) == read(jsonAsString, jsonPath).toString();
+            }
+        }
+    }
+
+
+
     @Given("^A service is consuming the Income Proving TM Family API\$")
-    public void a_service_is_consuming_the_Income_Proving_TM_Family_API()  {
+    public void a_service_is_consuming_the_Income_Proving_TM_Family_API() {
 
     }
 
     @When("^the Income Proving TM Family API is invoked with the following:\$")
-    public void the_Income_Proving_TM_Family_API_is_invoked_with_the_following(DataTable expectedResult){
+    public void the_Income_Proving_TM_Family_API_is_invoked_with_the_following(DataTable expectedResult) {
 
 
         getTableData(expectedResult)
                resp = get("http://localhost:8081/incomeproving/v1/individual/"+nino+"/financialstatus?applicationRaisedDate="+applicationRaisedDate+"&dependants="+dependants)
 
-              jsonAsString = resp.asString();
-             println ""+ jsonAsString
-
+        jsonAsString = resp.asString();
+        println ""+ jsonAsString
     }
 
     @Then("^The Income Proving TM Family API provides the following result:\$")
     public void the_Income_Proving_TM_Family_API_provides_the_following_result(DataTable arg1) {
-        validateResult(arg1)
+        validateJsonResult(arg1)
     }
-
 
 
 }

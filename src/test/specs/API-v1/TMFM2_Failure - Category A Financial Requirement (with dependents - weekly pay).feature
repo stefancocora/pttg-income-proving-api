@@ -18,7 +18,7 @@ Feature: Failure - Category A Financial Requirement (with Dependantss - weekly p
 			7 Dependant children - £18600+£3800+(£2400*6)/12 = £707.69
 			ETC
 
-#New scenario - Added in 
+#New scenario - Added in
   Scenario: Donald Sweet does not meet the Category A Financial Requirement (She has earned < the Cat A financial threshold)
 
 		He has 3 columbian dependants
@@ -33,14 +33,13 @@ Feature: Failure - Category A Financial Requirement (with Dependantss - weekly p
 
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status                  | 200                           |
-      | Financial requirement met    | False                         |
+      | Financial requirement met    | false                         |
       | Failure reason               | WEEKLY_VALUE_BELOW_THRESHOLD  |
       | Individual title             | Mr                            |
       | Individual forename          | Donald                        |
       | Individual surname           | Sweet                         |
-      | Application Raised to date   | 03/05/2014                    |
-      | Application Raised date      | 03/11/2015                    |
-      | Dependant                    | 3                             |
+      | Application Raised to date   | 2015-05-05                    |
+      | Application Raised date      | 2015-11-03                    |
       | National Insurance Number    | DS123456C                     |
 
 
@@ -58,18 +57,17 @@ Feature: Failure - Category A Financial Requirement (with Dependantss - weekly p
 
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status                  | 200                           |
-      | Financial requirement met    | False                         |
+      | Financial requirement met    | false                         |
       | Failure reason               | NOT_ENOUGH_RECORDS     	 |
       | Individual title             | Mr                            |
       | Individual forename          | John                          |
       | Individual surname           | Lister                        |
-      | Application Raised to date   | 10/01/2015                    |
-      | Application Raised date      | 10/07/2015                    |
-      | Dependant                    | 2                             |
+      | Application Raised to date   | 2015-01-09                    |
+      | Application Raised date      | 2015-07-10                    |
       | National Insurance Number    | JL123456B                     |
 
 
-#New scenario - Added in 
+#New scenario - Added in
   Scenario: Gary Goldstein does not meet the Category A employment duration Requirement (He has worked for his current employer for only 20 weeks)
 
 		He has 3 Isreali dependants
@@ -84,12 +82,11 @@ Feature: Failure - Category A Financial Requirement (with Dependantss - weekly p
 
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status                  | 200                           |
-      | Financial requirement met    | False                         |
+      | Financial requirement met    | false                         |
       | Failure reason               | NOT_ENOUGH_RECORDS     	 |
       | Individual title             | Mr                            |
       | Individual forename          | Gary                          |
       | Individual surname           | Goldstein                     |
-      | Application Raised to date   | 03/03/2015                    |
-      | Application Raised date      | 03/09/2015                    |
-      | Dependant                    | 3                             |
+      | Application Raised to date   | 2015-03-05                    |
+      | Application Raised date      | 2015-09-03                    |
       | National Insurance Number    | GG987654A                     |
