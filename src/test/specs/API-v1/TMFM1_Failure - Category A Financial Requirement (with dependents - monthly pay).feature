@@ -30,7 +30,7 @@ Feature: Failure - Category A Financial Requirement (with dependents - monthly p
     		Given A service is consuming the Income Proving TM Family API
     		When the Income Proving TM Family API is invoked with the following:
       			| NINO                    | SP123456B  |
-      			| Application Raised Date | 03/02/2015 |
+      			| Application Raised Date | 2015-02-03 |
       			| Dependants              | 4 |
 
     		Then The Income Proving TM Family API provides the following result:
@@ -55,7 +55,7 @@ Feature: Failure - Category A Financial Requirement (with dependents - monthly p
     		Given A service is consuming the Income Proving TM Family API
     		When the Income Proving TM Family API is invoked with the following:
       			| NINO                    | BS123456B  |
-      			| Application Raised Date | 10/02/2015 |
+      			| Application Raised Date | 2015-02-10 |
       			| Dependants              | 2 |
 
     		Then The Income Proving TM Family API provides the following result:
@@ -82,7 +82,7 @@ Feature: Failure - Category A Financial Requirement (with dependents - monthly p
     		Given A service is consuming the Income Proving TM Family API
     		When the Income Proving TM Family API is invoked with the following:
       			| NINO                    | SY987654C  |
-      			| Application Raised Date | 03/09/2015 |
+      			| Application Raised Date | 2015-09-03 |
       			| Dependants              | 3          |
 
     		Then The Income Proving TM Family API provides the following result:

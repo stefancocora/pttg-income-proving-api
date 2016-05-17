@@ -14,7 +14,7 @@ Feature: Failure - Category A Financial Requirement (with no dependents - weekly
     Given A service is consuming the Income Proving TM Family API
     When the Income Proving TM Family API is invoked with the following:
       | NINO                    | DV123456A  |
-      | Application Raised Date | 15/01/2015 |
+      | Application Raised Date | 2015-01-15 |
 
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status                  | 200                           |
@@ -36,7 +36,7 @@ Feature: Failure - Category A Financial Requirement (with no dependents - weekly
     Given A service is consuming the Income Proving TM Family API
     When the Income Proving TM Family API is invoked with the following:
       | NINO                    | XS123456B  |
-      | Application Raised Date | 15/12/2015 |
+      | Application Raised Date | 2015-12-15 |
 
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status                  | 200                           |
@@ -59,7 +59,7 @@ Feature: Failure - Category A Financial Requirement (with no dependents - weekly
     Given A service is consuming the Income Proving TM Family API
     When the Income Proving TM Family API is invoked with the following:
       | NINO                    | PY123456B  |
-      | Application Raised Date | 15/01/2015 |
+      | Application Raised Date | 2015-01-15 |
 
     		Then The Income Proving TM Family API provides the following result:
       			| HTTP Status                           | 200        |
@@ -81,7 +81,7 @@ Feature: Failure - Category A Financial Requirement (with no dependents - weekly
     Given A service is consuming the Income Proving TM Family API
     When the Income Proving TM Family API is invoked with the following:
       | NINO                    | RP123456C  |
-      | Application Raised Date | 03/07/2015 |
+      | Application Raised Date | 2015-07-03 |
 
     		Then The Income Proving TM Family API provides the following result:
       			| HTTP Status                           | 200        |
@@ -104,7 +104,7 @@ Feature: Failure - Category A Financial Requirement (with no dependents - weekly
     Given A service is consuming the Income Proving TM Family API
     When the Income Proving TM Family API is invoked with the following:
       | NINO                    | JJ123456A  |
-      | Application Raised Date | 03/07/2015 |
+      | Application Raised Date | 2015-07-03 |
 
     		Then The Income Proving TM Family API provides the following result:
       			| HTTP Status                           | 200        |
@@ -126,7 +126,7 @@ Feature: Failure - Category A Financial Requirement (with no dependents - weekly
     Given A service is consuming the Income Proving TM Family API
     When the Income Proving TM Family API is invoked with the following:
       | NINO                    | PJ123456A  |
-      | Application Raised Date | 03/07/2015 |
+      | Application Raised Date | 2015-07-03 |
 
     		Then The Income Proving TM Family API provides the following result:
       			| HTTP Status                           | 200        |
@@ -147,7 +147,7 @@ Feature: Failure - Category A Financial Requirement (with no dependents - weekly
     Given A service is consuming the Income Proving TM Family API
     When the Income Proving TM Family API is invoked with the following:
       | NINO                    | JF123456A  |
-      | Application Raised Date | 12/05/2015 |
+      | Application Raised Date | 2015-05-12 |
 
     		Then The Income Proving TM Family API provides the following result:
       			| HTTP Status                           | 200        |

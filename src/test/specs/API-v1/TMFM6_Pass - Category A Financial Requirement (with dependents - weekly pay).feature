@@ -27,7 +27,7 @@ Feature: Pass - Category A Financial Requirement (with Dependants - weekly pay)
     Given A service is consuming the Income Proving TM Family API
     When the Income Proving TM Family API is invoked with the following:
       | NINO                    | TS123456A  |
-      | Application raised date | 23/02/2015 |
+      | Application raised date | 2015-02-23  |
       | Dependent               | 1          |
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status                  | 200        |
@@ -49,7 +49,7 @@ Feature: Pass - Category A Financial Requirement (with Dependants - weekly pay)
     Given A service is consuming the Income Proving TM Family API
     When the Income Proving TM Family API is invoked with the following:
       | NINO                    | JT123456C  |
-      | Application raised date | 04/12/2015 |
+      | Application raised date | 2015-12-04 |
       | Dependent               | 3          |
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status                  | 200        |
@@ -71,7 +71,7 @@ Feature: Pass - Category A Financial Requirement (with Dependants - weekly pay)
     Given A service is consuming the Income Proving TM Family API
     When the Income Proving TM Family API is invoked with the following:
       | NINO                    | LV987654B  |
-      | Application raised date | 22/07/2015 |
+      | Application raised date | 2015-07-22 |
       | Dependent               | 5          |
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status                  | 200        |
