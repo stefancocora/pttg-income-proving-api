@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import uk.gov.digital.ho.proving.income.acl.*;
 import uk.gov.digital.ho.proving.income.domain.Application;
 import uk.gov.digital.ho.proving.income.domain.IncomeProvingResponse;
@@ -19,6 +20,7 @@ import java.util.Date;
 import java.util.regex.Pattern;
 
 @RestController
+@ControllerAdvice
 public class Service {
     private Logger LOGGER = LoggerFactory.getLogger(Service.class);
 
@@ -98,16 +100,16 @@ public class Service {
             return buildErrorResponse(headers, "0003", "Could not retrieve earning details", HttpStatus.NOT_FOUND);
         } catch (ParseException e) {
             LOGGER.error("Error parsing date", e);
-            return buildErrorResponse(headers, "0002", "Application Date is invalid.", HttpStatus.BAD_REQUEST);
+            return buildErrorResponse(headers, "0002", "Parameter error: Application raised date is invalid", HttpStatus.BAD_REQUEST);
         } catch (IllegalArgumentException iae) {
             LOGGER.error(iae.getMessage(), iae);
-            return buildErrorResponse(headers, "0004", iae.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+            return buildErrorResponse(headers, "0004", "Parameter error: " + iae.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         } catch (UnknownPaymentFrequencyType upte) {
             LOGGER.error("Unknown payment frequency type " + upte);
             return buildErrorResponse(headers, "0004", "Unknown payment frequency type", HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (RuntimeException e) {
             LOGGER.error("NINO is not valid", e);
-            return buildErrorResponse(headers, "0001", "NINO is invalid.", HttpStatus.BAD_REQUEST);
+            return buildErrorResponse(headers, "0001", "Parameter error: NINO is invalid", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -133,7 +135,7 @@ public class Service {
     private void validateNino(String nino) {
         final Pattern pattern = Pattern.compile("^[a-zA-Z]{2}[0-9]{6}[a-dA-D]{1}$");
         if (!pattern.matcher(nino).matches()) {
-            throw new IllegalArgumentException("Invalid NINO");
+            throw new IllegalArgumentException("Parameter error: Invalid NINO");
         }
     }
 
@@ -143,5 +145,13 @@ public class Service {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-type", "application/json");
         return buildErrorResponse(headers, "0008", "Missing parameter: " + exception.getParameterName() , HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public Object requestHandlingNoHandlerFound(NoHandlerFoundException exception) {
+        LOGGER.debug(exception.getMessage());
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-type", "application/json");
+        return buildErrorResponse(headers, "0008", "Resource not found: " + exception.getRequestURL() , HttpStatus.NOT_FOUND);
     }
 }
