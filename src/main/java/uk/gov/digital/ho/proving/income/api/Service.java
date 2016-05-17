@@ -30,6 +30,10 @@ public class Service {
     @Autowired
     private IndividualService individualService;
 
+    private static final String CONTENT_TYPE = "Content-type";
+    private static final String APPLICATION_JSON = "application/json";
+
+
     private static final int MINIMUM_DEPENDANTS = 0;
     private static final int MAXIMUM_DEPENDANTS = 99;
 
@@ -47,7 +51,7 @@ public class Service {
         LOGGER.info(String.format("Income Proving Service API for Temporary Migration Family Application invoked for %s application received on %s.", nino, applicationDateAsString));
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-type", "application/json");
+        headers.set(CONTENT_TYPE, APPLICATION_JSON);
 
         try {
             nino = sanitiseNino(nino);
@@ -143,7 +147,7 @@ public class Service {
     public Object missingParamterHandler(MissingServletRequestParameterException exception) {
         LOGGER.debug(exception.getMessage());
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-type", "application/json");
+        headers.set(CONTENT_TYPE, APPLICATION_JSON);
         return buildErrorResponse(headers, "0008", "Missing parameter: " + exception.getParameterName() , HttpStatus.BAD_REQUEST);
     }
 
@@ -151,7 +155,7 @@ public class Service {
     public Object requestHandlingNoHandlerFound(NoHandlerFoundException exception) {
         LOGGER.debug(exception.getMessage());
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-type", "application/json");
+        headers.set(CONTENT_TYPE, APPLICATION_JSON);
         return buildErrorResponse(headers, "0008", "Resource not found: " + exception.getRequestURL() , HttpStatus.NOT_FOUND);
     }
 }
