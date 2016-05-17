@@ -63,7 +63,7 @@ Feature: Failure - Category A Financial Requirement (with no dependents - weekly
 
     		Then The Income Proving TM Family API provides the following result:
       			| HTTP Status                           | 200        |
-      			| Financial requirement met            | true       |
+      			| Financial requirement met            | false       |
       			| Failure reason                        | WEEKLY_VALUE_BELOW_THRESHOLD  |
       			| Individual title                      | Mr         |
       			| Individual forename                   | Paul       |
@@ -88,8 +88,8 @@ Feature: Failure - Category A Financial Requirement (with no dependents - weekly
       			| Financial requirement met            | false      |
       			| Failure reason                        | NOT_ENOUGH_RECORDS  |
       			| Individual title                      | Mr         |
-      			| Individual forename                   | Paul       |
-      			| Individual surname                    | Young      |
+      			| Individual forename                   | Raj       |
+      			| Individual surname                    | Patel      |
       			| Application Raised to date            | 2015-01-02 |
       			| Application Raised date               | 2015-07-03 |
       			| National Insurance Number             | RP123456C  |
