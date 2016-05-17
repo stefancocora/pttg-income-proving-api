@@ -28,6 +28,9 @@ public class Service {
     @Autowired
     private IndividualService individualService;
 
+    private static final int MINIMUM_DEPENDANTS = 0;
+    private static final int MAXIMUM_DEPENDANTS = 99;
+
     private static final int NUMBER_OF_DAYS = 182;
 
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -50,8 +53,10 @@ public class Service {
 
             if (dependants == null) {
                 dependants = 0;
-            } else if (dependants < 0) {
-                throw new IllegalArgumentException("Dependants cannot be less than zero");
+            } else if (dependants < MINIMUM_DEPENDANTS) {
+                throw new IllegalArgumentException("Dependants cannot be less than " + MINIMUM_DEPENDANTS);
+            } else if (dependants > MAXIMUM_DEPENDANTS) {
+                throw new IllegalArgumentException("Dependants cannot be more than " + MAXIMUM_DEPENDANTS);
             }
 
             sdf.setLenient(false);
