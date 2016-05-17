@@ -17,15 +17,15 @@ Feature: Failure - Category A Financial Requirement (with no dependents - weekly
       | Application Raised Date | 15/01/2015 |
 
     Then The Income Proving TM Family API provides the following result:
-      | HTTP Status                | 200                          |
-      | Financial requirement met  | False                        |
-      | Failure reason             | WEEKLY_VALUE_BELOW_THRESHOLD |
-      | Individual title           | Miss                         |
-      | Individual forename        | Davina                       |
-      | Individual surname         | Love                         |
-      | Application Raised to date | 17/07/2014                   |
-      | Application Raised date    | 15/01/2015                   |
-      | National Insurance Number  | DV123456A                    |
+      | HTTP Status                  | 200                           |
+      | Financial requirement met    | false                         |
+      | Failure reason               | WEEKLY_VALUE_BELOW_THRESHOLD  |
+      | Individual title             | Miss                          |
+      | Individual forename          | Davina                        |
+      | Individual surname           | Love                          |
+      | Application Raised to date   | 2014-07-17                    |
+      | Application Raised date      | 2015-01-15                    |
+      | National Insurance Number    | DV123456A                     |
 
 
 #New Scenario -
@@ -39,15 +39,15 @@ Feature: Failure - Category A Financial Requirement (with no dependents - weekly
       | Application Raised Date | 15/12/2015 |
 
     Then The Income Proving TM Family API provides the following result:
-      | HTTP Status                | 200                          |
-      | Financial requirement met  | False                        |
-      | Failure reason             | WEEKLY_VALUE_BELOW_THRESHOLD |
-      | Individual title           | Mr                           |
-      | Individual forename        | Xavier                       |
-      | Individual surname         | Snow                         |
-      | Application Raised to date | 16/06/2015                   |
-      | Application Raised date    | 15/12/2015                   |
-      | National Insurance Number  | XS123456B                    |
+      | HTTP Status                  | 200                           |
+      | Financial requirement met    | false                         |
+      | Failure reason               | WEEKLY_VALUE_BELOW_THRESHOLD  |
+      | Individual title             | Mr                            |
+      | Individual forename          | Xavier                        |
+      | Individual surname           | Snow                          |
+      | Application Raised to date   | 2015-06-16                    |
+      | Application Raised date      | 2015-12-15                    |
+      | National Insurance Number    | XS123456B                     |
 
 
 #New Scenario -
@@ -61,16 +61,16 @@ Feature: Failure - Category A Financial Requirement (with no dependents - weekly
       | NINO                    | PY123456B  |
       | Application Raised Date | 15/01/2015 |
 
-    Then The Income Proving TM Family API provides the following result:
-      | HTTP Status                | 200                          |
-      | Employment requirement met | True                         |
-      | Failure reason             | WEEKLY_VALUE_BELOW_THRESHOLD |
-      | Individual title           | Mr                           |
-      | Individual forename        | Paul                         |
-      | Individual surname         | Young                        |
-      | Application Raised to date | 17/07/2014                   |
-      | Application Raised date    | 15/01/2015                   |
-      | National Insurance Number  | PY123456B                    |
+    		Then The Income Proving TM Family API provides the following result:
+      			| HTTP Status                           | 200        |
+      			| Financial requirement met            | true       |
+      			| Failure reason                        | WEEKLY_VALUE_BELOW_THRESHOLD  |
+      			| Individual title                      | Mr         |
+      			| Individual forename                   | Paul       |
+      			| Individual surname                    | Young      |
+      			| Application Raised to date            | 2014-07-17 |
+      			| Application Raised date               | 2015-01-15 |
+      			| National Insurance Number             | PY123456B  |
 
 #New Scenario -
   Scenario: Raj Patel does not meet the Category A employment duration Requirement (He has worked for his current employer for only 3 months)
@@ -83,16 +83,16 @@ Feature: Failure - Category A Financial Requirement (with no dependents - weekly
       | NINO                    | RP123456C  |
       | Application Raised Date | 03/07/2015 |
 
-    Then The Income Proving TM Family API provides the following result:
-      | HTTP Status                | 200                |
-      | Employment requirement met | False              |
-      | Failure reason             | NOT_ENOUGH_RECORDS |
-      | Individual title           | Mr                 |
-      | Individual forename        | Raj                |
-      | Individual surname         | Patel              |
-      | Application Raised to date | 02/01/2015         |
-      | Application Raised date    | 03/07/2015         |
-      | National Insurance Number  | RP123456C          |
+    		Then The Income Proving TM Family API provides the following result:
+      			| HTTP Status                           | 200        |
+      			| Financial requirement met            | false      |
+      			| Failure reason                        | NOT_ENOUGH_RECORDS  |
+      			| Individual title                      | Mr         |
+      			| Individual forename                   | Paul       |
+      			| Individual surname                    | Young      |
+      			| Application Raised to date            | 2015-01-02 |
+      			| Application Raised date               | 2015-07-03 |
+      			| National Insurance Number             | RP123456C  |
 
 
 #New Scenario -
@@ -106,16 +106,16 @@ Feature: Failure - Category A Financial Requirement (with no dependents - weekly
       | NINO                    | JJ123456A  |
       | Application Raised Date | 03/07/2015 |
 
-    Then The Income Proving TM Family API provides the following result:
-      | HTTP Status                | 200                |
-      | Employment requirement met | False              |
-      | Failure reason             | NOT_ENOUGH_RECORDS |
-      | Individual title           | Mr                 |
-      | Individual forename        | John               |
-      | Individual surname         | James              |
-      | Application Raised to date | 02/01/2015         |
-      | Application Raised date    | 03/07/2015         |
-      | National Insurance Number  | JJ123456A          |
+    		Then The Income Proving TM Family API provides the following result:
+      			| HTTP Status                           | 200        |
+      			| Financial requirement met            | false      |
+      			| Failure reason                        | NOT_ENOUGH_RECORDS  |
+      			| Individual title                      | Mr         |
+      			| Individual forename                   | John       |
+      			| Individual surname                    | James      |
+      			| Application Raised to date            | 2015-01-02 |
+      			| Application Raised date               | 2015-07-03 |
+      			| National Insurance Number             | JJ123456A  |
 
 #New Scenario -
   Scenario: Peter Jones does not meet the Category A employment duration Requirement (He has worked for his current employer for 6 months)
@@ -128,16 +128,16 @@ Feature: Failure - Category A Financial Requirement (with no dependents - weekly
       | NINO                    | PJ123456A  |
       | Application Raised Date | 03/07/2015 |
 
-    Then The Income Proving TM Family API provides the following result:
-      | HTTP Status                | 200                |
-      | Employment requirement met | False              |
-      | Failure reason             | NOT_ENOUGH_RECORDS |
-      | Individual title           | Mr                 |
-      | Individual forename        | Peter              |
-      | Individual surname         | Jones              |
-      | Application Raised to date | 02/01/2015         |
-      | Application Raised date    | 03/07/2015         |
-      | National Insurance Number  | PJ123456A          |
+    		Then The Income Proving TM Family API provides the following result:
+      			| HTTP Status                           | 200        |
+      			| Financial requirement met            | false      |
+      			| Failure reason                        | NOT_ENOUGH_RECORDS  |
+      			| Individual title                      | Mr         |
+      			| Individual forename                   | Peter      |
+      			| Individual surname                    | Jones      |
+      			| Application Raised to date            | 2015-01-02 |
+      			| Application Raised date               | 2015-07-03 |
+      			| National Insurance Number             | PJ123456A  |
 
 #New Scenario -
   Scenario: Jenny Francis does not meet the Category A employment duration Requirement (He has worked for his current employer for 6 months)
@@ -149,13 +149,13 @@ Feature: Failure - Category A Financial Requirement (with no dependents - weekly
       | NINO                    | JF123456A  |
       | Application Raised Date | 12/05/2015 |
 
-    Then The Income Proving TM Family API provides the following result:
-      | HTTP Status                | 200                |
-      | Employment requirement met | False              |
-      | Failure reason             | NOT_ENOUGH_RECORDS |
-      | Individual title           | Mrs                |
-      | Individual forename        | Jenny              |
-      | Individual surname         | Francis            |
-      | Application Raised to date | 11/11/2014         |
-      | Application Raised date    | 12/05/2015         |
-      | National Insurance Number  | JF123456A          |
+    		Then The Income Proving TM Family API provides the following result:
+      			| HTTP Status                           | 200        |
+      			| Financial requirement met            | false      |
+      			| Failure reason                        | NOT_ENOUGH_RECORDS  |
+      			| Individual title                      | Mrs        |
+      			| Individual forename                   | Jenny      |
+      			| Individual surname                    | Francis    |
+      			| Application Raised to date            | 2014-11-11 |
+      			| Application Raised date               | 2015-05-12 |
+      			| National Insurance Number             | JF123456A  |

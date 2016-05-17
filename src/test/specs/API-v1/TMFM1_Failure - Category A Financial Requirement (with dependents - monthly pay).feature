@@ -35,14 +35,13 @@ Feature: Failure - Category A Financial Requirement (with dependents - monthly p
 
     		Then The Income Proving TM Family API provides the following result:
       			| HTTP Status                           | 200        |
-      			| Financial requirement met             | False      |
+      			| Financial requirement met             | false      |
       			| Failure reason                        | MONTHLY_VALUE_BELOW_THRESHOLD      |
       			| Individual title                      | Ms         |
       			| Individual forename                   | Shelly     |
       			| Individual surname                    | Patel      |
-      			| Application Raised to date          | 03/08/2014 |
-      			| Application Raised date             | 03/02/2015 |
-			| Dependant                             | 4          |
+      			| Application Raised to date            | 2014-08-05 |
+      			| Application Raised date               | 2015-02-03 |
       			| National Insurance Number             | SP123456B  |
 
 #New scenario - Added in
@@ -61,14 +60,13 @@ Feature: Failure - Category A Financial Requirement (with dependents - monthly p
 
     		Then The Income Proving TM Family API provides the following result:
       			| HTTP Status                           | 200        |
-      			| Financial requirement met             | False      |
+      			| Financial requirement met             | false      |
       			| Failure reason                        | MONTHLY_VALUE_BELOW_THRESHOLD      |
       			| Individual title                      | Mr         |
       			| Individual forename                   | Brian      |
       			| Individual surname                    | Sinclair   |
-      			| Application Raised to date          | 10/08/2014 |
-      			| Application Raised date             | 10/02/2015 |
-			    | Dependant                             | 2          |
+      			| Application Raised to date            | 2014-08-12 |
+      			| Application Raised date               | 2015-02-10 |
       			| National Insurance Number             | BS123456B  |
 
 
@@ -89,14 +87,13 @@ Feature: Failure - Category A Financial Requirement (with dependents - monthly p
 
     		Then The Income Proving TM Family API provides the following result:
       			| HTTP Status                           | 200        |
-      			| Financial requirement met             | False      |
+      			| Financial requirement met             | false      |
       			| Failure reason                        | NOT_ENOUGH_RECORDS      |
       			| Individual title                      | Mr         |
       			| Individual forename                   | Steve      |
       			| Individual surname                    | Yu         |
-      			| Application Raised to date          | 03/03/2015 |
-      			| Application Raised date             | 03/09/2015 |
-			    | Dependant                             | 3          |
+      			| Application Raised to date            | 2015-03-05 |
+      			| Application Raised date               | 2015-09-03 |
       			| National Insurance Number             | SY987654C  |
 
 

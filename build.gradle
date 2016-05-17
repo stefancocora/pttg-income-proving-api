@@ -74,6 +74,7 @@ dependencies {
     testCompile "org.spockframework:spock-core:1.0-groovy-2.4"
     testCompile 'org.spockframework:spock-spring:1.0-groovy-2.4'
     testCompile 'org.springframework:spring-test:4.2.5.RELEASE'
+    testCompile 'com.jayway.jsonpath:json-path:2.2.0'
     testCompile 'cglib:cglib-nodep:3.2.1'
     testCompile 'org.objenesis:objenesis:2.2'
 

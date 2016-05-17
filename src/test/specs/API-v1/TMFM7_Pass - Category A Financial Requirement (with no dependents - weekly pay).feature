@@ -17,12 +17,12 @@ Feature: Pass - Category A Financial Requirement (with no dependents - weekly pa
       | Application raised date | 29/11/2015 |
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status                  | 200        |
-      | Financial requirement met    | True       |
+      | Financial requirement met    | true       |
       | Individual title             | Ms         |
       | Individual forename          | Molly      |
       | Individual surname           | Henry      |
-      | Application Raised to date   | 29/05/2015 |
-      | Application Raised date      | 29/11/2015 |
+      | Application Raised to date   | 2015-05-31 |
+      | Application Raised date      | 2015-11-29 |
       | National Insurance Number    | MH123456A  |
 
 
@@ -37,12 +37,12 @@ Feature: Pass - Category A Financial Requirement (with no dependents - weekly pa
       | Application raised date | 10/04/2015 |
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status                  | 200        |
-      | Financial requirement met    | True       |
+      | Financial requirement met    | true       |
       | Individual title             | Mr         |
       | Individual forename          | Fernando   |
       | Individual surname           | Sanchez    |
-      | Application Raised to date   | 10/10/2014 |
-      | Application Raised date      | 10/04/2015 |
+      | Application Raised to date   | 2014-10-10 |
+      | Application Raised date      | 2015-04-10 |
       | National Insurance Number    | FS123456C  |
 
 
@@ -57,11 +57,11 @@ Feature: Pass - Category A Financial Requirement (with no dependents - weekly pa
       | Application raised date | 28/06/2015 |
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status                  | 200        |
-      | Financial requirement met    | True       |
+      | Financial requirement met    | true       |
       | Individual title             | Mr         |
       | Individual forename          | John       |
       | Individual surname           | Odometey   |
-      | Application Raised to date   | 28/12/2014 |
-      | Application Raised date      | 28/06/2015 |
+      | Application Raised to date   | 2014-12-28 |
+      | Application Raised date      | 2015-06-28 |
       | National Insurance Number    | JO123456A  |
 
