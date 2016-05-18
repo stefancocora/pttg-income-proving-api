@@ -125,7 +125,7 @@ Feature: Validation of the API fields and data
     When the Income Proving TM Family API is invoked with the following:
       | NINO                    | QQ128856A  |
       | Application Raised Date | 2015-01-01 |
-      | Dependant               | -3         |
+      | Dependants               | -3         |
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status   | 400                                                |
       | Status code   | 0004                                               |
@@ -136,7 +136,7 @@ Feature: Validation of the API fields and data
     When the Income Proving TM Family API is invoked with the following:
       | NINO                    | QQ128856A  |
       | Application Raised Date | 2015-01-01 |
-      | Dependant               | 100        |
+      | Dependants               | 100        |
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status    | 400                                                |
       | Status code    | 0004                                               |
@@ -149,7 +149,7 @@ Feature: Validation of the API fields and data
     When the Income Proving TM Family API is invoked with the following:
       | NINO                    | QQ128856A  |
       | Application Raised Date | 2015-01-01 |
-      | Dependant               | 3          |
+      | Dependants               | 3          |
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status    | 404                |
       | Status code    | 0004               |
