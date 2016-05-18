@@ -101,7 +101,7 @@ public class Service {
         } // TODO All this below is a mess of exceptions and needs to be refactored
         catch (EarningsServiceFailedToMapDataToDomainClass | EarningsServiceNoUniqueMatch e) {
             LOGGER.error("Could not retrieve earning details.", e);
-            return buildErrorResponse(headers, "0003", "Could not retrieve earning details", HttpStatus.NOT_FOUND);
+            return buildErrorResponse(headers, "0004", "Resource not found", HttpStatus.NOT_FOUND);
         } catch (ParseException e) {
             LOGGER.error("Error parsing date", e);
             return buildErrorResponse(headers, "0002", "Parameter error: Application raised date is invalid", HttpStatus.BAD_REQUEST);
