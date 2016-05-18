@@ -139,7 +139,7 @@ public class Service {
     private void validateNino(String nino) {
         final Pattern pattern = Pattern.compile("^[a-zA-Z]{2}[0-9]{6}[a-dA-D]{1}$");
         if (!pattern.matcher(nino).matches()) {
-            throw new IllegalArgumentException("Parameter error: Invalid NINO");
+            throw new IllegalArgumentException("Invalid NINO");
         }
     }
 
