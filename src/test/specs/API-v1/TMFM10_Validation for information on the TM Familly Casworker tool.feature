@@ -112,9 +112,9 @@ Feature: Validation of the API fields and data
   Scenario: The API provides Dependants with a character
     Given A service is consuming the Income Proving TM Family API
     When the Income Proving TM Family API is invoked with the following:
-      | NINO                    | QQ128856A |
-      | Application Raised Date |           |
-      | Dependant               | H         |
+      | NINO                    | QQ128856A  |
+      | Application Raised Date | 2015-01-01 |
+      | Dependants              | H          |
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status    | 400                                                |
       | Status code    | 0004                                               |
