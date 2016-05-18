@@ -13,7 +13,7 @@ Feature: Validation of the API fields and data
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status    | 404                |
       | Status code    | 0008               |
-      | Status message | Resource not found |
+      | Status message | Resource not found: /incomeproving/v1/individual//financialstatus |
 
   Scenario: The API provides incorrect National Insurance Number prefixed with two digits
     Given A service is consuming the Income Proving TM Family API

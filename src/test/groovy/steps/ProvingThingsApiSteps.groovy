@@ -20,7 +20,7 @@ class ProvingThingsApiSteps {
     public Response resp
     String jsonAsString
     String nino
-    String dependants = " "
+    String dependants=""
     String applicationRaisedDate
 
 
@@ -107,8 +107,7 @@ class ProvingThingsApiSteps {
 
 
         getTableData(expectedResult)
-        resp = get("http://localhost:8081/incomeproving/v1/individual/" + nino + "/financialstatus?applicationRaisedDate=" + applicationRaisedDate + "&dependants=" + dependants)
-
+        resp = get("http://localhost:8081/incomeproving/v1/individual/{nino}/financialstatus?applicationRaisedDate={applicationRaisedDate}&dependants={dependants}", nino, applicationRaisedDate, dependants);
         jsonAsString = resp.asString();
         println "" + jsonAsString
     }
