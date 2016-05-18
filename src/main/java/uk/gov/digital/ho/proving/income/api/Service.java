@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import uk.gov.digital.ho.proving.income.acl.*;
 import uk.gov.digital.ho.proving.income.domain.Application;
@@ -65,6 +66,9 @@ public class Service {
                 throw new IllegalArgumentException("Dependants cannot be more than " + MAXIMUM_DEPENDANTS);
             }
 
+            if (applicationDateAsString == null || applicationDateAsString.isEmpty()) {
+                throw new IllegalArgumentException("applicationRaisedDate");
+            }
             sdf.setLenient(false);
             Date applicationRaisedDate = sdf.parse(applicationDateAsString);
             Date startSearchDateDays = subtractXDays(applicationRaisedDate, NUMBER_OF_DAYS);
@@ -158,4 +162,13 @@ public class Service {
         headers.set(CONTENT_TYPE, APPLICATION_JSON);
         return buildErrorResponse(headers, "0008", "Resource not found: " + exception.getRequestURL() , HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public Object ethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException exception) {
+        LOGGER.debug(exception.getMessage());
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(CONTENT_TYPE, APPLICATION_JSON);
+        return buildErrorResponse(headers, "0004", "Parameter error: Invalid value for " + exception.getName() , HttpStatus.BAD_REQUEST);
+    }
+
 }

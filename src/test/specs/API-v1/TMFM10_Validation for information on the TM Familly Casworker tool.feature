@@ -104,8 +104,8 @@ Feature: Validation of the API fields and data
       | Application Raised Date |           |
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status    | 400                                      |
-      | Status code    | 0008                                     |
-      | Status message | Missing parameter: applicationRaisedDate |
+      | Status code    | 0004                                     |
+      | Status message | Parameter error: applicationRaisedDate |
 
 ###################################### Section - Validation on the Dependants field ######################################
 
@@ -118,7 +118,7 @@ Feature: Validation of the API fields and data
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status    | 400                                                |
       | Status code    | 0004                                               |
-      | Status message | Parameter error: Dependants cannot be more than 99 |
+      | Status message | Parameter error: Invalid value for dependants |
 
   Scenario: The API provides Dependants with a negative number
     Given A service is consuming the Income Proving TM Family API
