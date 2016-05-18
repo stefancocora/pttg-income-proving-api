@@ -129,7 +129,7 @@ Feature: Validation of the API fields and data
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status   | 400                                                |
       | Status code   | 0004                                               |
-      | Sttus message | Parameter error: Dependants cannot be more than 99 |
+      | Status message | Parameter error: Dependants cannot be less than 0 |
 
   Scenario: The API provides Dependants with 3 digits
     Given A service is consuming the Income Proving TM Family API
