@@ -75,7 +75,7 @@ Feature: Validation of the API fields and data
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status | 400                                                 |
       | Status code | 0002                                                |
-      | Message     | Parameter error: Application raised date is invalid |
+      | Status message     | Parameter error: Application raised date is invalid |
 
   Scenario: The API provides an incorrect Application Raised Date (Month format)
     Given A service is consuming the Income Proving TM Family API
@@ -85,7 +85,7 @@ Feature: Validation of the API fields and data
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status | 400                                                 |
       | Status code | 0002                                                |
-      | Message     | Parameter error: Application raised date is invalid |
+      | Status message     | Parameter error: Application raised date is invalid |
 
   Scenario: The API provides an incorrect Application Raised Date (Year format)
     Given A service is consuming the Income Proving TM Family API
