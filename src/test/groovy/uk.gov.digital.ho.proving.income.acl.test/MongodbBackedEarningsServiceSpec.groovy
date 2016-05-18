@@ -18,20 +18,6 @@ class MongodbBackedEarningsServiceSpec extends Specification {
     @Autowired
     MongodbBackedEarningsService sut;
 
-    def "earnings records are available"() {
-
-        when:
-
-        Application result = sut.lookup("AA123456A", new Date())
-
-        then:
-
-        result.individual.nino
-        result.individual.title
-        result.individual.forename
-        result.individual.surname
-
-    }
 
     def "multiple records exist for applicant"() {
 

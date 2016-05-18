@@ -1,4 +1,4 @@
-group 'uk.gov.digital.ho.proving.income'
+group 'pttg-family-migration-build'
 version '1.0-SNAPSHOT'
 
 task wrapper(type: Wrapper) {
@@ -29,7 +29,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 jar {
-    baseName = 'uk.gov.digital.ho.proving.income.api'
+    baseName = 'pttg-family-migration-api'
     version =  '0.1.0'
 }
 
