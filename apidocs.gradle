@@ -9,15 +9,19 @@ buildscript {
     }
 }
 
-//apply plugin: 'org.asciidoctor.convert'
-apply plugin: org.asciidoctor.gradle.AsciidoctorPlugin
-
 ext {
     testSrcRoot = 'apidocs'
     sourceDocsLocation = 'src/doc'
-    snippetsDir = file('build/generated-snippets')
     archiveLocation = 'static/docs'
+    snippetsDir = file('build/generated-snippets')
 }
+
+repositories {
+    maven { url 'https://repo.spring.io/libs-milestone' }
+}
+
+//apply plugin: 'org.asciidoctor.convert' - can't use plugin ids in script plugin
+apply plugin: org.asciidoctor.gradle.AsciidoctorPlugin
 
 dependencies {
     testCompile 'org.springframework.restdocs:spring-restdocs-core:1.1.0.RC1'
