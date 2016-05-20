@@ -7,17 +7,24 @@ ext {
     archiveLocation = 'static/docs'
 }
 
+dependencies {
+    testCompile 'org.springframework.restdocs:spring-restdocs-core:1.1.0.RC1'
+    testCompile 'org.springframework.restdocs:spring-restdocs-restassured:1.1.0.RC1'
+}
+
 sourceSets {
     doc {
         resources.srcDir file("$sourceDocsLocation/resources")
     }
 }
 
+
 jar {
     dependsOn asciidoctor
-    from ("${asciidoctor.outputDir}/html5/index.html") {into archiveLocation}
-    from ("${asciidoctor.outputDir}/pdf/index.pdf") {into archiveLocation}
+    from("${asciidoctor.outputDir}/html5/index.html") { into archiveLocation }
+    from("${asciidoctor.outputDir}/pdf/index.pdf") { into archiveLocation }
 }
+
 
 test {
     exclude "$testSrcRoot/**"
@@ -30,13 +37,13 @@ task apiDocTests(type: Test) {
     classpath = sourceSets.test.runtimeClasspath + files("$sourceDocsLocation/resources")
 }
 
-task generateApiDocs(dependsOn: ['asciidoctor']){
+task generateApiDocs(dependsOn: ['apiDocTests', 'asciidoctor']){
     description = 'Generates the API documentation - look in build/asciidoc for the output'
     group 'documentation'
     onlyFor(generateApiDocs) {asciidoctor.enabled = true}
 }
 
-task buildWithApiDocs(dependsOn: ['build']){
+task buildWithApiDocs(dependsOn: ['apiDocTests', 'build']){
     description 'Same as build but also generates API docs and adds them to the jar'
     group 'build'
     onlyFor(buildWithApiDocs) {asciidoctor.enabled = true}
@@ -44,7 +51,6 @@ task buildWithApiDocs(dependsOn: ['build']){
 
 asciidoctor {
     description = 'You should use the generateApiDocs task instead'
-    dependsOn 'apiDocTests'
     attributes 'snippets': snippetsDir
     inputs.dir snippetsDir
     outputDir 'build/asciidoc'
