@@ -91,12 +91,12 @@ Feature: API returns a list of income for a specific NINO inorder to understand 
       | From Date | 2015-01-01 |
       | To Date   | 2015-06-30 |
     Then The service provides the following result:
-      | 2015-01-04 | Flying Pizza Ltd | 1666.00 |
-      | 2015-02-04 | Flying Pizza Ltd | 1666.00 |
-      | 2015-05-20 | Pizza Hut LTD    | 2500.00 |
-      | 2015-06-20 | Pizza Hut LTD    | 1666.00 |
-      | 2015-07-20 | Pizza Hut LTD    | 1666.00 |
-      | 2015-08-20 | Pizza Hut LTD    | 1666.00 |
+      | 2015-01-04 | Flying Pizza Ltd | 1666.00  |
+      | 2015-02-04 | Flying Pizza Ltd | 1666.00  |
+      | 2015-05-20 | Pizza Hut LTD    | 2500.00  |
+      | 2015-06-20 | Pizza Hut LTD    | 1666.00  |
+      | 2015-07-20 | Pizza Hut LTD    | 1666.00  |
+      | 2015-08-20 | Pizza Hut LTD    | 1666.00  |
       | Total:     |                  | 10830.00 |
     And The API provides the following Individual details:
       | HTTP Status               | 200       |
