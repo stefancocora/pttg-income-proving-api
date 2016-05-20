@@ -1,28 +1,21 @@
 package uk.gov.digital.ho.proving.income.api;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.servlet.NoHandlerFoundException;
 import uk.gov.digital.ho.proving.income.acl.*;
 import uk.gov.digital.ho.proving.income.domain.Application;
 import uk.gov.digital.ho.proving.income.domain.IncomeProvingResponse;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.regex.Pattern;
 
 @RestController
 @ControllerAdvice
-public class Service extends AbstractIncomeProvingController {
+public class FinancialStatusService extends AbstractIncomeProvingController {
 
     @Autowired
     private EarningsService earningsService;
@@ -38,7 +31,7 @@ public class Service extends AbstractIncomeProvingController {
 
     // TODO Some of these parameters should be mandatory
     @RequestMapping(value = "/incomeproving/v1/individual/{nino}/financialstatus", method = RequestMethod.GET)
-    public ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> getTemporaryMigrationFamilyApplication(
+    public ResponseEntity<FinancialStatusCheckResponse> getTemporaryMigrationFamilyApplication(
         @PathVariable(value = "nino") String nino,
         @RequestParam(value = "applicationRaisedDate") String applicationDateAsString,
         @RequestParam(value = "dependants", required = false) Integer dependants) {
@@ -70,7 +63,7 @@ public class Service extends AbstractIncomeProvingController {
 
             Application application = earningsService.lookup(nino, applicationRaisedDate);
 
-            TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
+            FinancialStatusCheckResponse response = new FinancialStatusCheckResponse();
             response.setIndividual(application.getIndividual());
 
             switch (incomeProvingResponse.getPayFreq().toUpperCase()) {
@@ -115,9 +108,9 @@ public class Service extends AbstractIncomeProvingController {
         }
     }
 
-    protected ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> buildErrorResponse(HttpHeaders headers, String statusCode, String statusMessage, HttpStatus status) {
+    protected ResponseEntity<FinancialStatusCheckResponse> buildErrorResponse(HttpHeaders headers, String statusCode, String statusMessage, HttpStatus status) {
         ResponseStatus error = new ResponseStatus(statusCode, statusMessage);
-        TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
+        FinancialStatusCheckResponse response = new FinancialStatusCheckResponse();
         response.setStatus(error);
         return new ResponseEntity<>(response, headers, status);
     }

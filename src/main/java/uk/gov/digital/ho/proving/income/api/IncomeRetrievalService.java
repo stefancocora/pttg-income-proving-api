@@ -1,6 +1,7 @@
 package uk.gov.digital.ho.proving.income.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class IncomeRetrievalService extends AbstractIncomeProvingController {
     @Autowired
     private IndividualService individualService;
 
-    @RequestMapping(value = "/incomeproving/v1/individual/{nino}", method = RequestMethod.GET)
+    @RequestMapping(value = "/incomeproving/v1/individual/{nino:}", method = RequestMethod.GET)
     public ResponseEntity<IncomeRetrievalResponse> getIncome (
         @PathVariable(value = "nino") String nino,
         @RequestParam(value = "fromDate") String fromDateAsString,

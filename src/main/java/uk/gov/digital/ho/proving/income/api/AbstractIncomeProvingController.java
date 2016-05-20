@@ -74,7 +74,7 @@ public abstract class AbstractIncomeProvingController {
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    protected Object ethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException exception) {
+    protected Object methodArgumentTypeMismatchException(MethodArgumentTypeMismatchException exception) {
         LOGGER.debug(exception.getMessage());
         HttpHeaders headers = new HttpHeaders();
         headers.set(CONTENT_TYPE, APPLICATION_JSON);

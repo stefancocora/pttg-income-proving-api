@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import uk.gov.digital.ho.proving.income.domain.Individual;
 
 
-public class TemporaryMigrationFamilyCaseworkerApplicationResponse {
+public class FinancialStatusCheckResponse {
 
     @JsonInclude(Include.NON_NULL)
     private Individual individual;
