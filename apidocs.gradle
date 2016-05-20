@@ -1,0 +1,47 @@
+
+
+apply plugin: 'org.asciidoctor.convert'
+
+ext {
+    snippetsDir = file('build/generated-snippets')
+}
+
+
+sourceSets {
+    doc {
+//        java.srcDir file('src/doc/java')
+        resources.srcDir file('src/doc/resources')
+//        compileClasspath += main.output + test.output + configurations.testRuntime
+//        runtimeClasspath += output + compileClasspath
+    }
+}
+
+task apiDocTests(type: Test) {
+    description = 'Runs the API documentation tests (generates doc snippets to build/generated-snippets but does not process into HTML)'
+    group = 'documentation'
+    include 'apidocs/**'
+
+    classpath = sourceSets.test.runtimeClasspath + files('src/doc/resources')
+}
+
+task generateApiDocs(dependsOn: ['asciidoctor']){
+    description = 'Generates the API documentation - look in build/asciidoc for the output'
+    group 'documentation'
+    onlyFor(generateApiDocs) {asciidoctor.enabled = true}
+}
+
+task buildWithApiDocs(dependsOn: ['build']){
+    description 'Same as build but also generates API docs and adds them to the jar'
+    group 'build'
+    onlyFor(buildWithApiDocs) {asciidoctor.enabled = true}
+}
+
+asciidoctor {
+    description = 'You should use the generateApiDocs task instead'
+    dependsOn 'apiDocTests'
+    attributes 'snippets': snippetsDir
+    inputs.dir snippetsDir
+    outputDir 'build/asciidoc'
+    sourceDir 'src/doc/asciidoc'
+    backends    'pdf', 'html5'
+}.enabled(false)

@@ -1,9 +1,3 @@
-group 'uk.gov.digital.ho.proving.income'
-version '1.0-SNAPSHOT'
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.13'
-}
 
 buildscript {
     repositories {
@@ -11,118 +5,145 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.3.3.RELEASE")
-        classpath("org.asciidoctor:asciidoctor-gradle-plugin:1.5.3")
-        classpath("org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.11")
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.3.3.RELEASE'
         classpath 'net.serenity-bdd:serenity-gradle-plugin:1.1.31'
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
+        classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.11'
     }
 }
 
-apply plugin: 'java'
-apply plugin: 'groovy'
-apply plugin: 'spring-boot'
-apply plugin: 'application'
-apply plugin: 'org.asciidoctor.convert'
-apply plugin: 'net.serenity-bdd.aggregator'
+apply from: 'common.gradle'
+apply from: 'apidocs.gradle'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+apply plugin: 'spring-boot'
+apply plugin: 'net.serenity-bdd.aggregator'
+//apply plugin: 'org.asciidoctor.convert'
+
+
+group 'uk.gov.digital.ho.proving.income'
+version '1.0-SNAPSHOT'
+
+mainClassName = "uk.gov.digital.ho.proving.income.ServiceRunner"
+
+//ext {
+//    snippetsDir = file('build/generated-snippets')
+//}
+
+
+//sourceSets {
+//    doc {
+////        java.srcDir file('src/doc/java')
+//        resources.srcDir file('src/doc/resources')
+////        compileClasspath += main.output + test.output + configurations.testRuntime
+////        runtimeClasspath += output + compileClasspath
+//    }
+//}
+
+dependencies {
+
+    compile 'ch.qos.logback:logback-classic:1.1.3'
+    compile 'ch.qos.logback:logback-core:1.1.3'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.2'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.6.3'
+
+    compile 'org.codehaus.groovy:groovy-all:2.4.3'
+    compile 'org.mongodb:bson:3.0.4'
+    compile 'org.mongodb:mongodb-driver:3.0.4'
+    compile 'org.json:json:20160212'
+    compile 'org.slf4j:slf4j-parent:1.7.14'
+    compile 'org.springframework.boot:spring-boot:1.3.3.RELEASE'
+    compile 'org.springframework.boot:spring-boot-starter-web:1.3.3.RELEASE'
+
+    testCompile 'cglib:cglib-nodep:3.2.1'
+    testCompile 'com.jayway.jsonpath:json-path:2.2.0'
+    testCompile 'com.jayway.restassured:json-schema-validator:2.9.0'
+    testCompile 'com.jayway.restassured:rest-assured:2.9.0'
+
+    testCompile 'org.codehaus.groovy:groovy-all:2.4.3'
+    testCompile 'org.json:json:20090211'
+    testCompile 'org.objenesis:objenesis:2.2'
+    testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
+    testCompile 'org.spockframework:spock-spring:1.0-groovy-2.4'
+    testCompile 'org.springframework:spring-test:4.2.5.RELEASE'
+
+    testCompile 'info.cukes:cucumber-java:1.2.4'
+    testCompile 'info.cukes:cucumber-junit:1.2.4'
+    testCompile 'info.cukes:gherkin:2.12.2'
+
+    testCompile 'junit:junit:4.12'
+
+    testCompile 'net.serenity-bdd:serenity-core:1.1.28'
+    testCompile 'net.serenity-bdd:serenity-cucumber:1.1.6'
+    testCompile 'net.serenity-bdd:serenity-junit:1.1.1'
+
+    testCompile 'org.mockito:mockito-all:1.10.19:'
+    testCompile 'org.springframework.restdocs:spring-restdocs-core:1.1.0.RC1'
+    testCompile 'org.springframework.restdocs:spring-restdocs-restassured:1.1.0.RC1'
+}
+
+
+
+
+
 
 jar {
     baseName = 'uk.gov.digital.ho.proving.income.api'
-    version =  '0.1.0'
+    version =  '0.1.0' // why not use the project.version?
+
+    dependsOn asciidoctor
+    from ("${asciidoctor.outputDir}/html5/index.html") {into 'static/docs'}
+    from ("${asciidoctor.outputDir}/pdf/index.pdf") {into 'static/docs'}
 }
 
 test {
     exclude 'acceptance/**'
+    exclude 'apidocs/**'
 }
 
-task accept(type: Test) {
+task acceptanceTest(type: Test) {
+    description 'Runs the acceptance tests. Requires server to be running.'
+    group 'verification'
     include 'acceptance/**'
+    finalizedBy aggregate
 }
 
-accept.finalizedBy aggregate
-
-repositories {
-    mavenCentral()
-    mavenLocal()    // Pick up the domain jar locally until we have a central repo server.
-    maven { url 'https://repo.spring.io/libs-milestone' }
-}
-
-// API documentation tests are separated from unit tests and are not run automatically.
-// Use the asciidoctor task to execute tests and generate HTML documentation (output to build/asciidoc)
-// Use the apiDocTests task to execute tests (output to build/generated-snippets)
-sourceSets {
-    doc {
-        java.srcDir file('src/doc/java')
-        resources.srcDir file('src/doc/resources')
-        compileClasspath += main.output + test.output + configurations.testRuntime
-        runtimeClasspath += output + compileClasspath
-    }
-}
-
-dependencies {
-    compile 'org.springframework.boot:spring-boot-starter-web:1.3.3.RELEASE'
-    compile 'org.springframework.boot:spring-boot:1.3.3.RELEASE'
-    compile 'org.mongodb:mongodb-driver:3.0.4'
-    compile 'org.mongodb:bson:3.0.4'
-    compile 'org.json:json:20160212'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.6.3'
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.2'
-    compile 'org.codehaus.groovy:groovy-all:2.4.3'
-    compile 'org.slf4j:slf4j-parent:1.7.14'
-    compile 'ch.qos.logback:logback-core:1.1.3'
-    compile 'ch.qos.logback:logback-classic:1.1.3'
-
-    testCompile 'org.codehaus.groovy:groovy-all:2.4.3'
-    testCompile "org.spockframework:spock-core:1.0-groovy-2.4"
-    testCompile 'org.spockframework:spock-spring:1.0-groovy-2.4'
-    testCompile 'org.springframework:spring-test:4.2.5.RELEASE'
-    testCompile 'com.jayway.jsonpath:json-path:2.2.0'
-    testCompile 'cglib:cglib-nodep:3.2.1'
-    testCompile 'org.objenesis:objenesis:2.2'
-
-    testCompile  'org.json:json:20090211'
-    testCompile 'com.jayway.restassured:rest-assured:2.9.0'
-    testCompile 'com.jayway.restassured:json-schema-validator:2.9.0'
-
-    testCompile 'net.serenity-bdd:serenity-cucumber:1.1.6'
-    testCompile 'net.serenity-bdd:serenity-junit:1.1.1'
-    testCompile 'net.serenity-bdd:serenity-core:1.1.28'
-
-    testCompile 'info.cukes:cucumber-java:1.2.4'
-    testCompile 'info.cukes:cucumber-junit:1.2.4'
-    testCompile 'junit:junit:4.12'
-    testCompile 'info.cukes:gherkin:2.12.2'
-
-    testCompile 'com.jayway.jsonpath:json-path'
-    testCompile 'org.springframework.restdocs:spring-restdocs-core:1.1.0.RC1'
-    testCompile 'org.springframework.restdocs:spring-restdocs-restassured:1.1.0.RC1'
-    testCompile 'org.mockito:mockito-all:1.10.19:'
-}
-
-task apiDocTests(type: Test) {
-    description = 'Runs the API documentation tests'
-    group = 'documentation'
-    testClassesDir = sourceSets.doc.output.classesDir
-    classpath = sourceSets.doc.runtimeClasspath
-    reports.junitXml.destination = 'build/doc-test-results'
-    reports.html.destination = 'build/reports/doc-tests'
-}
-
-ext {
-    snippetsDir = file('build/generated-snippets')
-}
-
-asciidoctor {
-    backends    'pdf', 'html5'
-    attributes 'snippets': snippetsDir
-    inputs.dir snippetsDir
-    outputDir "build/asciidoc"
-    dependsOn apiDocTests
-    sourceDir 'src/doc/asciidoc'
-}
-
-mainClassName = "uk.gov.digital.ho.proving.income.ServiceRunner"
+//task apiDocTests(type: Test) {
+//    description = 'Runs the API documentation tests (generates doc snippets to build/generated-snippets but does not process into HTML)'
+//    group = 'documentation'
+//    testClassesDir = sourceSets.doc.output.classesDir
+//    classpath = sourceSets.doc.runtimeClasspath
+//    reports.junitXml.destination = 'build/doc-test-results'
+//    reports.html.destination = 'build/reports/doc-tests'
+//}
+//task apiDocTests(type: Test) {
+//    description = 'Runs the API documentation tests (generates doc snippets to build/generated-snippets but does not process into HTML)'
+//    group = 'documentation'
+//    include 'apidocs/**'
+//    finalizedBy aggregate
+//
+//    classpath = sourceSets.test.runtimeClasspath + files('src/doc/resources')
+//}
+//
+//task generateApiDocs(dependsOn: ['asciidoctor']){
+//    description = 'Generates the API documentation - look in build/asciidoc for the output'
+//    group 'documentation'
+//    onlyFor(generateApiDocs) {asciidoctor.enabled = true}
+//}
+//
+//task buildWithApiDocs(dependsOn: ['build']){
+//    description 'Same as build but also generates API docs and adds them to the jar'
+//    group 'build'
+//    onlyFor(buildWithApiDocs) {asciidoctor.enabled = true}
+//}
+//
+//asciidoctor {
+//    description = 'You should use the generateApiDocs task instead'
+//    dependsOn 'apiDocTests'
+//    attributes 'snippets': snippetsDir
+//    inputs.dir snippetsDir
+//    outputDir 'build/asciidoc'
+//    sourceDir 'src/doc/asciidoc'
+//    backends    'pdf', 'html5'
+//}.enabled(false)
 
 

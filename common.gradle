@@ -1,0 +1,29 @@
+allprojects{
+
+    apply plugin: 'java'
+    apply plugin: 'groovy'
+    apply plugin: 'application'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        maven { url 'https://repo.spring.io/libs-milestone' }
+    }
+}
+
+// Apply configuration only when the given task is in the task execution graph
+ext.onlyFor = { task, config ->
+    gradle.taskGraph.whenReady { graph ->
+        if (graph.hasTask(task)) {
+            project.configure(project, config)
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.13'
+}
+
