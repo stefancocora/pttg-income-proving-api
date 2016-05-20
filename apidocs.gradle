@@ -1,31 +1,33 @@
 apply plugin: 'org.asciidoctor.convert'
 
 ext {
+    testSrcRoot = 'apidocs'
+    sourceDocsLocation = 'src/doc'
     snippetsDir = file('build/generated-snippets')
+    archiveLocation = 'static/docs'
 }
 
 sourceSets {
     doc {
-        resources.srcDir file('src/doc/resources')
+        resources.srcDir file("$sourceDocsLocation/resources")
     }
 }
 
 jar {
     dependsOn asciidoctor
-    from ("${asciidoctor.outputDir}/html5/index.html") {into 'static/docs'}
-    from ("${asciidoctor.outputDir}/pdf/index.pdf") {into 'static/docs'}
+    from ("${asciidoctor.outputDir}/html5/index.html") {into archiveLocation}
+    from ("${asciidoctor.outputDir}/pdf/index.pdf") {into archiveLocation}
 }
 
 test {
-    exclude 'apidocs/**'
+    exclude "$testSrcRoot/**"
 }
 
 task apiDocTests(type: Test) {
     description = 'Runs the API documentation tests (generates doc snippets to build/generated-snippets but does not process into HTML)'
     group = 'documentation'
-    include 'apidocs/**'
-
-    classpath = sourceSets.test.runtimeClasspath + files('src/doc/resources')
+    include "$testSrcRoot/**"
+    classpath = sourceSets.test.runtimeClasspath + files("$sourceDocsLocation/resources")
 }
 
 task generateApiDocs(dependsOn: ['asciidoctor']){
@@ -46,6 +48,6 @@ asciidoctor {
     attributes 'snippets': snippetsDir
     inputs.dir snippetsDir
     outputDir 'build/asciidoc'
-    sourceDir 'src/doc/asciidoc'
-    backends    'pdf', 'html5'
+    sourceDir "$sourceDocsLocation/asciidoc"
+    backends 'pdf', 'html5'
 }.enabled(false)
