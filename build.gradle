@@ -10,11 +10,13 @@ buildscript {
     }
 }
 
+apply from: 'common.gradle'
+apply from: 'apidocs.gradle'
+
 group 'uk.gov.digital.ho.proving.income'
 version '1.0-SNAPSHOT'
 
-apply from: 'common.gradle'
-apply from: 'apidocs.gradle'
+mainClassName = "uk.gov.digital.ho.proving.income.ServiceRunner"  // used by application plugin
 
 apply plugin: 'spring-boot'
 apply plugin: 'net.serenity-bdd.aggregator'
@@ -28,6 +30,7 @@ dependencies {
     testCompile libraries.restassured
     testCompile libraries.spock
 }
+
 
 jar {
     appendix = 'api'
@@ -44,4 +47,16 @@ task acceptanceTest(type: Test) {
     finalizedBy aggregate
 }
 
+def applicationProperties = new Properties()
+new File("$projectDir/src/main/resources/application.properties").withInputStream {
+    stream -> applicationProperties.load(stream)
+}
+
+task bootStop() {
+    group 'application'
+    def port = applicationProperties["server.port"]
+    def command = "curl -X POST localhost:$port/shutdown"
+    def proc = command.execute()
+    proc.waitFor()
+}
 

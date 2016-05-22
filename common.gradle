@@ -8,6 +8,7 @@ targetCompatibility = 1.8
 repositories {
     mavenCentral()
     mavenLocal()
+    jcenter()
 }
 
 task wrapper(type: Wrapper) {
@@ -68,7 +69,8 @@ ext.libraries = [
 
     springboot: [
         "org.springframework.boot:spring-boot:$springBootVersion",
-        "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+        "org.springframework.boot:spring-boot-starter-web:$springBootVersion",
+        "org.springframework.boot:spring-boot-starter-actuator"
     ],
 
     restassured: [
