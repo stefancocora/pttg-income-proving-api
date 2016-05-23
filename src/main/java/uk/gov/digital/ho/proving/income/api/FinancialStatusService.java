@@ -1,29 +1,21 @@
 package uk.gov.digital.ho.proving.income.api;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.servlet.NoHandlerFoundException;
 import uk.gov.digital.ho.proving.income.acl.*;
 import uk.gov.digital.ho.proving.income.domain.Application;
 import uk.gov.digital.ho.proving.income.domain.IncomeProvingResponse;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.regex.Pattern;
 
 @RestController
 @ControllerAdvice
-public class Service {
-    private Logger LOGGER = LoggerFactory.getLogger(Service.class);
+public class FinancialStatusService extends AbstractIncomeProvingController {
 
     @Autowired
     private EarningsService earningsService;
@@ -31,20 +23,15 @@ public class Service {
     @Autowired
     private IndividualService individualService;
 
-    private static final String CONTENT_TYPE = "Content-type";
-    private static final String APPLICATION_JSON = "application/json";
-
-
     private static final int MINIMUM_DEPENDANTS = 0;
     private static final int MAXIMUM_DEPENDANTS = 99;
 
     private static final int NUMBER_OF_DAYS = 182;
 
-    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     // TODO Some of these parameters should be mandatory
     @RequestMapping(value = "/incomeproving/v1/individual/{nino}/financialstatus", method = RequestMethod.GET)
-    public ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> getTemporaryMigrationFamilyApplication(
+    public ResponseEntity<FinancialStatusCheckResponse> getTemporaryMigrationFamilyApplication(
         @PathVariable(value = "nino") String nino,
         @RequestParam(value = "applicationRaisedDate") String applicationDateAsString,
         @RequestParam(value = "dependants", required = false) Integer dependants) {
@@ -76,7 +63,7 @@ public class Service {
 
             Application application = earningsService.lookup(nino, applicationRaisedDate);
 
-            TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
+            FinancialStatusCheckResponse response = new FinancialStatusCheckResponse();
             response.setIndividual(application.getIndividual());
 
             switch (incomeProvingResponse.getPayFreq().toUpperCase()) {
@@ -121,54 +108,11 @@ public class Service {
         }
     }
 
-    private ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> buildErrorResponse(HttpHeaders headers, String statusCode, String statusMessage, HttpStatus status) {
+    protected ResponseEntity<FinancialStatusCheckResponse> buildErrorResponse(HttpHeaders headers, String statusCode, String statusMessage, HttpStatus status) {
         ResponseStatus error = new ResponseStatus(statusCode, statusMessage);
-        TemporaryMigrationFamilyCaseworkerApplicationResponse response = new TemporaryMigrationFamilyCaseworkerApplicationResponse();
+        FinancialStatusCheckResponse response = new FinancialStatusCheckResponse();
         response.setStatus(error);
         return new ResponseEntity<>(response, headers, status);
-    }
-
-
-    private Date subtractXDays(Date date, int days) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.add(Calendar.DATE, -days);
-        return calendar.getTime();
-    }
-
-    private String sanitiseNino(String nino) {
-        return nino.replaceAll("\\s", "").toUpperCase();
-    }
-
-    private void validateNino(String nino) {
-        final Pattern pattern = Pattern.compile("^[a-zA-Z]{2}[0-9]{6}[a-dA-D]{1}$");
-        if (!pattern.matcher(nino).matches()) {
-            throw new IllegalArgumentException("Invalid NINO");
-        }
-    }
-
-    @ExceptionHandler(MissingServletRequestParameterException.class)
-    public Object missingParamterHandler(MissingServletRequestParameterException exception) {
-        LOGGER.debug(exception.getMessage());
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(CONTENT_TYPE, APPLICATION_JSON);
-        return buildErrorResponse(headers, "0008", "Missing parameter: " + exception.getParameterName() , HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(NoHandlerFoundException.class)
-    public Object requestHandlingNoHandlerFound(NoHandlerFoundException exception) {
-        LOGGER.debug(exception.getMessage());
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(CONTENT_TYPE, APPLICATION_JSON);
-        return buildErrorResponse(headers, "0008", "Resource not found: " + exception.getRequestURL() , HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public Object ethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException exception) {
-        LOGGER.debug(exception.getMessage());
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(CONTENT_TYPE, APPLICATION_JSON);
-        return buildErrorResponse(headers, "0004", "Parameter error: Invalid value for " + exception.getName() , HttpStatus.BAD_REQUEST);
     }
 
 }
