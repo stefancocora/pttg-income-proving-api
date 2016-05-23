@@ -23,7 +23,7 @@ public class IncomeRetrievalService extends AbstractIncomeProvingController {
     @Autowired
     private IndividualService individualService;
 
-    @RequestMapping(value = "/incomeproving/v1/individual/{nino:}", method = RequestMethod.GET)
+    @RequestMapping(value = "/incomeproving/v1/individual/{nino}/income", method = RequestMethod.GET)
     public ResponseEntity<IncomeRetrievalResponse> getIncome (
         @PathVariable(value = "nino") String nino,
         @RequestParam(value = "fromDate") String fromDateAsString,
