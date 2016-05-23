@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class Income {
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd/MM/yyyy", timezone = "GMT")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyy-MM-dd", timezone = "GMT")
     private Date payDate;
     private String employer;
     private String income;
