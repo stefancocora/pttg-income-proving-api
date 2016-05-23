@@ -88,9 +88,13 @@ task buildWithApiDocs(type: Jar, dependsOn: ['generateApiDocs', 'build']) {
     group 'build'
 
     destinationDir = new File("build/libs/")
-    appendix = "api+docs"
 
     project.afterEvaluate { // Wait for regular jar task to be evaluated first
+
+        baseName = jar.baseName
+        appendix = "api+docs"
+        version = jar.version
+
         manifest { attributes('Main-Class': "$mainClassName") }
 
         from zipTree(jar.archivePath)
