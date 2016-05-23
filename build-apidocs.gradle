@@ -45,8 +45,7 @@ repositories {
 apply plugin: org.asciidoctor.gradle.AsciidoctorPlugin
 
 dependencies {
-    testCompile 'org.springframework.restdocs:spring-restdocs-core:1.1.0.RC1'
-    testCompile 'org.springframework.restdocs:spring-restdocs-restassured:1.1.0.RC1'
+    testCompile libraries.springrestdocs
 }
 
 sourceSets {

@@ -26,6 +26,7 @@ ext{
     serenityVersion = '1.1.31'
     spockVersion = '1.0-groovy-2.4'
     springBootVersion = '1.3.3.RELEASE'
+    springRestDocsVersion = '1.1.0.RC1'
     springVersion = '4.2.5.RELEASE'
 }
 
@@ -69,8 +70,16 @@ ext.libraries = [
 
     springboot: [
         "org.springframework.boot:spring-boot:$springBootVersion",
-        "org.springframework.boot:spring-boot-starter-web:$springBootVersion",
-        "org.springframework.boot:spring-boot-starter-actuator"
+        "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+    ],
+
+    springbootDev: [
+        "org.springframework.boot:spring-boot-starter-actuator:$springBootVersion"
+    ],
+
+    springrestdocs: [
+        "org.springframework.restdocs:spring-restdocs-core:$springRestDocsVersion",
+        "org.springframework.restdocs:spring-restdocs-restassured:$springRestDocsVersion"
     ],
 
     restassured: [
@@ -93,16 +102,6 @@ ext.onlyFor = { task, config ->
     }
 }
 
-def applicationProperties = new Properties()
-new File("$projectDir/src/main/resources/application.properties").withInputStream {
-    stream -> applicationProperties.load(stream)
-}
 
-task bootStop() {
-    description 'Stop the running Spring Boot application via the actuator shutdown method'
-    group 'application'
-    def port = applicationProperties["server.port"]
-    def command = "curl -X POST localhost:$port/shutdown"
-    def proc = command.execute()
-    proc.waitFor()
-}
+
+
