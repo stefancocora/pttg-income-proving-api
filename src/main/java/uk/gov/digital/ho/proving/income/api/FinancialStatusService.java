@@ -108,6 +108,7 @@ public class FinancialStatusService extends AbstractIncomeProvingController {
         }
     }
 
+    @Override
     protected ResponseEntity<FinancialStatusCheckResponse> buildErrorResponse(HttpHeaders headers, String statusCode, String statusMessage, HttpStatus status) {
         ResponseStatus error = new ResponseStatus(statusCode, statusMessage);
         FinancialStatusCheckResponse response = new FinancialStatusCheckResponse();

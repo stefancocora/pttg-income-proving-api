@@ -31,7 +31,7 @@ Feature: API returns a list of income for a specific NINO inorder to understand 
     Given A service is consuming the Income Proving TM Family API
     When the Income Proving API is invoked with the following:
       | NINO      | QQ654321A  |
-      | From Date | 2015-02-15 |
+      | From Date | 2015-02-11 |
       | To Date   | 2016-01-15 |
     Then The API provides the following result:
       | 2015-02-11 | Sheffield Spice  | 1000.00  |
@@ -62,7 +62,7 @@ Feature: API returns a list of income for a specific NINO inorder to understand 
       | From Date | 2015-01-01 |
       | To Date   | 2015-06-30 |
     Then The API provides the following result:
-      | 2015-01-10 | Halifax PLC      | 2000.00  |
+      | 2015-01-10 | Flying Pizza Ltd | 2000.00  |
       | 2015-01-17 | Halifax PLC      | 1000.00  |
       | 2015-02-01 | Flying Pizza Ltd | 1666.00  |
       | 2015-02-10 | Halifax PLC      | 2000.00  |
@@ -72,7 +72,8 @@ Feature: API returns a list of income for a specific NINO inorder to understand 
       | 2015-04-10 | Halifax PLC      | 2000.00  |
       | 2015-05-10 | Halifax PLC      | 2000.00  |
       | 2015-06-10 | Halifax PLC      | 2000.00  |
-      | Total:     |                  | 17998.00 |
+      | 2015-06-17 | Flying Pizza Ltd | 2000.00  |
+      | Total:     |                  | 19998.00 |
     And The API provides the following Individual details:
       | HTTP Status               | 200       |
       | Individual forename       | Harry     |
@@ -86,7 +87,7 @@ Feature: API returns a list of income for a specific NINO inorder to understand 
     When the Income Proving API is invoked with the following:
       | NINO      | QQ987654A  |
       | From Date | 2015-01-01 |
-      | To Date   | 2015-06-30 |
+      | To Date   | 2015-08-30 |
     Then The API provides the following result:
       | 2015-01-04 | Flying Pizza Ltd | 1666.00  |
       | 2015-02-04 | Flying Pizza Ltd | 1666.00  |
