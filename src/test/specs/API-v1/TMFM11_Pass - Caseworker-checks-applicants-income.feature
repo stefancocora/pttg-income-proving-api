@@ -61,7 +61,7 @@ Feature: API returns a list of income for a specific NINO inorder to understand 
       | NINO      | QQ023987A  |
       | From Date | 2015-01-01 |
       | To Date   | 2015-06-30 |
-    Then The service provides the following result:
+    Then The API provides the following result:
       | 2015-01-10 | Halifax PLC      | 2000.00  |
       | 2015-01-17 | Halifax PLC      | 1000.00  |
       | 2015-02-01 | Flying Pizza Ltd | 1666.00  |
@@ -87,7 +87,7 @@ Feature: API returns a list of income for a specific NINO inorder to understand 
       | NINO      | QQ987654A  |
       | From Date | 2015-01-01 |
       | To Date   | 2015-06-30 |
-    Then The service provides the following result:
+    Then The API provides the following result:
       | 2015-01-04 | Flying Pizza Ltd | 1666.00  |
       | 2015-02-04 | Flying Pizza Ltd | 1666.00  |
       | 2015-05-20 | Pizza Hut LTD    | 2500.00  |
@@ -109,7 +109,7 @@ Feature: API returns a list of income for a specific NINO inorder to understand 
       | NINO      | QQ765432A  |
       | From Date | 2015-02-01 |
       | To Date   | 2016-01-31 |
-    Then The service provides the following result:
+    Then The API provides the following result:
       | 2015-02-01 | Flying Pizza Ltd | 1666.00  |
       | 2015-03-01 | Flying Pizza Ltd | 1666.00  |
       | 2015-04-01 | Flying Pizza Ltd | 1666.00  |
