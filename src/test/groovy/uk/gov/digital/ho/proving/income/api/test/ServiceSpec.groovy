@@ -6,8 +6,8 @@ import spock.lang.Specification
 import uk.gov.digital.ho.proving.income.acl.IndividualService
 import uk.gov.digital.ho.proving.income.acl.EarningsService
 import uk.gov.digital.ho.proving.income.acl.EarningsServiceNoUniqueMatch
-import uk.gov.digital.ho.proving.income.api.Service
-import uk.gov.digital.ho.proving.income.api.TemporaryMigrationFamilyCaseworkerApplicationResponse
+import uk.gov.digital.ho.proving.income.api.FinancialStatusService
+import uk.gov.digital.ho.proving.income.api.FinancialStatusCheckResponse
 import uk.gov.digital.ho.proving.income.domain.Individual
 import uk.gov.digital.ho.proving.income.domain.Income
 import uk.gov.digital.ho.proving.income.domain.IncomeProvingResponse
@@ -17,7 +17,7 @@ class ServiceSpec extends Specification {
     final String PIZZA_HUT = "Pizza Hut"
     final String BURGER_KING = "Burger King"
 
-    Service sut = new Service();
+    FinancialStatusService sut = new FinancialStatusService();
 
     def "valid NINO is looked up on the earnings service"() {
         given:
@@ -34,7 +34,7 @@ class ServiceSpec extends Specification {
 
         when:
 
-        ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456A", "2015-09-23", 0)
+        ResponseEntity<FinancialStatusCheckResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456A", "2015-09-23", 0)
 
         then:
 
@@ -45,7 +45,7 @@ class ServiceSpec extends Specification {
 
         when:
 
-        ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456AX", "2016-03-21", 0)
+        ResponseEntity<FinancialStatusCheckResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456AX", "2016-03-21", 0)
 
         then:
 
@@ -70,7 +70,7 @@ class ServiceSpec extends Specification {
         sut.earningsService = stubEarningsService
 
         when:
-        ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456C", "2016-03-21", 0)
+        ResponseEntity<FinancialStatusCheckResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456C", "2016-03-21", 0)
         then:
         result.statusCode == HttpStatus.NOT_FOUND
 
@@ -78,7 +78,7 @@ class ServiceSpec extends Specification {
 
     def "cannot submit less than zero dependants"() {
         when:
-        ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456C", "2016-03-21", -1)
+        ResponseEntity<FinancialStatusCheckResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456C", "2016-03-21", -1)
         then:
         result.statusCode == HttpStatus.BAD_REQUEST
     }
@@ -95,7 +95,7 @@ class ServiceSpec extends Specification {
         }
         sut.individualService = stubIndividualService
         when:
-        ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456A", "2015-09-23", 1)
+        ResponseEntity<FinancialStatusCheckResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456A", "2015-09-23", 1)
         then:
         result.statusCode == HttpStatus.OK
     }
@@ -146,7 +146,7 @@ class ServiceSpec extends Specification {
 
         when:
 
-        ResponseEntity<TemporaryMigrationFamilyCaseworkerApplicationResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456A", "2015-09-23", 0)
+        ResponseEntity<FinancialStatusCheckResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456A", "2015-09-23", 0)
 
         then:
 

@@ -2,17 +2,21 @@ package uk.gov.digital.ho.proving.income.api;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import uk.gov.digital.ho.proving.income.domain.Income;
 import uk.gov.digital.ho.proving.income.domain.Individual;
 
+import java.util.List;
 
-public class TemporaryMigrationFamilyCaseworkerApplicationResponse {
+
+public class IncomeRetrievalResponse {
 
     @JsonInclude(Include.NON_NULL)
     private Individual individual;
 
     @JsonInclude(Include.NON_NULL)
-    private CategoryCheck categoryCheck;
+    List<Income> incomes;
 
+    @JsonInclude(Include.NON_NULL)
     private ResponseStatus status;
 
     public Individual getIndividual() {
@@ -23,12 +27,12 @@ public class TemporaryMigrationFamilyCaseworkerApplicationResponse {
         this.individual = individual;
     }
 
-    public CategoryCheck getCategoryCheck() {
-        return categoryCheck;
+    public List<Income> getIncomes() {
+        return incomes;
     }
 
-    public void setCategoryCheck(CategoryCheck categoryCheck) {
-        this.categoryCheck = categoryCheck;
+    public void setIncomes(List<Income> incomes) {
+        this.incomes = incomes;
     }
 
     public ResponseStatus getStatus() {
