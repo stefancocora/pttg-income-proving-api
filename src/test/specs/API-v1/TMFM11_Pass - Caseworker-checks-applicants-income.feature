@@ -99,7 +99,7 @@ Feature: API returns a list of income for a specific NINO inorder to understand 
       | HTTP Status               | 200       |
       | Individual forename       | Harry     |
       | Individual surname        | Callahan  |
-      | National Insurance Number | QQ023987A |
+      | National Insurance Number | QQ987654A |
 
 
 #@ Changed scenario, added Your search box
@@ -127,4 +127,4 @@ Feature: API returns a list of income for a specific NINO inorder to understand 
       | HTTP Status               | 200       |
       | Individual forename       | Harry     |
       | Individual surname        | Callahan  |
-      | National Insurance Number | QQ023987A |
+      | National Insurance Number | QQ765432A |

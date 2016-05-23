@@ -22,9 +22,10 @@ class ProvingThingsApiSteps {
     public Response resp
     String jsonAsString
     String nino
-    String dependants=""
+    String dependants = ""
     String applicationRaisedDate
-
+    String fromDate = ""
+    String toDate =""
 
     public String tocamelcase(String g) {
         StringBuilder sbl = new StringBuilder()
@@ -74,6 +75,13 @@ class ProvingThingsApiSteps {
             if (s.equalsIgnoreCase("dependants")) {
                 dependants = entries.get(s)
             }
+            if (s.equalsIgnoreCase("From Date")) {
+                fromDate = entries.get(s)
+
+            }
+            if(s.equalsIgnoreCase("To Date")){
+                toDate = entries.get(s)
+            }
         }
     }
 
@@ -111,7 +119,7 @@ class ProvingThingsApiSteps {
         getTableData(expectedResult)
         resp = get("http://localhost:8081/incomeproving/v1/individual/{nino}/financialstatus?applicationRaisedDate={applicationRaisedDate}&dependants={dependants}", nino, applicationRaisedDate, dependants);
         jsonAsString = resp.asString();
-        println "" + jsonAsString
+        println "Generic Tool Json" + jsonAsString
     }
 
     @Then("^The Income Proving TM Family API provides the following result:\$")
@@ -120,14 +128,19 @@ class ProvingThingsApiSteps {
 
     }
 
+    //For generic Tool
     @When("^the Income Proving API is invoked with the following:\$")
     public void the_Income_Proving_API_is_invoked_with_the_following(DataTable arg1) throws Throwable {
+        getTableData(arg1)
+        resp = get("http://localhost:8081/incomeproving/v1/individual/{nino}/income?fromDate={fromDate}&toDate={toDate}", nino, fromDate, toDate)
 
+        jsonAsString = resp.asString();
+        println "" + jsonAsString
     }
 
     @Then("^The API provides the following Individual details:\$")
     public void the_API_provides_the_following_Individual_details(DataTable arg1) throws Throwable {
-
+        validateJsonResult(arg1)
     }
 
     @Then("^The API provides the following result:\$")
