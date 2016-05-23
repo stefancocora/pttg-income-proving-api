@@ -59,14 +59,16 @@ test {
     exclude "$testSrcPattern"
 }
 
-task apiDocTests(type: Test) {
+task apiDocTest(type: Test) {
     description 'Runs the API documentation tests (generates doc snippets to build/generated-snippets but does not process into HTML)'
     group 'documentation'
     include "$testSrcPattern"
     classpath = sourceSets.test.runtimeClasspath + files("$sourceDocsDir/resources")
+    reports.html.destination = file("$buildDir/reports/apidoctests")
+    reports.junitXml.destination = file("$buildDir/test-results/apidoctests")
 }
 
-task generateApiDocs(dependsOn: ['apiDocTests', 'asciidoctor']) {
+task generateApiDocs(dependsOn: ['apiDocTest', 'asciidoctor']) {
     description 'Generates the API documentation - look in build/asciidoc for the output'
     group 'documentation'
 }
@@ -78,7 +80,7 @@ asciidoctor {
     outputDir 'build/asciidoc'
     sourceDir "$sourceDocsDir/asciidoc"
     backends 'pdf', 'html5'
-    mustRunAfter 'apiDocTests'
+    mustRunAfter 'apiDocTest'
 }
 
 task buildWithApiDocs(type: Jar, dependsOn: ['generateApiDocs', 'build']) {
@@ -88,7 +90,7 @@ task buildWithApiDocs(type: Jar, dependsOn: ['generateApiDocs', 'build']) {
     destinationDir = new File("build/libs/")
     appendix = "api+docs"
 
-    project.afterEvaluate { // Wait for regular jar task to be evaulated first
+    project.afterEvaluate { // Wait for regular jar task to be evaluated first
         manifest { attributes('Main-Class': "$mainClassName") }
 
         from zipTree(jar.archivePath)
