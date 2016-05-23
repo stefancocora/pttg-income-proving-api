@@ -93,6 +93,11 @@ ext.libraries = [
     ]
 ]
 
+// Separate all test reports according to task name
+tasks.withType(Test) {
+    reports.html.destination = file("${reporting.baseDir}/${name}")
+}
+
 // Apply configuration only when the given task is in the task execution graph
 ext.onlyFor = { task, config ->
     gradle.taskGraph.whenReady { graph ->

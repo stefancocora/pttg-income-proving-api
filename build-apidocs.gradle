@@ -63,8 +63,6 @@ task apiDocTest(type: Test) {
     group 'documentation'
     include "$testSrcPattern"
     classpath = sourceSets.test.runtimeClasspath + files("$sourceDocsDir/resources")
-    reports.html.destination = file("$buildDir/reports/apidoctests")
-    reports.junitXml.destination = file("$buildDir/test-results/apidoctests")
 }
 
 task generateApiDocs(dependsOn: ['apiDocTest', 'asciidoctor']) {
