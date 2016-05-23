@@ -9,10 +9,32 @@ buildscript {
     }
 }
 
+
+// Expected structure:
+//
+//└── src
+//    ├── doc
+//    │   ├── asciidoc  == static adoc files eg index.adoc
+//    │   └── resources
+//    │       └── org
+//    │           └── springframework
+//    │               └── restdocs
+//    │                   └── templates  == spring rest docs template overrides
+//    └── test
+//        └── java
+//            └── apidocs  == spring rest docs test cases.
+
 ext {
-    testSrcRoot = 'apidocs'
-    sourceDocsLocation = 'src/doc'
-    archiveLocation = 'static/docs'
+    // pattern for including/excluding api doc tests under src/test/java
+    testSrcPattern = 'apidocs/**'
+
+    // root for all adoc sources to add to path
+    sourceDocsDir = 'src/doc'
+
+    // location for generated docs inside jar
+    jarDocsDir = 'static/docs'
+
+    // working directory for doc fragments produced by tests
     snippetsDir = file('build/generated-snippets')
 }
 
@@ -20,7 +42,6 @@ repositories {
     maven { url 'https://repo.spring.io/libs-milestone' }
 }
 
-//apply plugin: 'org.asciidoctor.convert' - can't use plugin ids in script plugin
 apply plugin: org.asciidoctor.gradle.AsciidoctorPlugin
 
 dependencies {
@@ -30,44 +51,48 @@ dependencies {
 
 sourceSets {
     doc {
-        resources.srcDir file("$sourceDocsLocation/resources")
+        resources.srcDir file("$sourceDocsDir/resources")
     }
 }
 
-jar {
-    dependsOn asciidoctor
-    from("${asciidoctor.outputDir}/html5/index.html") { into archiveLocation }
-    from("${asciidoctor.outputDir}/pdf/index.pdf") { into archiveLocation }
-}
-
 test {
-    exclude "$testSrcRoot/**"
+    exclude "$testSrcPattern"
 }
 
 task apiDocTests(type: Test) {
-    description = 'Runs the API documentation tests (generates doc snippets to build/generated-snippets but does not process into HTML)'
-    group = 'documentation'
-    include "$testSrcRoot/**"
-    classpath = sourceSets.test.runtimeClasspath + files("$sourceDocsLocation/resources")
-}
-
-task generateApiDocs(dependsOn: ['apiDocTests', 'asciidoctor']){
-    description = 'Generates the API documentation - look in build/asciidoc for the output'
+    description 'Runs the API documentation tests (generates doc snippets to build/generated-snippets but does not process into HTML)'
     group 'documentation'
-    onlyFor(generateApiDocs) {asciidoctor.enabled = true}
+    include "$testSrcPattern"
+    classpath = sourceSets.test.runtimeClasspath + files("$sourceDocsDir/resources")
 }
 
-task buildWithApiDocs(dependsOn: ['apiDocTests', 'build']){
-    description 'Same as build but also generates API docs and adds them to the jar'
-    group 'build'
-    onlyFor(buildWithApiDocs) {asciidoctor.enabled = true}
+task generateApiDocs(dependsOn: ['apiDocTests', 'asciidoctor']) {
+    description 'Generates the API documentation - look in build/asciidoc for the output'
+    group 'documentation'
 }
 
 asciidoctor {
-    description = 'You should use the generateApiDocs task instead'
+    description 'You should use the generateApiDocs task instead'
     attributes 'snippets': snippetsDir
     inputs.dir snippetsDir
     outputDir 'build/asciidoc'
-    sourceDir "$sourceDocsLocation/asciidoc"
+    sourceDir "$sourceDocsDir/asciidoc"
     backends 'pdf', 'html5'
-}.enabled(false)
+    mustRunAfter 'apiDocTests'
+}
+
+task buildWithApiDocs(type: Jar, dependsOn: ['generateApiDocs', 'build']) {
+    description 'Same as build but also generates API docs and adds them to the jar'
+    group 'build'
+
+    destinationDir = new File("build/libs/")
+    appendix = "api+docs"
+
+    project.afterEvaluate { // Wait for regular jar task to be evaulated first
+        manifest { attributes('Main-Class': "$mainClassName") }
+
+        from zipTree(jar.archivePath)
+        from("${asciidoctor.outputDir}/html5/index.html") { into "$jarDocsDir" }
+        from("${asciidoctor.outputDir}/pdf/index.pdf") { into "$jarDocsDir" }
+    }
+}

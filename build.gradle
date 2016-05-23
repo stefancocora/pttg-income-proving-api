@@ -47,16 +47,5 @@ task acceptanceTest(type: Test) {
     finalizedBy aggregate
 }
 
-def applicationProperties = new Properties()
-new File("$projectDir/src/main/resources/application.properties").withInputStream {
-    stream -> applicationProperties.load(stream)
-}
 
-task bootStop() {
-    group 'application'
-    def port = applicationProperties["server.port"]
-    def command = "curl -X POST localhost:$port/shutdown"
-    def proc = command.execute()
-    proc.waitFor()
-}
 
