@@ -1,7 +1,6 @@
 package uk.gov.digital.ho.proving.income.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,6 +59,7 @@ public class IncomeRetrievalService extends AbstractIncomeProvingController {
 
    }
 
+    @Override
     protected ResponseEntity<IncomeRetrievalResponse> buildErrorResponse(HttpHeaders headers, String statusCode, String statusMessage, HttpStatus status) {
         ResponseStatus error = new ResponseStatus(statusCode, statusMessage);
         IncomeRetrievalResponse response = new IncomeRetrievalResponse();
