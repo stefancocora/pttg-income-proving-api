@@ -1,7 +1,7 @@
 Feature: Validation of the API fields and data
 
   National Insurance Numbers (NINO) - Format and Security: A NINO is made up of two letters, six numbers and a final letter (which is always A, B, C, or D)
-  Date formats: Format should be dd/mm/yyyy
+  Date formats: Format should be yyyy-MM-dd
 
 ###################################### Section - Validation on the NINO ######################################
 
