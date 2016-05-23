@@ -118,14 +118,20 @@ class ProvingThingsApiSteps {
 
     }
 
+    @When("^the Income Proving API is invoked with the following:\$")
+    public void the_Income_Proving_API_is_invoked_with_the_following(DataTable arg1) throws Throwable {
+
+    }
+
     @Then("^The API provides the following Individual details:\$")
     public void the_API_provides_the_following_Individual_details(DataTable arg1) throws Throwable {
 
     }
 
-    @When("^the Income Proving API is invoked with the following:\$")
-    public void the_Income_Proving_API_is_invoked_with_the_following(DataTable arg1) throws Throwable {
+    @Then("^The API provides the following result:\$")
+    public void the_API_provides_the_following_details(DataTable arg1) throws Throwable {
 
     }
+
 
 }
