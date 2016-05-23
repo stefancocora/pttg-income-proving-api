@@ -16,6 +16,7 @@ import uk.gov.digital.ho.proving.income.domain.IncomeProvingResponse;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 /**
  * This class retrieves data from an external sources and converts it to Home Office domain classes. When the HMRC web
@@ -32,7 +33,8 @@ public class MongodbBackedApplicantService implements IndividualService {
 
     private static Logger LOGGER = LoggerFactory.getLogger(MongodbBackedApplicantService.class);
 
-    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    // SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     @Override
     public IncomeProvingResponse lookup(String nino, Date applicationFromDate, Date applicationToDate) {
@@ -41,8 +43,7 @@ public class MongodbBackedApplicantService implements IndividualService {
         String fromDate = sdf.format(applicationFromDate);
         String toDate = sdf.format(applicationToDate);
 
-        DBObject query = new QueryBuilder().start().put("individual.nino").is(nino)
-                .get();
+        DBObject query = new QueryBuilder().start().put("individual.nino").is(nino).get();
         DBCursor cursor = applicantCollection.find(query);
 
         if (1 == cursor.size()) {
@@ -51,6 +52,9 @@ public class MongodbBackedApplicantService implements IndividualService {
 
             try {
                 IncomeProvingResponse incomeProvingResponse = mapper.readValue(jsonResponse.toString(), IncomeProvingResponse.class);
+                incomeProvingResponse.setIncomes(incomeProvingResponse.getIncomes().stream().filter( income ->
+                    !(income.getPayDate().before(applicationFromDate)) && !(income.getPayDate().after(applicationToDate))
+                ).collect(Collectors.toList()));
                 LOGGER.info(incomeProvingResponse.toString());
                 return incomeProvingResponse;
             } catch (JSONException | IOException e) {

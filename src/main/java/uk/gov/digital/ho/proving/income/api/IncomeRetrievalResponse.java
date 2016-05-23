@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import uk.gov.digital.ho.proving.income.domain.Income;
 import uk.gov.digital.ho.proving.income.domain.Individual;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Stream;
 
 
 public class IncomeRetrievalResponse {
@@ -18,6 +20,13 @@ public class IncomeRetrievalResponse {
 
     @JsonInclude(Include.NON_NULL)
     private ResponseStatus status;
+
+    public String getTotal() {
+        Stream<BigDecimal> decimalValues = incomes.stream().map (income -> new BigDecimal(income.getIncome()));
+        BigDecimal total = decimalValues.reduce(BigDecimal.ZERO, ( sum, value ) -> sum.add(value));
+
+        return total.toString();
+    }
 
     public Individual getIndividual() {
         return individual;

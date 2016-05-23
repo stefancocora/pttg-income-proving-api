@@ -6,6 +6,8 @@ import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
 import net.thucydides.core.annotations.Managed
+import org.openqa.selenium.By
+import uk.gov.digital.ho.proving.income.domain.Income
 
 import static com.jayway.jsonpath.JsonPath.read
 import static com.jayway.restassured.RestAssured.get
@@ -142,9 +144,31 @@ class ProvingThingsApiSteps {
     }
 
     @Then("^The API provides the following result:\$")
-    public void the_API_provides_the_following_details(DataTable arg1) throws Throwable {
+    public void the_API_provides_the_following_details(DataTable expectedResult) throws Throwable {
 
+// TODO Remove when more steps have been implemented
+//        resp = get("http://localhost:8081/incomeproving/v1/individual/{nino}/income?fromDate={fromDate}&toDate={toDate}", "QQ123456A", "2015-01-01","2015-06-30");
+//        jsonAsString = resp.asString();
+
+        List<List<String>> rawData = expectedResult.raw()
+        def incomes = read(jsonAsString, "incomes")
+        assert(incomes.size() >= rawData.size() -1)
+
+        String total = read(jsonAsString, "total")
+
+        int index =0
+
+        for (List<String> row : rawData) {
+
+            if (!row.get(0).startsWith("Total")) {
+                assert (row.get(0).equals(incomes.get(index).get("payDate")))
+                assert (row.get(1).equals(incomes.get(index).get("employer")))
+                assert (row.get(2).equals(incomes.get(index).get("income")))
+            } else {
+                assert (row.get(2).equals(total))
+            }
+            index++
+        }
     }
-
 
 }
