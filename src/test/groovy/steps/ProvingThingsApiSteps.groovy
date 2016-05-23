@@ -133,10 +133,7 @@ class ProvingThingsApiSteps {
 
     }
 
-    @Then("^The service provides the following result:\$")
-    public void the_service_provides_the_following_result(DataTable arg1) throws Throwable {
 
-    }
 
 
 }
