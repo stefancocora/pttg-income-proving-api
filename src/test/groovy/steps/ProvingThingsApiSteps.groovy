@@ -115,6 +115,28 @@ class ProvingThingsApiSteps {
     @Then("^The Income Proving TM Family API provides the following result:\$")
     public void the_Income_Proving_TM_Family_API_provides_the_following_result(DataTable arg1) {
         validateJsonResult(arg1)
+
     }
+
+    @When("^the Income Proving API is invoked with the following:\$")
+    public void the_Income_Proving_API_is_invoked_with_the_following(DataTable arg1) throws Throwable {
+
+    }
+
+    @Then("^The API provides the following result:\$")
+    public void the_API_provides_the_following_result(DataTable arg1) throws Throwable {
+
+    }
+
+    @Then("^The API provides the following Individual details:\$")
+    public void the_API_provides_the_following_Individual_details(DataTable arg1) throws Throwable {
+
+    }
+
+    @Then("^The service provides the following result:\$")
+    public void the_service_provides_the_following_result(DataTable arg1) throws Throwable {
+
+    }
+
 
 }
