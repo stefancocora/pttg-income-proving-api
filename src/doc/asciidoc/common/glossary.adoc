@@ -12,6 +12,8 @@ Payment Frequency:: One of the following codes
 
 |M1
 |Calendar Monthly
+|W1
+|Weekly
 |?
 | to do
 

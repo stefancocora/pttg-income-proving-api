@@ -25,18 +25,6 @@ cause of the error.
 |===
 | Code | Meaning
 
-| `0001`
-| Invalid NINO
-
-| `0002`
-| Invalid application date
-
-| `0003`
-| Failed to retrieve earnings details
-
-| `0004`
-| Unknown payment frequency type
-
-| `0008`
-| Missing parameter - the message will identify the missed parameter
+| `to do`
+| to do - Pending details of Home Office standard error codes
 |===
