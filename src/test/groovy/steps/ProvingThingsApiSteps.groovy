@@ -170,4 +170,9 @@ class ProvingThingsApiSteps {
         checkIncome(expectedResult)
     }
 
+
+
+
+
+
 }
