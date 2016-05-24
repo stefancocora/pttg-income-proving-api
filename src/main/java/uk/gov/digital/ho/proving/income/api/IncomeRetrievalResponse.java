@@ -17,7 +17,10 @@ public class IncomeRetrievalResponse extends BaseResponse {
     @JsonInclude(Include.NON_NULL)
     List<Income> incomes;
 
-    public String getTotal() {
+    @JsonInclude(Include.NON_NULL)
+    public String total;
+
+    private String getTotal() {
         Stream<BigDecimal> decimalValues = incomes.stream().map (income -> new BigDecimal(income.getIncome()));
         BigDecimal total = decimalValues.reduce(BigDecimal.ZERO, ( sum, value ) -> sum.add(value));
 
@@ -38,6 +41,7 @@ public class IncomeRetrievalResponse extends BaseResponse {
 
     public void setIncomes(List<Income> incomes) {
         this.incomes = incomes;
+        total = getTotal();
     }
 
 }

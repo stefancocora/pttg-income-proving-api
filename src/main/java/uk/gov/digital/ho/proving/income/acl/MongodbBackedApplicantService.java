@@ -57,7 +57,7 @@ public class MongodbBackedApplicantService implements IndividualService {
                 ).collect(Collectors.toList()));
                 LOGGER.info(incomeProvingResponse.toString());
                 return incomeProvingResponse;
-            } catch (JSONException | IOException e) {
+            } catch ( Exception e) {
                 LOGGER.error("Could not map JSON from mongodb to Application domain class", e);
                 // TODO change exception or replace with Optional
                 throw new EarningsServiceFailedToMapDataToDomainClass();

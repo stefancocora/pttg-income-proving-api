@@ -32,8 +32,8 @@ Feature: Robert is presented with an error when attempting to obtain a NINOs inc
       | To Date   | 2015-06-30 |
     Then The API provides the following Individual details:
       | HTTP Status    | 400                                                 |
-      | Status code    | 0004                                                |
-      | Status message | Required String parameter 'fromDate' is not present |
+      | Status code    | 0002                                                |
+      | Status message | Parameter error: From date is invalid |
 
   Scenario: Robert is unable to obtain the NINOs income details due to NOT providing the To Date field
     Given A service is consuming the Income Proving TM Family API
@@ -43,8 +43,8 @@ Feature: Robert is presented with an error when attempting to obtain a NINOs inc
       | To Date   |            |
     Then The API provides the following Individual details:
       | HTTP Status    | 400                                               |
-      | Status code    | 0004                                              |
-      | Status message | Required String parameter 'toDate' is not present |
+      | Status code    | 0002                                              |
+      | Status message | Parameter error: To date is invalid |
 
   Scenario: Robert is unable to obtain the NINOs income details due to NINO does not exist being held by the HMRC for the give NINO
     Given A service is consuming the Income Proving TM Family API
