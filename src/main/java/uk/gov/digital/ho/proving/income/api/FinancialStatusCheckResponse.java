@@ -4,16 +4,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import uk.gov.digital.ho.proving.income.domain.Individual;
 
-
-public class FinancialStatusCheckResponse {
+public class FinancialStatusCheckResponse extends BaseResponse{
 
     @JsonInclude(Include.NON_NULL)
     private Individual individual;
 
     @JsonInclude(Include.NON_NULL)
     private CategoryCheck categoryCheck;
-
-    private ResponseStatus status;
 
     public Individual getIndividual() {
         return individual;
@@ -31,11 +28,4 @@ public class FinancialStatusCheckResponse {
         this.categoryCheck = categoryCheck;
     }
 
-    public ResponseStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(ResponseStatus status) {
-        this.status = status;
-    }
 }
