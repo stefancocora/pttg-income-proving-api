@@ -53,9 +53,9 @@ Feature: Robert is presented with an error when attempting to obtain a NINOs inc
       | From Date | 2015-01-01 |
       | To Date   | 2015-06-30 |
     Then The API provides the following Individual details:
-      | HTTP Status    | 400                           |
+      | HTTP Status    | 404                           |
       | Status code    | 0004                          |
-      | Status message | Parameter error: Invalid NINO |
+      | Status message | Resource not found            |
 
   Scenario: Robert is unable to obtain the NINOs income details due to no income records being held by the HMRC for the give NINO
     Given A service is consuming the Income Proving TM Family API
