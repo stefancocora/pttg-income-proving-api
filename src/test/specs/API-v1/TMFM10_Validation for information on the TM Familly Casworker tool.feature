@@ -107,6 +107,18 @@ Feature: Validation of the API fields and data
       | Status code    | 0004                                     |
       | Status message | Parameter error: applicationRaisedDate |
 
+ #New scenario - Added 24.05.16
+    Scenario: The API prevents a future date as the Application Raised Date
+        Given A service is consuming the Income Proving TM Family API
+        When the Income Proving TM Family API is invoked with the following:
+            | NINO                    | QQ125556A |
+            | Application Raised Date | 01/01/2017 |
+        Then The Income Proving TM Family API provides the following result:
+            | HTTP Status    | 400                                                |
+            | Status code    | 0004                                               |
+            | Status message | Parameter error: Application raise date is invalid |
+
+
 ###################################### Section - Validation on the Dependants field ######################################
 
   Scenario: The API provides Dependants with a character
