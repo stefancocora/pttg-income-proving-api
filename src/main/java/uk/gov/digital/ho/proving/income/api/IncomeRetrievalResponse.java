@@ -9,17 +9,13 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Stream;
 
-
-public class IncomeRetrievalResponse {
+public class IncomeRetrievalResponse extends BaseResponse {
 
     @JsonInclude(Include.NON_NULL)
     private Individual individual;
 
     @JsonInclude(Include.NON_NULL)
     List<Income> incomes;
-
-    @JsonInclude(Include.NON_NULL)
-    private ResponseStatus status;
 
     public String getTotal() {
         Stream<BigDecimal> decimalValues = incomes.stream().map (income -> new BigDecimal(income.getIncome()));
@@ -44,11 +40,4 @@ public class IncomeRetrievalResponse {
         this.incomes = incomes;
     }
 
-    public ResponseStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(ResponseStatus status) {
-        this.status = status;
-    }
 }
