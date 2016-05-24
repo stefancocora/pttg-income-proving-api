@@ -35,7 +35,8 @@ public class IncomeRetrievalService extends AbstractIncomeProvingController {
 
 
         try {
-            validateNino(nino);
+            String cleanNino = sanitiseNino(nino);
+            validateNino(cleanNino);
 
             Optional<Date> fromDate = parseDate(fromDateAsString);
             if (!fromDate.isPresent()) {
@@ -50,7 +51,7 @@ public class IncomeRetrievalService extends AbstractIncomeProvingController {
 
             Optional<IncomeProvingResponse> incomeProvingResponse = fromDate.flatMap(from ->
                 toDate.map(to ->
-                    individualService.lookup(nino, from, to)
+                    individualService.lookup(cleanNino, from, to)
                 )
             );
 
