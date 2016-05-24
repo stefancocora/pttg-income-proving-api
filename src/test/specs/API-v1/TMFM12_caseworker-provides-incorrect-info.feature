@@ -66,6 +66,6 @@ Feature: Robert is presented with an error when attempting to obtain a NINOs inc
     Then The API provides the following Individual details:
       | HTTP Status    | 200                           |
       | Status code    | 0004                          |
-      | Status message | Status Message: NINO does not exist |
+      | Status message | Status Message: No record exist for this NINO |
 
 
