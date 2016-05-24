@@ -64,8 +64,8 @@ Feature: Robert is presented with an error when attempting to obtain a NINOs inc
       | From Date | 2015-01-01 |
       | To Date   | 2015-06-30 |
     Then The API provides the following Individual details:
-      | HTTP Status    | 400                           |
+      | HTTP Status    | 200                           |
       | Status code    | 0004                          |
-      | Status message | Parameter error: Invalid NINO |
+      | Status message | Status Message: NINO does not exist |
 
 
