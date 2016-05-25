@@ -21,6 +21,7 @@ Feature: API returns a list of income for a specific NINO inorder to understand 
       | Total:     |                  | 9996.66 |
     And The API provides the following Individual details:
       | HTTP Status               | 200       |
+      | Individual title          | Mr        |
       | Individual forename       | Harry     |
       | Individual surname        | Callahan  |
       | National Insurance Number | QQ123456A |
@@ -49,6 +50,7 @@ Feature: API returns a list of income for a specific NINO inorder to understand 
       | Total:     |                  | 18830.00 |
     And The API provides the following Individual details:
       | HTTP Status               | 200       |
+      | Individual title          | Mr        |
       | Individual forename       | Harry     |
       | Individual surname        | Callahan  |
       | National Insurance Number | QQ654321A |
@@ -76,6 +78,7 @@ Feature: API returns a list of income for a specific NINO inorder to understand 
       | Total:     |                  | 19998.00 |
     And The API provides the following Individual details:
       | HTTP Status               | 200       |
+      | Individual title          | Mr        |
       | Individual forename       | Harry     |
       | Individual surname        | Callahan  |
       | National Insurance Number | QQ023987A |
@@ -98,6 +101,7 @@ Feature: API returns a list of income for a specific NINO inorder to understand 
       | Total:     |                  | 10830.00 |
     And The API provides the following Individual details:
       | HTTP Status               | 200       |
+      | Individual title          | Mr        |
       | Individual forename       | Harry     |
       | Individual surname        | Callahan  |
       | National Insurance Number | QQ987654A |
@@ -126,6 +130,7 @@ Feature: API returns a list of income for a specific NINO inorder to understand 
       | Total:     |                  | 19994.00 |
     And The API provides the following Individual details:
       | HTTP Status               | 200       |
+      | Individual title          | Mr        |
       | Individual forename       | Harry     |
       | Individual surname        | Callahan  |
       | National Insurance Number | QQ765432A |
