@@ -9,8 +9,6 @@ import uk.gov.digital.ho.proving.income.acl.*;
 import uk.gov.digital.ho.proving.income.domain.Application;
 import uk.gov.digital.ho.proving.income.domain.IncomeProvingResponse;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Date;
@@ -18,7 +16,7 @@ import java.util.Date;
 import static java.time.LocalDate.now;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static org.springframework.util.StringUtils.isEmpty;
-import static uk.gov.digital.ho.proving.income.util.DateUtils.asLocalInstant;
+import static uk.gov.digital.ho.proving.income.util.DateUtils.dateWithDefaultZone;
 
 @RestController
 @ControllerAdvice
@@ -68,8 +66,8 @@ public class FinancialStatusService extends AbstractIncomeProvingController {
                 throw new IllegalArgumentException("applicationRaisedDate");
             }
 
-            Date startSearchDate = Date.from(asLocalInstant(inputApplicationRaisedDate.minusDays(NUMBER_OF_DAYS)));
-            Date applicationRaisedDate = Date.from(asLocalInstant(inputApplicationRaisedDate));
+            Date startSearchDate = dateWithDefaultZone(inputApplicationRaisedDate.minusDays(NUMBER_OF_DAYS));
+            Date applicationRaisedDate = dateWithDefaultZone(inputApplicationRaisedDate);
 
 
             IncomeProvingResponse incomeProvingResponse = individualService.lookup(nino, startSearchDate, applicationRaisedDate);

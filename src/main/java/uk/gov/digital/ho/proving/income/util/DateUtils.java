@@ -13,11 +13,12 @@ import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
  */
 public class DateUtils {
 
-    public static Instant asLocalInstant(LocalDate localDate) {
-        return localDate.atStartOfDay().atZone(systemDefault()).toInstant();
-    }
-
-    public static Optional<LocalDate> parseDate(String date) {
+    /**
+     * Parse a string date representation in the ISO format (yyyy-mm-dd)
+     * @param date
+     * @return LocalDate corresponding to the input or empty if the input string does not parse
+     */
+    public static Optional<LocalDate> parseIsoDate(String date) {
         try {
             return Optional.of(LocalDate.parse(date, ISO_LOCAL_DATE));
         } catch (DateTimeParseException e) {
@@ -25,4 +26,17 @@ public class DateUtils {
         }
     }
 
+    /**
+     * Convert LocalDate to Date using the system default time zone.
+     * @param localDate
+     * @return
+     */
+    public static Date dateWithDefaultZone(LocalDate localDate){
+        return Date.from(asLocalInstant(localDate));
+    }
+
+
+    private static Instant asLocalInstant(LocalDate localDate) {
+        return localDate.atStartOfDay().atZone(systemDefault()).toInstant();
+    }
 }
