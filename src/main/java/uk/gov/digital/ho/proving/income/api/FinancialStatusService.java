@@ -1,7 +1,6 @@
 package uk.gov.digital.ho.proving.income.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,8 +9,16 @@ import uk.gov.digital.ho.proving.income.acl.*;
 import uk.gov.digital.ho.proving.income.domain.Application;
 import uk.gov.digital.ho.proving.income.domain.IncomeProvingResponse;
 
-import java.text.ParseException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
+
+import static java.time.LocalDate.now;
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
+import static org.springframework.util.StringUtils.isEmpty;
+import static uk.gov.digital.ho.proving.income.util.DateUtils.asLocalInstant;
 
 @RestController
 @ControllerAdvice
@@ -28,8 +35,6 @@ public class FinancialStatusService extends AbstractIncomeProvingController {
 
     private static final int NUMBER_OF_DAYS = 182;
 
-
-    // TODO Some of these parameters should be mandatory
     @RequestMapping(value = "/incomeproving/v1/individual/{nino}/financialstatus", method = RequestMethod.GET)
     public ResponseEntity<FinancialStatusCheckResponse> getTemporaryMigrationFamilyApplication(
         @PathVariable(value = "nino") String nino,
@@ -53,13 +58,21 @@ public class FinancialStatusService extends AbstractIncomeProvingController {
                 throw new IllegalArgumentException("Dependants cannot be more than " + MAXIMUM_DEPENDANTS);
             }
 
-            if (applicationDateAsString == null || applicationDateAsString.isEmpty()) {
+            if (isEmpty(applicationDateAsString)) {
                 throw new IllegalArgumentException("applicationRaisedDate");
             }
-            sdf.setLenient(false);
-            Date applicationRaisedDate = sdf.parse(applicationDateAsString);
-            Date startSearchDateDays = subtractXDays(applicationRaisedDate, NUMBER_OF_DAYS);
-            IncomeProvingResponse incomeProvingResponse = individualService.lookup(nino, startSearchDateDays, applicationRaisedDate);
+
+            LocalDate inputApplicationRaisedDate = LocalDate.parse(applicationDateAsString, ISO_LOCAL_DATE);
+
+            if (inputApplicationRaisedDate.isAfter(now())) {
+                throw new IllegalArgumentException("applicationRaisedDate");
+            }
+
+            Date startSearchDate = Date.from(asLocalInstant(inputApplicationRaisedDate.minusDays(NUMBER_OF_DAYS)));
+            Date applicationRaisedDate = Date.from(asLocalInstant(inputApplicationRaisedDate));
+
+
+            IncomeProvingResponse incomeProvingResponse = individualService.lookup(nino, startSearchDate, applicationRaisedDate);
 
             Application application = earningsService.lookup(nino, applicationRaisedDate);
 
@@ -68,19 +81,19 @@ public class FinancialStatusService extends AbstractIncomeProvingController {
 
             switch (incomeProvingResponse.getPayFreq().toUpperCase()) {
                 case "M1":
-                    FinancialCheckValues categoryAMonthlySalaried = IncomeValidator.validateCategoryAMonthlySalaried(incomeProvingResponse.getIncomes(), startSearchDateDays, applicationRaisedDate, dependants);
+                    FinancialCheckValues categoryAMonthlySalaried = IncomeValidator.validateCategoryAMonthlySalaried(incomeProvingResponse.getIncomes(), startSearchDate, applicationRaisedDate, dependants);
                     if (categoryAMonthlySalaried.equals(FinancialCheckValues.MONTHLY_SALARIED_PASSED)) {
-                        response.setCategoryCheck(new CategoryCheck("A",true, null, applicationRaisedDate, startSearchDateDays));
+                        response.setCategoryCheck(new CategoryCheck("A", true, null, applicationRaisedDate, startSearchDate));
                     } else {
-                        response.setCategoryCheck(new CategoryCheck("A",false, categoryAMonthlySalaried, applicationRaisedDate, startSearchDateDays));
+                        response.setCategoryCheck(new CategoryCheck("A", false, categoryAMonthlySalaried, applicationRaisedDate, startSearchDate));
                     }
                     break;
                 case "W1":
-                    FinancialCheckValues categoryAWeeklySalaried = IncomeValidator.validateCategoryAWeeklySalaried(incomeProvingResponse.getIncomes(), startSearchDateDays, applicationRaisedDate, dependants);
+                    FinancialCheckValues categoryAWeeklySalaried = IncomeValidator.validateCategoryAWeeklySalaried(incomeProvingResponse.getIncomes(), startSearchDate, applicationRaisedDate, dependants);
                     if (categoryAWeeklySalaried.equals(FinancialCheckValues.WEEKLY_SALARIED_PASSED)) {
-                        response.setCategoryCheck(new CategoryCheck("A",true, null, applicationRaisedDate, startSearchDateDays));
+                        response.setCategoryCheck(new CategoryCheck("A", true, null, applicationRaisedDate, startSearchDate));
                     } else {
-                        response.setCategoryCheck(new CategoryCheck("A",false, categoryAWeeklySalaried, applicationRaisedDate, startSearchDateDays));
+                        response.setCategoryCheck(new CategoryCheck("A", false, categoryAWeeklySalaried, applicationRaisedDate, startSearchDate));
                     }
                     break;
                 default:
@@ -93,7 +106,7 @@ public class FinancialStatusService extends AbstractIncomeProvingController {
         catch (EarningsServiceFailedToMapDataToDomainClass | EarningsServiceNoUniqueMatch e) {
             LOGGER.error("Could not retrieve earning details.", e);
             return buildErrorResponse(headers, "0004", "Resource not found", HttpStatus.NOT_FOUND);
-        } catch (ParseException e) {
+        } catch (DateTimeParseException e) {
             LOGGER.error("Error parsing date", e);
             return buildErrorResponse(headers, "0002", "Parameter error: Application raised date is invalid", HttpStatus.BAD_REQUEST);
         } catch (IllegalArgumentException iae) {
@@ -107,6 +120,7 @@ public class FinancialStatusService extends AbstractIncomeProvingController {
             return buildErrorResponse(headers, "0001", "Parameter error: NINO is invalid", HttpStatus.BAD_REQUEST);
         }
     }
+
 
     @Override
     protected ResponseEntity<FinancialStatusCheckResponse> buildErrorResponse(HttpHeaders headers, String statusCode, String statusMessage, HttpStatus status) {

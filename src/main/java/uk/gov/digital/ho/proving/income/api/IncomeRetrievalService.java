@@ -8,9 +8,10 @@ import org.springframework.web.bind.annotation.*;
 import uk.gov.digital.ho.proving.income.acl.*;
 import uk.gov.digital.ho.proving.income.domain.IncomeProvingResponse;
 
-import java.text.ParseException;
 import java.util.Date;
 import java.util.Optional;
+
+import static uk.gov.digital.ho.proving.income.util.DateUtils.parseDate;
 
 @RestController
 @ControllerAdvice
@@ -47,7 +48,6 @@ public class IncomeRetrievalService extends AbstractIncomeProvingController {
             if (!toDate.isPresent()) {
                 return buildErrorResponse(headers, "0002", "Parameter error: To date is invalid", HttpStatus.BAD_REQUEST);
             }
-
 
             Optional<IncomeProvingResponse> incomeProvingResponse = fromDate.flatMap(from ->
                 toDate.map(to ->

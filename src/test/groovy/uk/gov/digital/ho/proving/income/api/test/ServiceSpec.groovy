@@ -12,6 +12,12 @@ import uk.gov.digital.ho.proving.income.domain.Individual
 import uk.gov.digital.ho.proving.income.domain.Income
 import uk.gov.digital.ho.proving.income.domain.IncomeProvingResponse
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
+import static java.time.LocalDate.now
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE
+
 class ServiceSpec extends Specification {
 
     final String PIZZA_HUT = "Pizza Hut"
@@ -98,6 +104,31 @@ class ServiceSpec extends Specification {
         ResponseEntity<FinancialStatusCheckResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456A", "2015-09-23", 1)
         then:
         result.statusCode == HttpStatus.OK
+    }
+
+    def "invalid date is rejected"() {
+
+        when:
+
+        ResponseEntity<FinancialStatusCheckResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456A", "2016-03-xx", 0)
+
+        then:
+
+        result.statusCode == HttpStatus.BAD_REQUEST
+    }
+
+    def "future date is rejected"() {
+
+        given:
+        String tomorrow = now().plusDays(1).format(ISO_LOCAL_DATE);
+
+        when:
+
+        ResponseEntity<FinancialStatusCheckResponse> result = sut.getTemporaryMigrationFamilyApplication("AA123456A", tomorrow, 0)
+
+        then:
+
+        result.statusCode == HttpStatus.BAD_REQUEST
     }
 
 
