@@ -17,10 +17,9 @@ public class DateUtils {
         return localDate.atStartOfDay().atZone(systemDefault()).toInstant();
     }
 
-    public static Optional<Date> parseDate(String date) {
+    public static Optional<LocalDate> parseDate(String date) {
         try {
-            LocalDate localDate = LocalDate.parse(date, ISO_LOCAL_DATE);
-            return Optional.of(Date.from(asLocalInstant(localDate)));
+            return Optional.of(LocalDate.parse(date, ISO_LOCAL_DATE));
         } catch (DateTimeParseException e) {
             return Optional.empty();
         }

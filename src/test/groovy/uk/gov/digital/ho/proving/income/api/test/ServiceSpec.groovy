@@ -132,6 +132,8 @@ class ServiceSpec extends Specification {
     }
 
 
+
+
     def getIndividual() {
         Individual individual = new Individual()
         individual.title = "Mr"

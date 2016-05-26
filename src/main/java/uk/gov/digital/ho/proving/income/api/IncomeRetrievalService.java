@@ -7,10 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uk.gov.digital.ho.proving.income.acl.*;
 import uk.gov.digital.ho.proving.income.domain.IncomeProvingResponse;
+import uk.gov.digital.ho.proving.income.util.DateUtils;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
 
+import static java.time.LocalDate.now;
+import static uk.gov.digital.ho.proving.income.util.DateUtils.asLocalInstant;
 import static uk.gov.digital.ho.proving.income.util.DateUtils.parseDate;
 
 @RestController
@@ -39,12 +43,12 @@ public class IncomeRetrievalService extends AbstractIncomeProvingController {
             String cleanNino = sanitiseNino(nino);
             validateNino(cleanNino);
 
-            Optional<Date> fromDate = parseDate(fromDateAsString);
+            Optional<Date> fromDate = readDate(fromDateAsString);
             if (!fromDate.isPresent()) {
                 return buildErrorResponse(headers, "0002", "Parameter error: From date is invalid", HttpStatus.BAD_REQUEST);
             }
 
-            Optional<Date> toDate = parseDate(toDateAsString);
+            Optional<Date> toDate = readDate(toDateAsString);
             if (!toDate.isPresent()) {
                 return buildErrorResponse(headers, "0002", "Parameter error: To date is invalid", HttpStatus.BAD_REQUEST);
             }
@@ -76,6 +80,19 @@ public class IncomeRetrievalService extends AbstractIncomeProvingController {
             return buildErrorResponse(headers, "0001", "Parameter error: NINO is invalid", HttpStatus.BAD_REQUEST);
         }
     }
+
+    private Optional<Date> readDate(String dateString) {
+
+        Optional<LocalDate> parsed = parseDate(dateString);
+
+        // todo - this will all simplify when date code is refactored to use java.time
+        if(!parsed.isPresent() || parsed.get().isAfter(now())){
+            return Optional.empty();
+        }
+
+        return parsed.map(d -> Date.from(asLocalInstant(d)));
+    }
+
 
     @Override
     protected ResponseEntity<IncomeRetrievalResponse> buildErrorResponse(HttpHeaders headers, String statusCode, String statusMessage, HttpStatus status) {
