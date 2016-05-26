@@ -67,5 +67,11 @@ Feature: Robert is presented with an error when attempting to obtain a NINOs inc
       | HTTP Status    | 200                           |
 
 
-
-
+  Scenario: Robert is unable to obtain the NINOs income details due to a future To Date
+    Given A service is consuming the Income Proving TM Family API
+    When the Income Proving API is invoked with the following:
+      | nino      | QQ769875A  |
+      | From Date | 2016-06-01 |
+      | To Date   | 2016-12-30 |
+    Then The API provides the following Individual details:
+      | HTTP Status    | 400                           |
