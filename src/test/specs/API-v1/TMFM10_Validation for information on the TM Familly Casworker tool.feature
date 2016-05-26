@@ -176,4 +176,4 @@ Feature: Validation of the API fields and data
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status    | 400                |
       | Status code    | 0004               |
-      | Status message | Parameter error: Future application raised date |
+      | Status message | Parameter error: applicationRaisedDate |
