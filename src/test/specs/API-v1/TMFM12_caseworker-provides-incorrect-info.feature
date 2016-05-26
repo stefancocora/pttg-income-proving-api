@@ -74,8 +74,8 @@ Feature: Robert is presented with an error when attempting to obtain a NINOs inc
       | From Date | 2017-06-30 |
       | To Date   | 2017-12-30 |
     Then The API provides the following Individual details:
-      | HTTP Status    | 400                                           |
-      | Status code    | 0004                                          |
+      | HTTP Status    | 400                                         |
+      | Status code    | 0004                                        |
       | Status message | Parameter error: Future fromDate and toDate |
 
   Scenario: Robert is unable to obtain the NINOs income details due to a future From Date
@@ -85,8 +85,8 @@ Feature: Robert is presented with an error when attempting to obtain a NINOs inc
       | From Date | 2017-06-30 |
       | To Date   | 2015-12-30 |
     Then The API provides the following Individual details:
-      | HTTP Status    | 400                               |
-      | Status code    | 0004                              |
+      | HTTP Status    | 400                       |
+      | Status code    | 0004                      |
       | Status message | Parameter error: fromDate |
 
   Scenario: Robert is unable to obtain the NINOs income details due to a future To Date
@@ -96,6 +96,6 @@ Feature: Robert is presented with an error when attempting to obtain a NINOs inc
       | From Date | 2015-06-30 |
       | To Date   | 2017-12-30 |
     Then The API provides the following Individual details:
-      | HTTP Status    | 400                               |
-      | Status code    | 0004                              |
+      | HTTP Status    | 400                     |
+      | Status code    | 0004                    |
       | Status message | Parameter error: toDate |
