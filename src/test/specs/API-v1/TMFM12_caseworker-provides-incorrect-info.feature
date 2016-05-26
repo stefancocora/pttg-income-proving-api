@@ -76,7 +76,7 @@ Feature: Robert is presented with an error when attempting to obtain a NINOs inc
     Then The API provides the following Individual details:
       | HTTP Status    | 400                                           |
       | Status code    | 0004                                          |
-      | Status message | Parameter error: Future From Date and To Date |
+      | Status message | Parameter error: Future fromDate and toDate |
 
   Scenario: Robert is unable to obtain the NINOs income details due to a future From Date
     Given A service is consuming the Income Proving TM Family API
@@ -87,7 +87,7 @@ Feature: Robert is presented with an error when attempting to obtain a NINOs inc
     Then The API provides the following Individual details:
       | HTTP Status    | 400                               |
       | Status code    | 0004                              |
-      | Status message | Parameter error: Future From Date |
+      | Status message | Parameter error: fromDate |
 
   Scenario: Robert is unable to obtain the NINOs income details due to a future To Date
     Given A service is consuming the Income Proving TM Family API
@@ -98,4 +98,4 @@ Feature: Robert is presented with an error when attempting to obtain a NINOs inc
     Then The API provides the following Individual details:
       | HTTP Status    | 400                               |
       | Status code    | 0004                              |
-      | Status message | Parameter error: Future To Date |
+      | Status message | Parameter error: toDate |
