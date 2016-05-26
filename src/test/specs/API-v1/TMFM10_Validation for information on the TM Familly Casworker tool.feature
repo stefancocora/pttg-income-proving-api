@@ -166,3 +166,14 @@ Feature: Validation of the API fields and data
       | HTTP Status    | 404                |
       | Status code    | 0004               |
       | Status message | Resource not found |
+
+  Scenario: The API is provided with a valid NINO and a future application raised date
+    Given A service is consuming the Income Proving TM Family API
+    When the Income Proving TM Family API is invoked with the following:
+      | NINO                    | QQ987654A  |
+      | Application Raised Date | 2016-12-21 |
+      | Dependants               | 3          |
+    Then The Income Proving TM Family API provides the following result:
+      | HTTP Status    | 400                |
+      | Status code    | 0004               |
+      | Status message | Parameter error: applicationRaisedDate |
