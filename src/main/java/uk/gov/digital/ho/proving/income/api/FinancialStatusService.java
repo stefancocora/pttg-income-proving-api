@@ -8,16 +8,11 @@ import org.springframework.web.bind.annotation.*;
 import uk.gov.digital.ho.proving.income.acl.*;
 import uk.gov.digital.ho.proving.income.domain.Application;
 import uk.gov.digital.ho.proving.income.domain.IncomeProvingResponse;
-import uk.gov.digital.ho.proving.income.util.DateUtils;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Date;
-import java.util.Optional;
 
 import static java.time.LocalDate.now;
-import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static org.springframework.util.StringUtils.isEmpty;
 import static uk.gov.digital.ho.proving.income.util.DateUtils.dateWithDefaultZone;
 import static uk.gov.digital.ho.proving.income.util.DateUtils.parseIsoDate;

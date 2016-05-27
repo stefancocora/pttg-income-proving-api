@@ -33,8 +33,8 @@ public class MongodbBackedApplicantService implements IndividualService {
 
     private static Logger LOGGER = LoggerFactory.getLogger(MongodbBackedApplicantService.class);
 
-    // SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//    // SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+//    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     @Override
     public IncomeProvingResponse lookup(String nino, Date applicationFromDate, Date applicationToDate) {
