@@ -74,7 +74,7 @@ Feature: Validation of the API fields and data
       | Application Raised Date | 2015-01-85 |
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status | 400                                                 |
-      | Status code | 0002                                                |
+      | Status code | 0004                                                |
       | Status message     | Parameter error: Application raised date is invalid |
 
   Scenario: The API provides an incorrect Application Raised Date (Month format)
@@ -84,7 +84,7 @@ Feature: Validation of the API fields and data
       | Application Raised Date | 2015-13-01 |
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status | 400                                                 |
-      | Status code | 0002                                                |
+      | Status code | 0004                                                |
       | Status message     | Parameter error: Application raised date is invalid |
 
   Scenario: The API provides an incorrect Application Raised Date (Year format)
@@ -94,7 +94,7 @@ Feature: Validation of the API fields and data
       | Application Raised Date | 201H-01-01 |
     Then The Income Proving TM Family API provides the following result:
       | HTTP Status    | 400                                                 |
-      | Status code    | 0002                                                |
+      | Status code    | 0004                                                |
       | Status message | Parameter error: Application raised date is invalid |
 
   Scenario: The API provides a blank Application Raised date

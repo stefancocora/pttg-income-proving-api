@@ -8,15 +8,19 @@ import org.springframework.web.bind.annotation.*;
 import uk.gov.digital.ho.proving.income.acl.*;
 import uk.gov.digital.ho.proving.income.domain.Application;
 import uk.gov.digital.ho.proving.income.domain.IncomeProvingResponse;
+import uk.gov.digital.ho.proving.income.util.DateUtils;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Date;
+import java.util.Optional;
 
 import static java.time.LocalDate.now;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static org.springframework.util.StringUtils.isEmpty;
 import static uk.gov.digital.ho.proving.income.util.DateUtils.dateWithDefaultZone;
+import static uk.gov.digital.ho.proving.income.util.DateUtils.parseIsoDate;
 
 @RestController
 @ControllerAdvice
@@ -60,7 +64,8 @@ public class FinancialStatusService extends AbstractIncomeProvingController {
                 throw new IllegalArgumentException("applicationRaisedDate");
             }
 
-            LocalDate inputApplicationRaisedDate = LocalDate.parse(applicationDateAsString, ISO_LOCAL_DATE);
+            // We really shouldn't be mixing Optional with exceptions .. it's just wrong
+            LocalDate inputApplicationRaisedDate = parseIsoDate(applicationDateAsString).orElseThrow( () -> new IllegalArgumentException("Application raised date is invalid"));
 
             if (inputApplicationRaisedDate.isAfter(now())) {
                 throw new IllegalArgumentException("applicationRaisedDate");
@@ -68,7 +73,6 @@ public class FinancialStatusService extends AbstractIncomeProvingController {
 
             Date startSearchDate = dateWithDefaultZone(inputApplicationRaisedDate.minusDays(NUMBER_OF_DAYS));
             Date applicationRaisedDate = dateWithDefaultZone(inputApplicationRaisedDate);
-
 
             IncomeProvingResponse incomeProvingResponse = individualService.lookup(nino, startSearchDate, applicationRaisedDate);
 
@@ -104,9 +108,6 @@ public class FinancialStatusService extends AbstractIncomeProvingController {
         catch (EarningsServiceFailedToMapDataToDomainClass | EarningsServiceNoUniqueMatch e) {
             LOGGER.error("Could not retrieve earning details.", e);
             return buildErrorResponse(headers, "0004", "Resource not found", HttpStatus.NOT_FOUND);
-        } catch (DateTimeParseException e) {
-            LOGGER.error("Error parsing date", e);
-            return buildErrorResponse(headers, "0002", "Parameter error: Application raised date is invalid", HttpStatus.BAD_REQUEST);
         } catch (IllegalArgumentException iae) {
             LOGGER.error(iae.getMessage(), iae);
             return buildErrorResponse(headers, "0004", "Parameter error: " + iae.getLocalizedMessage(), HttpStatus.BAD_REQUEST);

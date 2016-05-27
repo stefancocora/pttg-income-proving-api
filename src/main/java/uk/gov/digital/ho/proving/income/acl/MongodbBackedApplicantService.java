@@ -40,9 +40,6 @@ public class MongodbBackedApplicantService implements IndividualService {
     public IncomeProvingResponse lookup(String nino, Date applicationFromDate, Date applicationToDate) {
         // TODO Make use of date range
 
-        String fromDate = sdf.format(applicationFromDate);
-        String toDate = sdf.format(applicationToDate);
-
         DBObject query = new QueryBuilder().start().put("individual.nino").is(nino).get();
         DBCursor cursor = applicantCollection.find(query);
 

@@ -2,6 +2,7 @@ package uk.gov.digital.ho.proving.income.util;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.Optional;
@@ -13,14 +14,17 @@ import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
  */
 public class DateUtils {
 
+
+    public static String IPS_DATE_FORMAT = "yyyy-M-d";
+
     /**
-     * Parse a string date representation in the ISO format (yyyy-mm-dd)
+     * Parse a string date representation in a flexible ISO format {@link #IPS_DATE_FORMAT}
      * @param date
      * @return LocalDate corresponding to the input or empty if the input string does not parse
      */
     public static Optional<LocalDate> parseIsoDate(String date) {
         try {
-            return Optional.of(LocalDate.parse(date, ISO_LOCAL_DATE));
+            return Optional.of(LocalDate.parse(date, DateTimeFormatter.ofPattern(IPS_DATE_FORMAT)));
         } catch (DateTimeParseException e) {
             return Optional.empty();
         }

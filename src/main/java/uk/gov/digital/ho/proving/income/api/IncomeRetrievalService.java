@@ -36,7 +36,6 @@ public class IncomeRetrievalService extends AbstractIncomeProvingController {
         HttpHeaders headers = new HttpHeaders();
         headers.set(CONTENT_TYPE, APPLICATION_JSON);
 
-
         try {
             String cleanNino = sanitiseNino(nino);
             validateNino(cleanNino);
@@ -68,6 +67,7 @@ public class IncomeRetrievalService extends AbstractIncomeProvingController {
                     return new ResponseEntity<>(incomeRetrievalResponse, headers, HttpStatus.OK);
                 }
             ).orElse(buildErrorResponse(headers, "0002", "Invalid NINO", HttpStatus.NOT_FOUND));
+
         } catch (EarningsServiceFailedToMapDataToDomainClass | EarningsServiceNoUniqueMatch e) {
             LOGGER.error("Could not retrieve earning details.", e);
             return buildErrorResponse(headers, "0004", "Resource not found", HttpStatus.NOT_FOUND);
@@ -82,8 +82,6 @@ public class IncomeRetrievalService extends AbstractIncomeProvingController {
             return buildErrorResponse(headers, "0001", "Parameter error: NINO is invalid", HttpStatus.BAD_REQUEST);
         }
     }
-
-
 
     @Override
     protected ResponseEntity<IncomeRetrievalResponse> buildErrorResponse(HttpHeaders headers, String statusCode, String statusMessage, HttpStatus status) {
