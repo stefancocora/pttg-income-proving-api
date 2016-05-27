@@ -8,14 +8,13 @@ import java.util.Date;
 import java.util.Optional;
 
 import static java.time.ZoneId.systemDefault;
-import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 /**
  * @Author Home Office Digital
  */
 public class DateUtils {
 
 
-    public static String IPS_DATE_FORMAT = "yyyy-M-d";
+    public static final String IPS_DATE_FORMAT = "yyyy-M-d";
 
     /**
      * Parse a string date representation in a flexible ISO format {@link #IPS_DATE_FORMAT}
