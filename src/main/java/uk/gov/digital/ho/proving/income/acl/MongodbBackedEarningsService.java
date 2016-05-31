@@ -15,7 +15,7 @@ import uk.gov.digital.ho.proving.income.domain.Application;
 import uk.gov.digital.ho.proving.income.domain.TemporaryMigrationFamilyApplication;
 
 import java.io.IOException;
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * This class retrieves data from an external sources and converts it to Home Office domain classes. When the HMRC web
@@ -32,7 +32,7 @@ public class MongodbBackedEarningsService implements EarningsService {
 
     private static Logger LOGGER = LoggerFactory.getLogger(MongodbBackedEarningsService.class);
 
-    public Application lookup(String nino, Date applicationRaisedDate) {
+    public Application lookup(String nino, LocalDate applicationRaisedDate) {
         DBObject query = new QueryBuilder().start().put("individual.nino").is(nino).get();
         DBCursor cursor = applicationsCollection.find(query);
 
@@ -53,7 +53,7 @@ public class MongodbBackedEarningsService implements EarningsService {
         }
     }
 
-    public Application lookup(String nino, Date fromDate, Date toDate) {
+    public Application lookup(String nino, LocalDate fromDate, LocalDate toDate) {
         DBObject query = new QueryBuilder().start().put("individual.nino").is(nino).get();
         DBCursor cursor = applicationsCollection.find(query);
 

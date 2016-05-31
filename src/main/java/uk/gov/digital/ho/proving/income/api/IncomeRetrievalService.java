@@ -13,7 +13,6 @@ import java.util.Optional;
 
 import static java.time.LocalDate.now;
 import static uk.gov.digital.ho.proving.income.util.DateUtils.parseIsoDate;
-import static uk.gov.digital.ho.proving.income.util.DateUtils.dateWithDefaultZone;
 
 @RestController
 @ControllerAdvice
@@ -56,7 +55,7 @@ public class IncomeRetrievalService extends AbstractIncomeProvingController {
 
             Optional<IncomeProvingResponse> incomeProvingResponse = fromDate.flatMap(from ->
                 toDate.map(to ->
-                    individualService.lookup(cleanNino, dateWithDefaultZone(from), dateWithDefaultZone(to))
+                    individualService.lookup(cleanNino, from, to)
                 )
             );
 

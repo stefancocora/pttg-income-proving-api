@@ -3,17 +3,17 @@ package uk.gov.digital.ho.proving.income.api.test
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import spock.lang.Specification
-import uk.gov.digital.ho.proving.income.acl.IndividualService
 import uk.gov.digital.ho.proving.income.acl.EarningsService
 import uk.gov.digital.ho.proving.income.acl.EarningsServiceNoUniqueMatch
-import uk.gov.digital.ho.proving.income.api.FinancialStatusService
+import uk.gov.digital.ho.proving.income.acl.IndividualService
 import uk.gov.digital.ho.proving.income.api.FinancialStatusCheckResponse
-import uk.gov.digital.ho.proving.income.domain.Individual
+import uk.gov.digital.ho.proving.income.api.FinancialStatusService
 import uk.gov.digital.ho.proving.income.domain.Income
 import uk.gov.digital.ho.proving.income.domain.IncomeProvingResponse
+import uk.gov.digital.ho.proving.income.domain.Individual
 
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import java.time.Month
 
 import static java.time.LocalDate.now
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE
@@ -145,23 +145,20 @@ class ServiceSpec extends Specification {
 
     def getConsecutiveIncomes() {
         List<Income> incomes = new ArrayList()
-        incomes.add(new Income(getDate(2015, Calendar.JANUARY, 15),PIZZA_HUT , "1400" ))
-        incomes.add(new Income(getDate(2015, Calendar.MAY, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.JUNE, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.APRIL, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.JULY, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.FEBRUARY, 15),BURGER_KING , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.AUGUST, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Calendar.SEPTEMBER, 15),PIZZA_HUT , "1600" ))
+        incomes.add(new Income(getDate(2015, Month.JANUARY, 15),PIZZA_HUT , "1400" ))
+        incomes.add(new Income(getDate(2015, Month.MAY, 15),PIZZA_HUT , "1600" ))
+        incomes.add(new Income(getDate(2015, Month.JUNE, 15),PIZZA_HUT , "1600" ))
+        incomes.add(new Income(getDate(2015, Month.APRIL, 15),PIZZA_HUT , "1600" ))
+        incomes.add(new Income(getDate(2015, Month.JULY, 15),PIZZA_HUT , "1600" ))
+        incomes.add(new Income(getDate(2015, Month.FEBRUARY, 15),BURGER_KING , "1600" ))
+        incomes.add(new Income(getDate(2015, Month.AUGUST, 15),PIZZA_HUT , "1600" ))
+        incomes.add(new Income(getDate(2015, Month.SEPTEMBER, 15),PIZZA_HUT , "1600" ))
         incomes
     }
 
-    Date getDate(int year, int month, int day) {
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, year);
-        cal.set(Calendar.MONTH, month);
-        cal.set(Calendar.DATE, day);
-        return cal.getTime()
+    LocalDate getDate(int year, Month month, int day) {
+        LocalDate localDate = LocalDate.of(year,month,day)
+        return localDate
     }
 
     def "monthly payment uses 182 days in start date calculation"() {

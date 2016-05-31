@@ -2,30 +2,30 @@ package uk.gov.digital.ho.proving.income.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Income {
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyy-MM-dd", timezone = "GMT")
-    private Date payDate;
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    private LocalDate payDate;
     private String employer;
     private String income;
 
     public Income() {
     }
 
-    public Income(Date payDate, String employer, String income) {
+    public Income(LocalDate payDate, String employer, String income) {
         this.payDate = payDate;
         this.employer = employer;
         this.income = income;
     }
 
-    public Date getPayDate() {
-        return new Date(payDate.getTime());
+    public LocalDate getPayDate() {
+        return payDate;
     }
 
-    public void setPayDate(Date payDate) {
-        this.payDate = new Date(payDate.getTime());
+    public void setPayDate(LocalDate payDate) {
+        this.payDate = payDate;
     }
 
     public String getEmployer() {

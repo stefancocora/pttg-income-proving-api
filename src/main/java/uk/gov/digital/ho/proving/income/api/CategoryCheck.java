@@ -1,11 +1,9 @@
 package uk.gov.digital.ho.proving.income.api;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class CategoryCheck {
 
@@ -13,17 +11,17 @@ public class CategoryCheck {
     private boolean passed;
 
     // @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="GMT")
-    private Date applicationRaisedDate;
+    private LocalDate applicationRaisedDate;
 
     // @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="GMT")
-    private Date assessmentStartDate;
+    private LocalDate assessmentStartDate;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private FinancialCheckValues failureReason;
 
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    public CategoryCheck(String category, boolean passed, FinancialCheckValues failureReason, Date applicationRaisedDate, Date assessmentStartDate) {
+    public CategoryCheck(String category, boolean passed, FinancialCheckValues failureReason, LocalDate applicationRaisedDate, LocalDate assessmentStartDate) {
         this.category = category;
         this.passed = passed;
         this.applicationRaisedDate = applicationRaisedDate;
@@ -31,8 +29,8 @@ public class CategoryCheck {
         this.failureReason = failureReason;
     }
 
-    private String formatDate(Date date){
-        return sdf.format(date);
+    private String formatDate(LocalDate date){
+        return date.format(formatter);
     }
 
     public String getCategory() {
@@ -55,7 +53,7 @@ public class CategoryCheck {
         return formatDate(applicationRaisedDate);
     }
 
-    public void setApplicationRaisedDate(Date applicationRaisedDate) {
+    public void setApplicationRaisedDate(LocalDate applicationRaisedDate) {
         this.applicationRaisedDate = applicationRaisedDate;
     }
 
@@ -63,7 +61,7 @@ public class CategoryCheck {
         return formatDate(assessmentStartDate);
     }
 
-    public void setAssessmentStartDate(Date assessmentStartDate) {
+    public void setAssessmentStartDate(LocalDate assessmentStartDate) {
         this.assessmentStartDate = assessmentStartDate;
     }
 

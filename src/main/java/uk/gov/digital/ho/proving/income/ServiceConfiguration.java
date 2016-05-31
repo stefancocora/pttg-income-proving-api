@@ -2,6 +2,8 @@ package uk.gov.digital.ho.proving.income;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
@@ -14,6 +16,8 @@ import uk.gov.digital.ho.proving.income.acl.MongodbBackedApplicantService;
 import uk.gov.digital.ho.proving.income.acl.MongodbBackedEarningsService;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Created by andrewmoores on 17/03/2016.
@@ -30,7 +34,10 @@ public class ServiceConfiguration {
     @Bean
     public ObjectMapper getMapper() {
         ObjectMapper m = new ObjectMapper();
-        m.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
+        JavaTimeModule javaTimeModule = new JavaTimeModule();
+        javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern("yyyy-M-d")));
+        m.registerModule(javaTimeModule);
+        m.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         m.enable(SerializationFeature.INDENT_OUTPUT);
         return m;
     }

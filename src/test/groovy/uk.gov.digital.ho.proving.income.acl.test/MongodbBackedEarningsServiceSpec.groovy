@@ -12,6 +12,8 @@ import uk.gov.digital.ho.proving.income.acl.EarningsServiceNoUniqueMatch
 import uk.gov.digital.ho.proving.income.acl.MongodbBackedEarningsService
 import uk.gov.digital.ho.proving.income.domain.Application
 
+import java.time.LocalDate
+
 @SpringApplicationConfiguration(ServiceConfiguration.class)
 class MongodbBackedEarningsServiceSpec extends Specification {
 
@@ -31,7 +33,7 @@ class MongodbBackedEarningsServiceSpec extends Specification {
 
         when:
 
-        Application result = sut.lookup("AA123456A", new Date())
+        Application result = sut.lookup("AA123456A", LocalDate.now())
 
         then:
 
@@ -50,7 +52,7 @@ class MongodbBackedEarningsServiceSpec extends Specification {
 
         when:
 
-        sut.lookup("AA123456A", new Date())
+        sut.lookup("AA123456A", LocalDate.now())
 
         then:
 
@@ -73,7 +75,7 @@ class MongodbBackedEarningsServiceSpec extends Specification {
 
         when:
 
-        sut.lookup("AA123456A", new Date())
+        sut.lookup("AA123456A", LocalDate.now())
 
         then:
 

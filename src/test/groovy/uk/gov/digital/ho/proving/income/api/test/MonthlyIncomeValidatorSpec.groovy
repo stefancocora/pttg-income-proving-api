@@ -5,8 +5,11 @@ import org.slf4j.LoggerFactory
 import spock.lang.Specification
 import uk.gov.digital.ho.proving.income.api.FinancialCheckValues
 import uk.gov.digital.ho.proving.income.api.IncomeValidator
-import uk.gov.digital.ho.proving.income.domain.Individual
 import uk.gov.digital.ho.proving.income.domain.Income
+import uk.gov.digital.ho.proving.income.domain.Individual
+
+import java.time.LocalDate
+import java.time.Month
 
 class MonthlyIncomeValidatorSpec extends Specification {
 
@@ -21,8 +24,8 @@ class MonthlyIncomeValidatorSpec extends Specification {
 
         given:
         List<Income> incomes = getConsecutiveIncomes()
-        Date raisedDate = getDate(2015, Calendar.SEPTEMBER, 23)
-        Date pastDate = subtractDaysFromDate(raisedDate, days)
+        LocalDate raisedDate = getDate(2015, Month.SEPTEMBER, 23)
+        LocalDate pastDate = subtractDaysFromDate(raisedDate, days)
 
         when:
         FinancialCheckValues categoryAIndividual = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
@@ -36,8 +39,8 @@ class MonthlyIncomeValidatorSpec extends Specification {
 
         given:
         List<Income> incomes = getNoneConsecutiveIncomes()
-        Date raisedDate = getDate(2015, Calendar.SEPTEMBER, 23)
-        Date pastDate = subtractDaysFromDate(raisedDate, days)
+        LocalDate raisedDate = getDate(2015, Month.SEPTEMBER, 23)
+        LocalDate pastDate = subtractDaysFromDate(raisedDate, days)
 
         when:
         FinancialCheckValues categoryAIndividual = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
@@ -51,8 +54,8 @@ class MonthlyIncomeValidatorSpec extends Specification {
 
         given:
         List<Income> incomes = getNotEnoughConsecutiveIncomes()
-        Date raisedDate = getDate(2015, Calendar.SEPTEMBER, 23)
-        Date pastDate = subtractDaysFromDate(raisedDate, days)
+        LocalDate raisedDate = getDate(2015, Month.SEPTEMBER, 23)
+        LocalDate pastDate = subtractDaysFromDate(raisedDate, days)
 
         when:
         FinancialCheckValues categoryAIndividual = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
@@ -66,8 +69,8 @@ class MonthlyIncomeValidatorSpec extends Specification {
 
         given:
         List<Income> incomes = getConsecutiveIncomesButDifferentEmployers()
-        Date raisedDate = getDate(2015, Calendar.SEPTEMBER, 23)
-        Date pastDate = subtractDaysFromDate(raisedDate, days)
+        LocalDate raisedDate = getDate(2015, Month.SEPTEMBER, 23)
+        LocalDate pastDate = subtractDaysFromDate(raisedDate, days)
 
         when:
         FinancialCheckValues categoryAIndividual = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
@@ -81,8 +84,8 @@ class MonthlyIncomeValidatorSpec extends Specification {
 
         given:
         List<Income> incomes = getConsecutiveIncomesButLowAmounts()
-        Date raisedDate = getDate(2015, Calendar.SEPTEMBER, 23)
-        Date pastDate = subtractDaysFromDate(raisedDate, days)
+        LocalDate raisedDate = getDate(2015, Month.SEPTEMBER, 23)
+        LocalDate pastDate = subtractDaysFromDate(raisedDate, days)
 
         when:
         FinancialCheckValues categoryAIndividual = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
@@ -92,12 +95,12 @@ class MonthlyIncomeValidatorSpec extends Specification {
 
     }
 
-    def "valid category A individual is accepted with different monthly pay dates"() {
+    def "valid category A individual is accepted with different monthly payLocalDates"() {
 
         given:
         List<Income> incomes = getConsecutiveIncomesWithDifferentMonthlyPayDay()
-        Date raisedDate = getDate(2015, Calendar.SEPTEMBER, 23)
-        Date pastDate = subtractDaysFromDate(raisedDate, days)
+        LocalDate raisedDate = getDate(2015, Month.SEPTEMBER, 23)
+        LocalDate pastDate = subtractDaysFromDate(raisedDate, days)
 
         when:
         FinancialCheckValues categoryAIndividual = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
@@ -111,8 +114,8 @@ class MonthlyIncomeValidatorSpec extends Specification {
 
         given:
         List<Income> incomes = getConsecutiveIncomesWithExactlyTheAmount()
-        Date raisedDate = getDate(2015, Calendar.SEPTEMBER, 23)
-        Date pastDate = subtractDaysFromDate(raisedDate, days)
+        LocalDate raisedDate = getDate(2015, Month.SEPTEMBER, 23)
+        LocalDate pastDate = subtractDaysFromDate(raisedDate, days)
 
         when:
         FinancialCheckValues categoryAIndividual = IncomeValidator.validateCategoryAMonthlySalaried(incomes, pastDate, raisedDate, 0)
@@ -134,103 +137,97 @@ class MonthlyIncomeValidatorSpec extends Specification {
 
     def getConsecutiveIncomes() {
         List<Income> incomes = new ArrayList()
-        incomes.add(new Income(getDate(2015, Calendar.JANUARY, 15), PIZZA_HUT, "1400"))
-        incomes.add(new Income(getDate(2015, Calendar.MAY, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.JUNE, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.APRIL, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.JULY, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.FEBRUARY, 15), BURGER_KING, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.AUGUST, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.SEPTEMBER, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.JANUARY, 15), PIZZA_HUT, "1400"))
+        incomes.add(new Income(getDate(2015, Month.MAY, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.JUNE, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.APRIL, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.JULY, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.FEBRUARY, 15), BURGER_KING, "1600"))
+        incomes.add(new Income(getDate(2015, Month.AUGUST, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.SEPTEMBER, 15), PIZZA_HUT, "1600"))
         incomes
     }
 
     def getNotEnoughConsecutiveIncomes() {
         List<Income> incomes = new ArrayList()
-        incomes.add(new Income(getDate(2015, Calendar.MAY, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.JUNE, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.APRIL, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.JULY, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.AUGUST, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.MAY, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.JUNE, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.APRIL, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.JULY, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.AUGUST, 15), PIZZA_HUT, "1600"))
         incomes
     }
 
     def getNoneConsecutiveIncomes() {
         List<Income> incomes = new ArrayList()
-        incomes.add(new Income(getDate(2015, Calendar.JANUARY, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.FEBRUARY, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.APRIL, 16), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.MAY, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.JUNE, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.APRIL, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.AUGUST, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.SEPTEMBER, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.JANUARY, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.FEBRUARY, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.APRIL, 16), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.MAY, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.JUNE, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.APRIL, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.AUGUST, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.SEPTEMBER, 15), PIZZA_HUT, "1600"))
         incomes
     }
 
     def getConsecutiveIncomesButDifferentEmployers() {
         List<Income> incomes = new ArrayList()
-        incomes.add(new Income(getDate(2015, Calendar.JANUARY, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.MAY, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.JUNE, 15), BURGER_KING, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.APRIL, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.JULY, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.AUGUST, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.SEPTEMBER, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.JANUARY, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.MAY, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.JUNE, 15), BURGER_KING, "1600"))
+        incomes.add(new Income(getDate(2015, Month.APRIL, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.JULY, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.AUGUST, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.SEPTEMBER, 15), PIZZA_HUT, "1600"))
         incomes
     }
 
     def getConsecutiveIncomesButLowAmounts() {
         List<Income> incomes = new ArrayList()
-        incomes.add(new Income(getDate(2015, Calendar.JANUARY, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.MAY, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.JUNE, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.APRIL, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.JULY, 15), PIZZA_HUT, "1400"))
-        incomes.add(new Income(getDate(2015, Calendar.AUGUST, 15), PIZZA_HUT, "1400"))
-        incomes.add(new Income(getDate(2015, Calendar.SEPTEMBER, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.JANUARY, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.MAY, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.JUNE, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.APRIL, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.JULY, 15), PIZZA_HUT, "1400"))
+        incomes.add(new Income(getDate(2015, Month.AUGUST, 15), PIZZA_HUT, "1400"))
+        incomes.add(new Income(getDate(2015, Month.SEPTEMBER, 15), PIZZA_HUT, "1600"))
         incomes
     }
 
     def getConsecutiveIncomesWithDifferentMonthlyPayDay() {
         List<Income> incomes = new ArrayList()
-        incomes.add(new Income(getDate(2015, Calendar.JANUARY, 15), PIZZA_HUT, "1400"))
-        incomes.add(new Income(getDate(2015, Calendar.MAY, 16), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.JUNE, 17), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.APRIL, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.JULY, 14), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.FEBRUARY, 15), BURGER_KING, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.AUGUST, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Calendar.SEPTEMBER, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.JANUARY, 15), PIZZA_HUT, "1400"))
+        incomes.add(new Income(getDate(2015, Month.MAY, 16), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.JUNE, 17), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.APRIL, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.JULY, 14), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.FEBRUARY, 15), BURGER_KING, "1600"))
+        incomes.add(new Income(getDate(2015, Month.AUGUST, 15), PIZZA_HUT, "1600"))
+        incomes.add(new Income(getDate(2015, Month.SEPTEMBER, 15), PIZZA_HUT, "1600"))
         incomes
     }
 
     def getConsecutiveIncomesWithExactlyTheAmount() {
         List<Income> incomes = new ArrayList()
-        incomes.add(new Income(getDate(2015, Calendar.JANUARY, 15), PIZZA_HUT, "1550"))
-        incomes.add(new Income(getDate(2015, Calendar.MAY, 16), PIZZA_HUT, "1550"))
-        incomes.add(new Income(getDate(2015, Calendar.JUNE, 17), PIZZA_HUT, "1550"))
-        incomes.add(new Income(getDate(2015, Calendar.APRIL, 15), PIZZA_HUT, "1550"))
-        incomes.add(new Income(getDate(2015, Calendar.JULY, 14), PIZZA_HUT, "1550"))
-        incomes.add(new Income(getDate(2015, Calendar.FEBRUARY, 15), BURGER_KING, "1550"))
-        incomes.add(new Income(getDate(2015, Calendar.AUGUST, 15), PIZZA_HUT, "1550"))
-        incomes.add(new Income(getDate(2015, Calendar.SEPTEMBER, 15), PIZZA_HUT, "1550"))
+        incomes.add(new Income(getDate(2015, Month.JANUARY, 15), PIZZA_HUT, "1550"))
+        incomes.add(new Income(getDate(2015, Month.MAY, 16), PIZZA_HUT, "1550"))
+        incomes.add(new Income(getDate(2015, Month.JUNE, 17), PIZZA_HUT, "1550"))
+        incomes.add(new Income(getDate(2015, Month.APRIL, 15), PIZZA_HUT, "1550"))
+        incomes.add(new Income(getDate(2015, Month.JULY, 14), PIZZA_HUT, "1550"))
+        incomes.add(new Income(getDate(2015, Month.FEBRUARY, 15), BURGER_KING, "1550"))
+        incomes.add(new Income(getDate(2015, Month.AUGUST, 15), PIZZA_HUT, "1550"))
+        incomes.add(new Income(getDate(2015, Month.SEPTEMBER, 15), PIZZA_HUT, "1550"))
         incomes
     }
 
-    Date getDate(int year, int month, int day) {
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, year);
-        cal.set(Calendar.MONTH, month);
-        cal.set(Calendar.DATE, day);
-        return cal.getTime()
+    LocalDate getDate(int year, Month month, int day) {
+        LocalDate localDate = LocalDate.of(year,month,day)
+        return localDate
     }
 
 
-    Date subtractDaysFromDate(Date date, int days) {
-        Calendar cal = Calendar.getInstance()
-        cal.setTime(date)
-        cal.add(Calendar.DAY_OF_YEAR, -days)
-        return cal.getTime()
+    LocalDate subtractDaysFromDate(LocalDate date, long days) {
+        return date.minusDays(days);
     }
 }
