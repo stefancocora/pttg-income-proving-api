@@ -5,24 +5,21 @@ import uk.gov.digital.ho.proving.income.acl.EarningsServiceNoUniqueMatch
 import uk.gov.digital.ho.proving.income.acl.MongodbBackedApplicantService
 import uk.gov.digital.ho.proving.income.acl.MongodbBackedEarningsService
 import uk.gov.digital.ho.proving.income.api.FinancialStatusService
-import uk.gov.digital.ho.proving.income.domain.Income
 import uk.gov.digital.ho.proving.income.domain.IncomeProvingResponse
-import uk.gov.digital.ho.proving.income.domain.Individual
 import uk.gov.digital.ho.proving.income.domain.TemporaryMigrationFamilyApplication
 
 import java.time.LocalDate
-import java.time.Month
 
 import static java.time.LocalDate.now
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
+import static uk.gov.digital.ho.proving.income.api.test.MockDataUtils.getConsecutiveIncomes
+import static uk.gov.digital.ho.proving.income.api.test.MockDataUtils.getIndividual
 
 class FinancialServiceSpec extends Specification {
 
-    final String PIZZA_HUT = "Pizza Hut"
-    final String BURGER_KING = "Burger King"
 
     def financialStatusController = new FinancialStatusService()
     def earningsService = Mock(MongodbBackedEarningsService)
@@ -36,11 +33,11 @@ class FinancialServiceSpec extends Specification {
 
     def "valid NINO is looked up on the earnings service"() {
         given:
-        1 * earningsService.lookup(_,_) >> new TemporaryMigrationFamilyApplication(getIndividual(), new Date(), "A", true)
-        1 * individualService.lookup(_,_,_) >> new IncomeProvingResponse(getIndividual(), getConsecutiveIncomes(), "9600", "M1")
+        1 * earningsService.lookup(_, _) >> new TemporaryMigrationFamilyApplication(getIndividual(), LocalDate.now(), "A", true)
+        1 * individualService.lookup(_, _, _) >> new IncomeProvingResponse(getIndividual(), getConsecutiveIncomes(), "9600", "M1")
 
         when:
-        def response = mockMvc.perform(get("/incomeproving/v1/individual/AA123456A/financialstatus").param("applicationRaisedDate","2015-09-23"))
+        def response = mockMvc.perform(get("/incomeproving/v1/individual/AA123456A/financialstatus").param("applicationRaisedDate", "2015-09-23"))
 
         then:
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
@@ -51,7 +48,7 @@ class FinancialServiceSpec extends Specification {
 
     def "invalid nino is rejected"() {
         when:
-        def response = mockMvc.perform(get("/incomeproving/v1/individual/AA123456A/financialstatus").param("applicationRaisedDate","2015-09-23"))
+        def response = mockMvc.perform(get("/incomeproving/v1/individual/AA123456A/financialstatus").param("applicationRaisedDate", "2015-09-23"))
 
         then:
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
@@ -63,10 +60,10 @@ class FinancialServiceSpec extends Specification {
 
     def "unknown nino yields HTTP Not Found (404)"() {
         given:
-        1 * individualService.lookup(_,_,_) >> { throw  new EarningsServiceNoUniqueMatch() }
+        1 * individualService.lookup(_, _, _) >> { throw new EarningsServiceNoUniqueMatch() }
 
         when:
-        def response = mockMvc.perform(get("/incomeproving/v1/individual/AA123456C/financialstatus").param("applicationRaisedDate","2015-03-21"))
+        def response = mockMvc.perform(get("/incomeproving/v1/individual/AA123456C/financialstatus").param("applicationRaisedDate", "2015-03-21"))
 
         then:
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
@@ -78,8 +75,8 @@ class FinancialServiceSpec extends Specification {
     def "cannot submit less than zero dependants"() {
         when:
         def response = mockMvc.perform(get("/incomeproving/v1/individual/AA123456C/financialstatus")
-            .param("applicationRaisedDate","2015-03-21")
-            .param("dependants","-1")
+            .param("applicationRaisedDate", "2015-03-21")
+            .param("dependants", "-1")
         )
 
         then:
@@ -90,13 +87,13 @@ class FinancialServiceSpec extends Specification {
 
     def "can submit more than zero dependants"() {
         given:
-        1 * earningsService.lookup(_,_) >> new TemporaryMigrationFamilyApplication(getIndividual(), new Date(), "A", true)
-        1 * individualService.lookup(_,_,_) >> new IncomeProvingResponse(getIndividual(), getConsecutiveIncomes(), "9600", "M1")
+        1 * earningsService.lookup(_, _) >> new TemporaryMigrationFamilyApplication(getIndividual(), LocalDate.now(), "A", true)
+        1 * individualService.lookup(_, _, _) >> new IncomeProvingResponse(getIndividual(), getConsecutiveIncomes(), "9600", "M1")
 
         when:
         def response = mockMvc.perform(get("/incomeproving/v1/individual/AA123456C/financialstatus")
-            .param("applicationRaisedDate","2015-03-21")
-            .param("dependants","1")
+            .param("applicationRaisedDate", "2015-03-21")
+            .param("dependants", "1")
         )
 
         then:
@@ -108,8 +105,8 @@ class FinancialServiceSpec extends Specification {
     def "invalid date is rejected"() {
         when:
         def response = mockMvc.perform(get("/incomeproving/v1/individual/AA123456C/financialstatus")
-            .param("applicationRaisedDate","2015-03-xx")
-            .param("dependants","1")
+            .param("applicationRaisedDate", "2015-03-xx")
+            .param("dependants", "1")
         )
 
         then:
@@ -124,8 +121,8 @@ class FinancialServiceSpec extends Specification {
 
         when:
         def response = mockMvc.perform(get("/incomeproving/v1/individual/AA123456C/financialstatus")
-            .param("applicationRaisedDate",tomorrow)
-            .param("dependants","1")
+            .param("applicationRaisedDate", tomorrow)
+            .param("dependants", "1")
         )
 
         then:
@@ -136,13 +133,13 @@ class FinancialServiceSpec extends Specification {
 
     def "monthly payment uses 182 days in start date calculation"() {
         given:
-        1 * earningsService.lookup(_,_) >> new TemporaryMigrationFamilyApplication(getIndividual(), new Date(), "A", true)
-        1 * individualService.lookup(_,_,_) >> new IncomeProvingResponse(getIndividual(), getConsecutiveIncomes(), "9600", "M1")
+        1 * earningsService.lookup(_, _) >> new TemporaryMigrationFamilyApplication(getIndividual(), LocalDate.now(), "A", true)
+        1 * individualService.lookup(_, _, _) >> new IncomeProvingResponse(getIndividual(), getConsecutiveIncomes(), "9600", "M1")
 
         when:
         def response = mockMvc.perform(get("/incomeproving/v1/individual/AA123456A/financialstatus")
-            .param("applicationRaisedDate","2015-09-23")
-            .param("dependants","1")
+            .param("applicationRaisedDate", "2015-09-23")
+            .param("dependants", "1")
         )
 
         then:
@@ -153,30 +150,4 @@ class FinancialServiceSpec extends Specification {
 
     }
 
-    def getIndividual() {
-        Individual individual = new Individual()
-        individual.title = "Mr"
-        individual.forename = "Duncan"
-        individual.surname = "Sinclair"
-        individual.nino = "AA123456A"
-        individual
-    }
-
-    def getConsecutiveIncomes() {
-        List<Income> incomes = new ArrayList()
-        incomes.add(new Income(getDate(2015, Month.JANUARY, 15),PIZZA_HUT , "1400" ))
-        incomes.add(new Income(getDate(2015, Month.MAY, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Month.JUNE, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Month.APRIL, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Month.JULY, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Month.FEBRUARY, 15),BURGER_KING , "1600" ))
-        incomes.add(new Income(getDate(2015, Month.AUGUST, 15),PIZZA_HUT , "1600" ))
-        incomes.add(new Income(getDate(2015, Month.SEPTEMBER, 15),PIZZA_HUT , "1600" ))
-        incomes
-    }
-
-    LocalDate getDate(int year, Month month, int day) {
-        LocalDate localDate = LocalDate.of(year,month,day)
-        return localDate
-    }
 }

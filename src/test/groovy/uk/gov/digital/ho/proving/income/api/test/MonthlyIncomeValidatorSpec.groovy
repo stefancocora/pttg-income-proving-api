@@ -6,17 +6,23 @@ import spock.lang.Specification
 import uk.gov.digital.ho.proving.income.api.FinancialCheckValues
 import uk.gov.digital.ho.proving.income.api.IncomeValidator
 import uk.gov.digital.ho.proving.income.domain.Income
-import uk.gov.digital.ho.proving.income.domain.Individual
 
 import java.time.LocalDate
 import java.time.Month
 
+import static MockDataUtils.getDate
+import static MockDataUtils.getConsecutiveIncomes
+import static MockDataUtils.getConsecutiveIncomesButDifferentEmployers
+import static MockDataUtils.getConsecutiveIncomesButLowAmounts
+import static MockDataUtils.getConsecutiveIncomesWithDifferentMonthlyPayDay
+import static MockDataUtils.getConsecutiveIncomesWithExactlyTheAmount
+import static MockDataUtils.getNoneConsecutiveIncomes
+import static MockDataUtils.getNotEnoughConsecutiveIncomes
+import static MockDataUtils.subtractDaysFromDate
+
 class MonthlyIncomeValidatorSpec extends Specification {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MonthlyIncomeValidatorSpec.class);
-
-    final String PIZZA_HUT = "Pizza Hut"
-    final String BURGER_KING = "Burger King"
 
     int days = 182
 
@@ -126,108 +132,4 @@ class MonthlyIncomeValidatorSpec extends Specification {
     }
 
 
-    def getIndividual() {
-        Individual individual = new Individual()
-        individual.title = "Mr"
-        individual.forename = "Duncan"
-        individual.surname = "Sinclair"
-        individual.nino = "AA123456A"
-        individual
-    }
-
-    def getConsecutiveIncomes() {
-        List<Income> incomes = new ArrayList()
-        incomes.add(new Income(getDate(2015, Month.JANUARY, 15), PIZZA_HUT, "1400"))
-        incomes.add(new Income(getDate(2015, Month.MAY, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Month.JUNE, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Month.APRIL, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Month.JULY, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Month.FEBRUARY, 15), BURGER_KING, "1600"))
-        incomes.add(new Income(getDate(2015, Month.AUGUST, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Month.SEPTEMBER, 15), PIZZA_HUT, "1600"))
-        incomes
-    }
-
-    def getNotEnoughConsecutiveIncomes() {
-        List<Income> incomes = new ArrayList()
-        incomes.add(new Income(getDate(2015, Month.MAY, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Month.JUNE, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Month.APRIL, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Month.JULY, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Month.AUGUST, 15), PIZZA_HUT, "1600"))
-        incomes
-    }
-
-    def getNoneConsecutiveIncomes() {
-        List<Income> incomes = new ArrayList()
-        incomes.add(new Income(getDate(2015, Month.JANUARY, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Month.FEBRUARY, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Month.APRIL, 16), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Month.MAY, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Month.JUNE, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Month.APRIL, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Month.AUGUST, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Month.SEPTEMBER, 15), PIZZA_HUT, "1600"))
-        incomes
-    }
-
-    def getConsecutiveIncomesButDifferentEmployers() {
-        List<Income> incomes = new ArrayList()
-        incomes.add(new Income(getDate(2015, Month.JANUARY, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Month.MAY, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Month.JUNE, 15), BURGER_KING, "1600"))
-        incomes.add(new Income(getDate(2015, Month.APRIL, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Month.JULY, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Month.AUGUST, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Month.SEPTEMBER, 15), PIZZA_HUT, "1600"))
-        incomes
-    }
-
-    def getConsecutiveIncomesButLowAmounts() {
-        List<Income> incomes = new ArrayList()
-        incomes.add(new Income(getDate(2015, Month.JANUARY, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Month.MAY, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Month.JUNE, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Month.APRIL, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Month.JULY, 15), PIZZA_HUT, "1400"))
-        incomes.add(new Income(getDate(2015, Month.AUGUST, 15), PIZZA_HUT, "1400"))
-        incomes.add(new Income(getDate(2015, Month.SEPTEMBER, 15), PIZZA_HUT, "1600"))
-        incomes
-    }
-
-    def getConsecutiveIncomesWithDifferentMonthlyPayDay() {
-        List<Income> incomes = new ArrayList()
-        incomes.add(new Income(getDate(2015, Month.JANUARY, 15), PIZZA_HUT, "1400"))
-        incomes.add(new Income(getDate(2015, Month.MAY, 16), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Month.JUNE, 17), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Month.APRIL, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Month.JULY, 14), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Month.FEBRUARY, 15), BURGER_KING, "1600"))
-        incomes.add(new Income(getDate(2015, Month.AUGUST, 15), PIZZA_HUT, "1600"))
-        incomes.add(new Income(getDate(2015, Month.SEPTEMBER, 15), PIZZA_HUT, "1600"))
-        incomes
-    }
-
-    def getConsecutiveIncomesWithExactlyTheAmount() {
-        List<Income> incomes = new ArrayList()
-        incomes.add(new Income(getDate(2015, Month.JANUARY, 15), PIZZA_HUT, "1550"))
-        incomes.add(new Income(getDate(2015, Month.MAY, 16), PIZZA_HUT, "1550"))
-        incomes.add(new Income(getDate(2015, Month.JUNE, 17), PIZZA_HUT, "1550"))
-        incomes.add(new Income(getDate(2015, Month.APRIL, 15), PIZZA_HUT, "1550"))
-        incomes.add(new Income(getDate(2015, Month.JULY, 14), PIZZA_HUT, "1550"))
-        incomes.add(new Income(getDate(2015, Month.FEBRUARY, 15), BURGER_KING, "1550"))
-        incomes.add(new Income(getDate(2015, Month.AUGUST, 15), PIZZA_HUT, "1550"))
-        incomes.add(new Income(getDate(2015, Month.SEPTEMBER, 15), PIZZA_HUT, "1550"))
-        incomes
-    }
-
-    LocalDate getDate(int year, Month month, int day) {
-        LocalDate localDate = LocalDate.of(year,month,day)
-        return localDate
-    }
-
-
-    LocalDate subtractDaysFromDate(LocalDate date, long days) {
-        return date.minusDays(days);
-    }
 }

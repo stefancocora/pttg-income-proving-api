@@ -6,6 +6,8 @@ import uk.gov.digital.ho.proving.income.api.IncomeValidator
 import java.time.LocalDate
 import java.time.Month
 
+import static MockDataUtils.getDate
+
 class DateCalculationSpec extends Specification {
 
     def "Check we get 1 month difference between 23/01/2015 and 23/02/2015"() {
@@ -94,9 +96,5 @@ class DateCalculationSpec extends Specification {
 
     }
 
-    LocalDate getDate(int year, Month month, int day) {
-        LocalDate localDate = LocalDate.of(year,month,day)
-        return localDate
-    }
 
 }
