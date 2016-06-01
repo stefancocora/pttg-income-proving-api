@@ -122,4 +122,11 @@ public class FinancialStatusService extends AbstractIncomeProvingController {
         return new ResponseEntity<>(response, headers, status);
     }
 
+    public void setEarningsService(EarningsService earningsService) {
+        this.earningsService = earningsService;
+    }
+
+    public void setIndividualService(IndividualService individualService) {
+        this.individualService = individualService;
+    }
 }
