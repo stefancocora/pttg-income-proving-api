@@ -54,7 +54,7 @@ public class ServiceConfiguration {
 
     @Bean(name="applicationsCollection")
     public DBCollection getApplicationsCollection() {
-        MongoClient mongoClient = new MongoClient();
+        MongoClient mongoClient = new MongoClient("pttg-test-mongodb");
         MongoDatabase db = mongoClient.getDatabase("test");
         DBCollection coll = mongoClient.getDB("test").getCollection("applications");
 
@@ -63,7 +63,7 @@ public class ServiceConfiguration {
 
     @Bean(name="applicantCollection")
     public DBCollection getApplicantCollection() {
-        MongoClient mongoClient = new MongoClient();
+        MongoClient mongoClient = new MongoClient("pttg-test-mongodb");
         MongoDatabase db = mongoClient.getDatabase("test");
         DBCollection coll = mongoClient.getDB("test").getCollection("applicants");
 
