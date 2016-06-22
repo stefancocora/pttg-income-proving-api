@@ -14,6 +14,7 @@ buildscript {
         classpath("org.asciidoctor:asciidoctor-gradle-plugin:1.5.3")
         classpath("org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.11")
         classpath 'net.serenity-bdd:serenity-gradle-plugin:1.1.31'
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.4.0"
     }
 }
 
@@ -23,6 +24,7 @@ apply plugin: 'spring-boot'
 apply plugin: 'application'
 apply plugin: 'org.asciidoctor.convert'
 apply plugin: 'net.serenity-bdd.aggregator'
+apply plugin: 'com.jfrog.artifactory'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -81,6 +83,16 @@ sourceSets {
     }
 }
 
+if (System.getenv('ARTIFACTORY_HOST')) {
+  artifactoryPublish {
+    skip = false 
+    contextUrl = System.getenv('ARTIFACTORY_HOST')
+    clientConfig.publisher.repoKey = 'libs-releases'
+    clientConfig.publisher.username = System.getenv('ARTIFACTORY_USER')
+    clientConfig.publisher.password = System.getenv('ARTIFACTORY_PASS')
+  }
+}
+  
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-web:1.3.3.RELEASE'
     compile 'org.springframework.boot:spring-boot:1.3.3.RELEASE'
