@@ -1,5 +1,4 @@
 group 'pttg-family-migration-build'
-version '1.0-SNAPSHOT'
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.13'
@@ -27,10 +26,31 @@ apply plugin: 'net.serenity-bdd.aggregator'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+version = '0.1.0'
+if (System.getenv('VERSION')) {
+  version = System.getenv('VERSION')
+}
 
 jar {
-    baseName = 'pttg-family-migration-api'
-    version =  '0.1.0'
+    baseName = 'pttg-income-proving-api'
+    if (System.getenv('BUILD_NUMBER')) {
+      version =  version + '-' + System.getenv('BUILD_NUMBER')
+    }
+    if (System.getenv('GIT_COMMIT')) {
+      version = version + '+' + System.getenv('GIT_COMMIT')
+    }
+    manifest {
+      attributes 'Implementation-Title': baseName,
+                 'Implementation-Version': version
+   }
+}
+
+uploadArchives {
+  repositories {
+    flatDir {
+      dirs 'repos'
+    }
+  }
 }
 
 test {
