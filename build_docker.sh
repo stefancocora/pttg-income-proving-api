@@ -4,6 +4,7 @@ set -e
 
 GRADLE_IMAGE="quay.io/ukhomeofficedigital/gradle:v2.13.5"
 GIT_COMMIT=${GIT_COMMIT:-$(git rev-parse --short HEAD)}
+GIT_COMMIT=${GIT_COMMIT:0:7}
 VERSION="0.1.0"
 
 build() {
