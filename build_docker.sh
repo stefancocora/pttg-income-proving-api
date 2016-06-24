@@ -35,6 +35,11 @@ dockerBuild() {
       -t quay.io/ukhomeofficedigital/pttg-income-proving-api:${VERSION} .
 }
 
+dockerPublish() {
+  docker push -t quay.io/ukhomeofficedigital/pttg-income-proving-api:${VERSION}
+}
+
 build "${@}"
 setProps
 dockerBuild
+dockerPublish
