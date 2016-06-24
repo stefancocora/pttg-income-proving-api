@@ -27,9 +27,20 @@ build() {
 
 setProps() {
   [ -n "${BUILD_NUMBER}" ] && VERSION="${VERSION}-${BUILD_NUMBER}"
-  [ -n "${GIT_COMMIT}" ] && VERSION="$VERSION+${GIT_COMMIT}"
-  echo "VERSION=${VERSION/+/_}" >> version.properties
+  [ -n "${GIT_COMMIT}" ] && VERSION="$VERSION.${GIT_COMMIT}"
+  echo "VERSION=${VERSION}" >> version.properties
+}
+
+dockerBuild() {
+  docker build --build-arg VERSION=${VERSION} --build-arg JAR_PATH=build/libs \
+      -t quay.io/ukhomeofficedigital/pttg-income-proving-api:${VERSION} .
+}
+
+dockerPublish() {
+  docker push quay.io/ukhomeofficedigital/pttg-income-proving-api:${VERSION}
 }
 
 build "${@}"
 setProps
+dockerBuild
+dockerPublish
