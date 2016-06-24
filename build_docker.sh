@@ -5,7 +5,7 @@ set -e
 GRADLE_IMAGE="quay.io/ukhomeofficedigital/gradle:v2.13.5"
 GIT_COMMIT=${GIT_COMMIT:-$(git rev-parse --short HEAD)}
 GIT_COMMIT=${GIT_COMMIT:0:7}
-VERSION=$(grep ^version build.gradle | cut -d= -f 2 | tr -d ' ' | sed -e "s|\'||g")
+VERSION=$(grep ^version build.gradle | cut -d= -f 2 | tr -d ' ' | sed -e "s|'||g")
 
 build() {
 
