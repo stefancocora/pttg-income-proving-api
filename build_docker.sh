@@ -31,7 +31,7 @@ setProps() {
 }
 
 dockerBuild() {
-  docker build --build-arg VERSION=${VERSION} --build-arg JARPATH=build/libs \
+  docker build --build-arg VERSION=${VERSION} --build-arg JAR_PATH=build/libs \
       -t quay.io/ukhomeofficedigital/pttg-income-proving-api:${VERSION} .
 }
 
