@@ -11,11 +11,12 @@ ext {
 buildscript {
     repositories {
         maven {
-            url "${artifactory_contextUrl} + '/artifactory/plugins-release'"
+            url "https://artifactory.digital.homeoffice.gov.uk/artifactory/plugins-release"
             credentials {
-            username = "${artifactory_user}"
-            password = "${artifactory_password}"
+              username = "${artifactory_user}"
+              password = "${artifactory_password}"
             }
+            name = "maven-main-cache"
         }
     }
     dependencies {
@@ -29,6 +30,7 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'groovy'
+apply plugin: 'maven-publish'
 apply plugin: 'spring-boot'
 apply plugin: 'application'
 apply plugin: 'org.asciidoctor.convert'
