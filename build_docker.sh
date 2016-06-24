@@ -5,7 +5,7 @@ set -e
 GRADLE_IMAGE="quay.io/ukhomeofficedigital/gradle:v2.13.5"
 GIT_COMMIT=${GIT_COMMIT:-$(git rev-parse --short HEAD)}
 GIT_COMMIT=${GIT_COMMIT:0:7}
-VERSION="0.1.0"
+VERSION=$(grep ^version build.gradle | cut -d= -f 2 | tr -d ' ' | sed -e "s|\'||g")
 
 build() {
 
@@ -19,7 +19,17 @@ build() {
   # Mount in local gradle user directory
   [ -d "${HOME}/.gradle" ] && MOUNT="${MOUNT} -v ${HOME}/.gradle:/root/.gradle"
 
-  docker run -e GIT_COMMIT=${GIT_COMMIT} -e VERSION=${VERSION} -v ${MOUNT} "${GRADLE_IMAGE}" "${@}"
+  ENV_OPTS="GIT_COMMIT=${GIT_COMMIT} -e VERSION=${VERSION}"
+  [ -n "${BUILD_NUMBER}" ] && ENV_OPTS="BUILD_NUMBER=${BUILD_NUMBER} -e ${ENV_OPTS}"
+
+  docker run -e ${ENV_OPTS} -v ${MOUNT} "${GRADLE_IMAGE}" "${@}"
+}
+
+setProps() {
+  [ -n "${BUILD_NUMBER}" ] && VERSION="${VERSION}-${BUILD_NUMBER}"
+  [ -n "${GIT_COMMIT}" ] && VERSION="$VERSION+${GIT_COMMIT}"
+  echo "VERSION=${VERSION}" >> version.properties
 }
 
 build "${@}"
+setProps
