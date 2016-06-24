@@ -36,7 +36,7 @@ dockerBuild() {
 }
 
 dockerPublish() {
-  docker push -t quay.io/ukhomeofficedigital/pttg-income-proving-api:${VERSION}
+  docker push quay.io/ukhomeofficedigital/pttg-income-proving-api:${VERSION}
 }
 
 build "${@}"
