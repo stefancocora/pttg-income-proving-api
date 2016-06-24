@@ -37,7 +37,7 @@ jar {
       version =  version + '-' + System.getenv('BUILD_NUMBER')
     }
     if (System.getenv('GIT_COMMIT')) {
-      version = version + '+' + System.getenv('GIT_COMMIT')
+      version = version + '.' + System.getenv('GIT_COMMIT')
     }
     manifest {
       attributes 'Implementation-Title': baseName,
