@@ -24,4 +24,4 @@ RUN chmod a+x /app/run.sh
 
 EXPOSE 8081
 
-ENTRYPOINT /run.sh
+ENTRYPOINT /app/run.sh
