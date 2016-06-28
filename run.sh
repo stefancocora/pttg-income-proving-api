@@ -1,4 +1,4 @@
-#!/usr/bin/env bash -x
+#!/usr/bin/env bash
 NAME=${NAME:-pttg-income-proving-api}
 
 JAR=$(find . -name ${NAME}*.jar|head -1)
