@@ -1,4 +1,4 @@
-FROM quay.io/ukhomeofficedigital/openjdk8:v0.1.2
+FROM quay.io/ukhomeofficedigital/openjdk8:v1.0.0
 
 ENV MONGO_HOST localhost
 ENV MONGO_PORT 28017
@@ -17,8 +17,8 @@ RUN groupadd -r ${GROUP} && \
     mkdir -p /app && \
     chown -R ${USER}:${GROUP} /app
 
-ADD ${JAR_PATH}/${NAME}-${VERSION}.jar /app
-ADD run.sh /app
+COPY ${JAR_PATH}/${NAME}-${VERSION}.jar /app
+COPY run.sh /app
 
 RUN chmod a+x /app/run.sh
 
