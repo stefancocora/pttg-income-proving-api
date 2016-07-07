@@ -2,7 +2,7 @@
 set -e
 [ -n "${DEBUG}" ] && set -x
 
-GRADLE_IMAGE="quay.io/ukhomeofficedigital/gradle:v2.13.5"
+GRADLE_IMAGE="quay.io/ukhomeofficedigital/gradle:v2.13.6"
 GIT_COMMIT=${GIT_COMMIT:-$(git rev-parse --short HEAD)}
 GIT_COMMIT=${GIT_COMMIT:0:7}
 VERSION=$(grep ^version build.gradle | cut -d= -f 2 | tr -d ' ' | sed -e "s|'||g")
@@ -28,7 +28,7 @@ build() {
 setProps() {
   [ -n "${BUILD_NUMBER}" ] && VERSION="${VERSION}-${BUILD_NUMBER}"
   [ -n "${GIT_COMMIT}" ] && VERSION="$VERSION.${GIT_COMMIT}"
-  echo "VERSION=${VERSION}" >> version.properties
+  echo "VERSION=${VERSION}" > version.properties
 }
 
 dockerBuild() {
@@ -40,7 +40,11 @@ dockerPublish() {
   docker push quay.io/ukhomeofficedigital/pttg-income-proving-api:${VERSION}
 }
 
+echo "=== build function"
 build "${@}"
+echo "=== setProps function"
 setProps
+echo "=== dockerBuild function"
 dockerBuild
+echo "=== dockerPublish function"
 dockerPublish
