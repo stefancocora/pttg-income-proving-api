@@ -6,6 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
 import com.mongodb.client.MongoDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,14 +28,11 @@ public class ServiceConfiguration {
 
     private static Logger LOGGER = LoggerFactory.getLogger(ServiceConfiguration.class);
 
-    private String host;
+    @Value("${mongodb.ssl}")
+    private boolean ssl;
 
-    @Value("${mongodb.host}")
-    private String mongodbHost;
-
-    @Value("${mongodb.port}")
-    private String mongodbPort;
-
+    @Value("${mongodb.service}")
+    private String mongodbService;
 
     @Bean
     public Jackson2ObjectMapperBuilder jacksonBuilder() {
@@ -82,21 +80,16 @@ public class ServiceConfiguration {
         return coll;
     }
 
-    //port will be ignored if host not specified
     private MongoClient getMongoClient() {
-        boolean useHost = (mongodbHost != null && !mongodbHost.isEmpty());
-        boolean usePort = (mongodbPort != null && !mongodbPort.isEmpty());
+        boolean useHost = (mongodbService != null && !mongodbService.isEmpty());
         MongoClient client;
         if (useHost) {
-            if (usePort) {
-                client = new MongoClient(mongodbHost, Integer.parseInt(mongodbPort));
-            } else {
-                client = new MongoClient(mongodbHost);
-            }
+            client = new MongoClient(mongodbService, MongoClientOptions.builder().sslEnabled(ssl).build());
+            LOGGER.info("MongoClient invoked using ["+mongodbService+"]");
         } else {
+            LOGGER.info("MongoClient invoked using default host and port");
             client = new MongoClient();
         }
-        LOGGER.info("MongoClient invoked using host[" + mongodbHost + "] and port [" + mongodbPort + "]");
         return client;
     }
 
