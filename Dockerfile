@@ -24,4 +24,6 @@ RUN chmod a+x /app/run.sh
 
 EXPOSE 8081
 
+USER pttg
+
 ENTRYPOINT /app/run.sh
