@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
+import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,7 +85,7 @@ public class ServiceConfiguration {
         boolean useHost = (mongodbService != null && !mongodbService.isEmpty());
         MongoClient client;
         if (useHost) {
-            client = new MongoClient(mongodbService, MongoClientOptions.builder().sslEnabled(ssl).build());
+            client = new MongoClient(new ServerAddress(mongodbService, 443), MongoClientOptions.builder().sslEnabled(ssl).build());
             LOGGER.info("MongoClient invoked using ["+mongodbService+"]");
         } else {
             LOGGER.info("MongoClient invoked using default host and port");
