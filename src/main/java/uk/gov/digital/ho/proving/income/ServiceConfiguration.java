@@ -85,8 +85,9 @@ public class ServiceConfiguration {
         boolean useHost = (mongodbService != null && !mongodbService.isEmpty());
         MongoClient client;
         if (useHost) {
-            client = new MongoClient(new ServerAddress(mongodbService, 443), MongoClientOptions.builder().sslEnabled(ssl).build());
-            LOGGER.info("MongoClient invoked using ["+mongodbService+"]");
+            final int port = ssl ? 443 : 27017;
+            client = new MongoClient(new ServerAddress(mongodbService, port), MongoClientOptions.builder().sslEnabled(ssl).build());
+            LOGGER.info("MongoClient invoked using ["+mongodbService+"] and port ["+port+"]");
         } else {
             LOGGER.info("MongoClient invoked using default host and port");
             client = new MongoClient();
