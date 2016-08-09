@@ -15,6 +15,7 @@ import org.springframework.boot.test.TestRestTemplate
 import org.springframework.test.context.TestPropertySource
 import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.web.client.RestTemplate
+import spock.lang.Ignore
 import spock.lang.Specification
 import uk.gov.digital.ho.proving.income.api.IncomeRetrievalResponse
 
@@ -31,6 +32,7 @@ import static java.time.temporal.ChronoUnit.MINUTES
 @TestPropertySource(properties = [
     "api.root=http://localhost:8989"
 ])
+@Ignore
 class AuditIntegrationSpec extends Specification {
 
     @Value('${local.server.port}')
