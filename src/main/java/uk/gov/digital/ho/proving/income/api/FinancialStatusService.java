@@ -1,18 +1,26 @@
 package uk.gov.digital.ho.proving.income.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uk.gov.digital.ho.proving.income.acl.*;
+import uk.gov.digital.ho.proving.income.audit.AuditActions;
 import uk.gov.digital.ho.proving.income.domain.Application;
 import uk.gov.digital.ho.proving.income.domain.IncomeProvingResponse;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import static java.time.LocalDate.now;
 import static org.springframework.util.StringUtils.isEmpty;
+import static uk.gov.digital.ho.proving.income.audit.AuditActions.auditEvent;
+import static uk.gov.digital.ho.proving.income.audit.AuditEventType.SEARCH;
+import static uk.gov.digital.ho.proving.income.audit.AuditEventType.SEARCH_RESULT;
 import static uk.gov.digital.ho.proving.income.util.DateUtils.parseIsoDate;
 
 @RestController
@@ -25,6 +33,9 @@ public class FinancialStatusService extends AbstractIncomeProvingController {
     @Autowired
     private IndividualService individualService;
 
+    @Autowired
+    private ApplicationEventPublisher auditor;
+
     private static final int MINIMUM_DEPENDANTS = 0;
     private static final int MAXIMUM_DEPENDANTS = 99;
 
@@ -36,7 +47,10 @@ public class FinancialStatusService extends AbstractIncomeProvingController {
         @RequestParam(value = "applicationRaisedDate") String applicationDateAsString,
         @RequestParam(value = "dependants", required = false) Integer dependants) {
 
-        LOGGER.info(String.format("Income Proving Service API for Temporary Migration Family Application invoked for %s application received on %s.", nino, applicationDateAsString));
+        LOGGER.debug("Get financial status invoked for {} application received on {}.", nino, applicationDateAsString);
+
+        UUID eventId = AuditActions.nextId();
+        auditor.publishEvent(auditEvent(SEARCH, eventId, auditData(nino, applicationDateAsString, dependants)));
 
         HttpHeaders headers = new HttpHeaders();
         headers.set(CONTENT_TYPE, APPLICATION_JSON);
@@ -95,21 +109,24 @@ public class FinancialStatusService extends AbstractIncomeProvingController {
                     throw new UnknownPaymentFrequencyType();
             }
             response.setStatus(new ResponseStatus("100", "OK"));
+
+            auditor.publishEvent(auditEvent(SEARCH_RESULT, eventId, auditData(response)));
+
             return new ResponseEntity<>(response, headers, HttpStatus.OK);
 
         } // TODO All this below is a mess of exceptions and needs to be refactored
         catch (EarningsServiceFailedToMapDataToDomainClass | EarningsServiceNoUniqueMatch e) {
             LOGGER.error("Could not retrieve earning details.", e);
-            return buildErrorResponse(headers, "0004", "Resource not found", HttpStatus.NOT_FOUND);
+            return buildErrorResponse(headers, "0009", "Resource not found", HttpStatus.NOT_FOUND);
         } catch (IllegalArgumentException iae) {
             LOGGER.error(iae.getMessage(), iae);
             return buildErrorResponse(headers, "0004", "Parameter error: " + iae.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         } catch (UnknownPaymentFrequencyType upte) {
             LOGGER.error("Unknown payment frequency type " + upte);
-            return buildErrorResponse(headers, "0004", "Unknown payment frequency type", HttpStatus.INTERNAL_SERVER_ERROR);
+            return buildErrorResponse(headers, "0005", "Unknown payment frequency type", HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (RuntimeException e) {
             LOGGER.error("NINO is not valid", e);
-            return buildErrorResponse(headers, "0001", "Parameter error: NINO is invalid", HttpStatus.BAD_REQUEST);
+            return buildErrorResponse(headers, "0004", "Parameter error: NINO is invalid", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -128,5 +145,27 @@ public class FinancialStatusService extends AbstractIncomeProvingController {
 
     public void setIndividualService(IndividualService individualService) {
         this.individualService = individualService;
+    }
+
+    private Map<String, Object> auditData(String nino, String applicationRaisedDate, Integer dependants) {
+
+        Map<String, Object> auditData = new HashMap<>();
+
+        auditData.put("method", "get-financial-status");
+        auditData.put("nino", nino);
+        auditData.put("applicationRaisedDate", applicationRaisedDate);
+        auditData.put("dependants", dependants);
+
+        return auditData;
+    }
+
+    private Map<String, Object> auditData(FinancialStatusCheckResponse response) {
+
+        Map<String, Object> auditData = new HashMap<>();
+
+        auditData.put("method", "get-financial-status");
+        auditData.put("response", response);
+
+        return auditData;
     }
 }

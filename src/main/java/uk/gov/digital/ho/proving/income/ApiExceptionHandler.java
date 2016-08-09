@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import uk.gov.digital.ho.proving.income.api.BaseResponse;
 import uk.gov.digital.ho.proving.income.api.ResponseStatus;
 
@@ -25,23 +24,23 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public Object missingParamterHandler(MissingServletRequestParameterException exception) {
-        LOGGER.debug(exception.getMessage());
+        LOGGER.error(exception.getMessage());
         HttpHeaders headers = new HttpHeaders();
         headers.set(CONTENT_TYPE, APPLICATION_JSON);
-        return buildErrorResponse(headers, "0008", "Missing parameter: " + exception.getParameterName(), HttpStatus.BAD_REQUEST);
+        return buildErrorResponse(headers, "0001", "Missing parameter: " + exception.getParameterName(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
     public Object requestHandlingNoHandlerFound(NoHandlerFoundException exception) {
-        LOGGER.debug(exception.getMessage());
+        LOGGER.error(exception.getMessage());
         HttpHeaders headers = new HttpHeaders();
         headers.set(CONTENT_TYPE, APPLICATION_JSON);
-        return buildErrorResponse(headers, "0008", "Resource not found: " + exception.getRequestURL(), HttpStatus.NOT_FOUND);
+        return buildErrorResponse(headers, "0009", "Resource not found: " + exception.getRequestURL(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public Object methodArgumentTypeMismatchException(MethodArgumentTypeMismatchException exception) {
-        LOGGER.debug(exception.getMessage());
+        LOGGER.error(exception.getMessage());
         HttpHeaders headers = new HttpHeaders();
         headers.set(CONTENT_TYPE, APPLICATION_JSON);
         return buildErrorResponse(headers, "0004", "Parameter error: Invalid value for " + exception.getName(), HttpStatus.BAD_REQUEST);
