@@ -35,6 +35,10 @@ public class ServiceConfiguration {
     @Value("${mongodb.service}")
     private String mongodbService;
 
+    @Value("${mongodb.connect.timeout.millis}")
+    private int mongodbConnectTimeout = 30000;
+
+
     @Bean
     public Jackson2ObjectMapperBuilder jacksonBuilder() {
         Jackson2ObjectMapperBuilder b = new Jackson2ObjectMapperBuilder();
@@ -84,9 +88,18 @@ public class ServiceConfiguration {
     private MongoClient getMongoClient() {
         boolean useHost = (mongodbService != null && !mongodbService.isEmpty());
         MongoClient client;
+
         if (useHost) {
             final int port = ssl ? 443 : 27017;
-            client = new MongoClient(new ServerAddress(mongodbService, port), MongoClientOptions.builder().sslEnabled(ssl).build());
+
+            client = new MongoClient(
+                new ServerAddress(mongodbService, port),
+                MongoClientOptions.builder()
+                    .connectTimeout(mongodbConnectTimeout)
+                    .serverSelectionTimeout(mongodbConnectTimeout)
+                    .sslEnabled(ssl)
+                    .build());
+
             LOGGER.info("MongoClient invoked using ["+mongodbService+"] and port ["+port+"]");
         } else {
             LOGGER.info("MongoClient invoked using default host and port");
