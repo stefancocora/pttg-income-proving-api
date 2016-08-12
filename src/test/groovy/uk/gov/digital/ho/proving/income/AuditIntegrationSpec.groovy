@@ -30,9 +30,9 @@ import static java.time.temporal.ChronoUnit.MINUTES
 @WebAppConfiguration
 @IntegrationTest("server.port:0")
 @TestPropertySource(properties = [
-    "api.root=http://localhost:8989"
+    "mongodb.service=unknownhost",  // Don't rely on pre-loaded data in a real mongo
+    "mongodb.connect.timeout.millis=100" // Don't hang around trying to connect to a mongo that isn't there
 ])
-@Ignore
 class AuditIntegrationSpec extends Specification {
 
     @Value('${local.server.port}')
@@ -61,14 +61,9 @@ class AuditIntegrationSpec extends Specification {
         root.addAppender(logAppender);
     }
 
-    def successResponses() {
-
-    }
-
     def "Searches are audited as INFO level log output with AUDIT prefix in json format and SEARCH type with a timestamp"() {
 
         given:
-        successResponses()
 
         List<LoggingEvent> logEntries = []
 
@@ -85,9 +80,9 @@ class AuditIntegrationSpec extends Specification {
 
         then:
 
-        logEntries.size >= 1
         logEntry.level == Level.INFO
 
+        // We can capture the SEARCH event log even though the search fails because there is no mongo
         logEntryJson.principal == "anonymous"
         logEntryJson.type == "SEARCH"
         logEntryJson.data.method == "get-income"
