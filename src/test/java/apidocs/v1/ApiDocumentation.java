@@ -77,12 +77,12 @@ public class ApiDocumentation {
         fieldWithPath("categoryCheck.passed").description("True if this check was satisfied, otherwise false"),
         fieldWithPath("categoryCheck.applicationRaisedDate").description("Date of the application"),
         fieldWithPath("categoryCheck.assessmentStartDate").description("Start date of the financial status check based on the application raised date minus 182 days"),
-        fieldWithPath("categoryCheck.failureReason").description("Description of the failure reason when passed is not true - see Glossary")
+        fieldWithPath("categoryCheck.failureReason").description("Description of the failure reason when passed is not true - see <<Glossary>>")
     };
 
     private FieldDescriptor[] statusModelFields = new FieldDescriptor[]{
         fieldWithPath("status").description("The result status"),
-        fieldWithPath("status.code").description("A numeric code identifying the error condition - see Error Codes"),
+        fieldWithPath("status.code").description("A numeric code identifying the error condition - see <<Errors>>"),
         fieldWithPath("status.message").description("Details to further explain the error condition")
     };
 
