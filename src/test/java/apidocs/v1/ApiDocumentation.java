@@ -68,22 +68,22 @@ public class ApiDocumentation {
         fieldWithPath("individual.title").description("The individual's title eg Mrs"),
         fieldWithPath("individual.forename").description("The individual's forename"),
         fieldWithPath("individual.surname").description("The individual's surname"),
-        fieldWithPath("individual.nino").description("The individual's NINO corresponding to the request")
+        fieldWithPath("individual.nino").description("The individual's NINO")
     };
 
     private FieldDescriptor[] categoryCheckModelFields = new FieldDescriptor[]{
         fieldWithPath("categoryCheck").description("The financial status category check details"),
         fieldWithPath("categoryCheck.category").description("to do - i don't know what this means"),
         fieldWithPath("categoryCheck.passed").description("True if this check was satisfied, otherwise false"),
-        fieldWithPath("categoryCheck.applicationRaisedDate").description("to do - i don't know what this means"),
-        fieldWithPath("categoryCheck.assessmentStartDate").description("to do - i don't know what this means"),
-        fieldWithPath("categoryCheck.failureReason").description("to do - i don't know what this means")
+        fieldWithPath("categoryCheck.applicationRaisedDate").description("Date of the application"),
+        fieldWithPath("categoryCheck.assessmentStartDate").description("Start date of the financial status check based on the application raised date minus 182 days"),
+        fieldWithPath("categoryCheck.failureReason").description("Description of the failure reason when passed is not true - see Glossary")
     };
 
     private FieldDescriptor[] statusModelFields = new FieldDescriptor[]{
-        fieldWithPath("status").description("to do - i don't know what this means"),
-        fieldWithPath("status.code").description("to do - i don't know what this means"),
-        fieldWithPath("status.message").description("to do - i don't know what this means")
+        fieldWithPath("status").description("The result status"),
+        fieldWithPath("status.code").description("A numeric code identifying the error condition - see Error Codes"),
+        fieldWithPath("status.message").description("Details to further explain the error condition")
     };
 
     private FieldDescriptor[] incomeModelFields = new FieldDescriptor[]{
@@ -166,7 +166,7 @@ public class ApiDocumentation {
                     .and(statusModelFields),
                 requestParameters(
                     parameterWithName("applicationRaisedDate")
-                        .description("to do - i don't know what this means Formatted as `yyyy-mm-dd` eg `2015-09-23`")
+                        .description("Date of the application. Formatted as `yyyy-mm-dd` eg `2015-09-23`")
                         .attributes(key("optional").value(false)),
                     parameterWithName("dependants")
                         .description("Number of dependants declared at time of application. Optional. Must be 0 or higher.")

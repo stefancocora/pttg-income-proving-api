@@ -15,3 +15,21 @@ Payment Frequency:: One of the following codes
 
 |===
 
+
+Failure Reason:: One of the following values
+[caption=]
+.Failure Reasons
+|===
+|Code|Meaning
+
+|NON_CONSECUTIVE_MONTHS
+|The income records do not meet the required number of consecutive monthly records for a monthly paid individual
+|MONTHLY_VALUE_BELOW_THRESHOLD
+|The income falls below the required monthly minimum for a monthly paid individual
+|NOT_ENOUGH_RECORDS
+|There are not enough income records
+|WEEKLY_VALUE_BELOW_THRESHOLD
+|The income falls below the required weekly minimum for a weekly paid individual
+
+|===
+
