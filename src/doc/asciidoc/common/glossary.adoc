@@ -1,7 +1,7 @@
 Financial Status:: to do
 
-NINO:: National Insurance Number. +
-Must conform to the pattern: `to do`
+NINO:: National Insurance Number +
+A National Insurance number is made up of 2 letters, 6 numbers and a letter (A, B, C, or D) eg AB123456A
 
 
 Payment Frequency:: One of the following codes
@@ -14,10 +14,6 @@ Payment Frequency:: One of the following codes
 |Calendar Monthly
 |W1
 |Weekly
-|?
-| to do
 
 |===
 
-
-Sponsor:: to do
