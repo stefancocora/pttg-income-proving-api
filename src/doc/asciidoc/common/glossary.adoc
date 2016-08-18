@@ -1,7 +1,5 @@
-Financial Status:: to do
-
-NINO:: National Insurance Number. +
-Must conform to the pattern: `to do`
+NINO:: National Insurance Number +
+A National Insurance number is made up of 2 letters, 6 numbers and a letter (A, B, C, or D) eg AB123456A
 
 
 Payment Frequency:: One of the following codes
@@ -14,10 +12,24 @@ Payment Frequency:: One of the following codes
 |Calendar Monthly
 |W1
 |Weekly
-|?
-| to do
 
 |===
 
 
-Sponsor:: to do
+Failure Reason:: One of the following values
+[caption=]
+.Failure Reasons
+|===
+|Code|Meaning
+
+|NON_CONSECUTIVE_MONTHS
+|The income records do not meet the required number of consecutive monthly records for a monthly paid individual
+|MONTHLY_VALUE_BELOW_THRESHOLD
+|The income falls below the required monthly minimum for a monthly paid individual
+|NOT_ENOUGH_RECORDS
+|There are not enough income records
+|WEEKLY_VALUE_BELOW_THRESHOLD
+|The income falls below the required weekly minimum for a weekly paid individual
+
+|===
+
