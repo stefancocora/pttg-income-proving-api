@@ -1,6 +1,8 @@
 Income Proving API
 =
 
+[![Docker Repository on Quay](https://quay.io/repository/ukhomeofficedigital/pttg-income-proving-api/status "Docker Repository on Quay")](https://quay.io/repository/ukhomeofficedigital/pttg-income-proving-api)
+
 Overview
 -
 
