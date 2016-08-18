@@ -33,11 +33,11 @@ setProps() {
 
 dockerBuild() {
   docker build --build-arg VERSION=${VERSION} --build-arg JAR_PATH=build/libs \
-      -t quay.io/ukhomeofficedigital/pttg-income-proving-api:${VERSION} .
+      -t quay.io/ukhomeofficedigital/pttg-ip-api:${VERSION} .
 }
 
 dockerPublish() {
-  docker push quay.io/ukhomeofficedigital/pttg-income-proving-api:${VERSION}
+  docker push quay.io/ukhomeofficedigital/pttg-ip-api:${VERSION}
 }
 
 function dockerCredentials() {
