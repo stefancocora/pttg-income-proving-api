@@ -15,6 +15,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import uk.gov.digital.ho.proving.income.acl.EarningsService;
 import uk.gov.digital.ho.proving.income.acl.IndividualService;
 import uk.gov.digital.ho.proving.income.acl.MongodbBackedApplicantService;
@@ -24,8 +28,9 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+@EnableWebMvc
 @Configuration
-public class ServiceConfiguration {
+public class ServiceConfiguration extends WebMvcConfigurerAdapter {
 
     private static Logger LOGGER = LoggerFactory.getLogger(ServiceConfiguration.class);
 
@@ -37,6 +42,9 @@ public class ServiceConfiguration {
 
     @Value("${mongodb.connect.timeout.millis}")
     private int mongodbConnectTimeout = 30000;
+
+    @Value("${apidocs.dir}")
+    private String apiDocsDir;
 
 
     @Bean
@@ -67,7 +75,7 @@ public class ServiceConfiguration {
         return new MongodbBackedApplicantService();
     }
 
-    @Bean(name="applicationsCollection")
+    @Bean(name = "applicationsCollection")
     public DBCollection getApplicationsCollection() {
         MongoClient mongoClient = getMongoClient();
         MongoDatabase db = mongoClient.getDatabase("test");
@@ -76,7 +84,7 @@ public class ServiceConfiguration {
         return coll;
     }
 
-    @Bean(name="applicantCollection")
+    @Bean(name = "applicantCollection")
     public DBCollection getApplicantCollection() {
         MongoClient mongoClient = getMongoClient();
         MongoDatabase db = mongoClient.getDatabase("test");
@@ -100,12 +108,29 @@ public class ServiceConfiguration {
                     .sslEnabled(ssl)
                     .build());
 
-            LOGGER.info("MongoClient invoked using ["+mongodbService+"] and port ["+port+"]");
+            LOGGER.info("MongoClient invoked using [" + mongodbService + "] and port [" + port + "]");
         } else {
             LOGGER.info("MongoClient invoked using default host and port");
             client = new MongoClient();
         }
         return client;
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry
+            .addResourceHandler("/" + apiDocsDir + "/**")
+            .addResourceLocations("classpath:/" + apiDocsDir + "/");
+    }
+
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry
+            .addViewController("/" + apiDocsDir + "/")
+            .setViewName("redirect:/" + apiDocsDir + "/index.html");
+        registry
+            .addViewController("/")
+            .setViewName("redirect:/" + apiDocsDir + "/index.html");
     }
 
 }

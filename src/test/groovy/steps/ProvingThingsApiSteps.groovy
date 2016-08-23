@@ -6,14 +6,32 @@ import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
 import net.thucydides.core.annotations.Managed
+import org.springframework.beans.BeansException
+import org.springframework.boot.test.IntegrationTest
+import org.springframework.boot.test.SpringApplicationConfiguration
+import org.springframework.context.ApplicationContext
+import org.springframework.context.ApplicationContextAware
+import org.springframework.test.context.web.WebAppConfiguration
+import org.springframework.web.servlet.DispatcherServlet
+import uk.gov.digital.ho.proving.income.ServiceConfiguration
+import uk.gov.digital.ho.proving.income.ServiceRunner
+import uk.gov.digital.ho.proving.income.ApiExceptionHandler
 
 import static com.jayway.jsonpath.JsonPath.read
 import static com.jayway.restassured.RestAssured.get
-/**
- * Created by mitchell on 11/05/16.
- */
-class ProvingThingsApiSteps {
 
+
+@SpringApplicationConfiguration(classes = [ServiceConfiguration.class, ServiceRunner.class, ApiExceptionHandler.class])
+@WebAppConfiguration
+@IntegrationTest()
+class ProvingThingsApiSteps implements ApplicationContextAware{
+
+    @Override
+    void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        //required for @controllerAdvice to work
+        DispatcherServlet ds = applicationContext.getBean("dispatcherServlet");
+        ds.setThrowExceptionIfNoHandlerFound(true)
+    }
 
     @Managed
     public Response resp
