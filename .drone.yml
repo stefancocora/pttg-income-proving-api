@@ -1,0 +1,15 @@
+# build_1_envvars:
+#   commands:
+#     -
+pipeline:
+    build_2_buildtest:
+      image: quay.io/ukhomeofficedigital/gradle:v2.13.6
+      commands:
+        - gradle build
+
+    build_3_setprops:
+      commands:
+        - GIT_COMMIT=${DRONE_COMMIT_SHA}
+        - VERSION=$(grep ^version build.gradle | cut -d= -f 2 | tr -d ' ' | sed -e "s|'||g")
+        - echo "VERSION=${VERSION}.${GIT_COMMIT}" > version.properties
+        - echo "test" > version.properties
