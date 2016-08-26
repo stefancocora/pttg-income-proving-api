@@ -33,7 +33,6 @@ import static java.time.temporal.ChronoUnit.MINUTES
     "mongodb.service=unknownhost",  // Don't rely on pre-loaded data in a real mongo
     "mongodb.connect.timeout.millis=100" // Don't hang around trying to connect to a mongo that isn't there
 ])
-@Ignore
 class AuditIntegrationSpec extends Specification {
 
     @Value('${local.server.port}')
