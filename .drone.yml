@@ -6,6 +6,9 @@ pipeline:
       image: quay.io/ukhomeofficedigital/gradle:v2.13.6
       commands:
         - gradle build
+      when:
+        branch: droneci_upstream
+        event: push
 
     build_3_setprops:
       commands:
@@ -13,3 +16,6 @@ pipeline:
         - VERSION=$(grep ^version build.gradle | cut -d= -f 2 | tr -d ' ' | sed -e "s|'||g")
         - echo "VERSION=${VERSION}.${GIT_COMMIT}" > version.properties
         - echo "test" > version.properties
+      when:
+        branch: droneci_upstream
+        event: push
