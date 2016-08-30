@@ -9,7 +9,9 @@ import net.logstash.logback.composite.loggingevent.LoggingEventPatternJsonProvid
 import net.logstash.logback.composite.loggingevent.LogstashMarkersJsonProvider
 import net.logstash.logback.composite.loggingevent.MdcJsonProvider
 import net.logstash.logback.composite.loggingevent.MessageJsonProvider
+import net.logstash.logback.composite.loggingevent.StackTraceJsonProvider
 import net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder
+import net.logstash.logback.stacktrace.ShortenedThrowableConverter
 
 import static ch.qos.logback.classic.Level.*
 
@@ -30,6 +32,7 @@ appender("STDOUT", ConsoleAppender) {
             arguments(ArgumentsJsonProvider)
             logstashMarkers(LogstashMarkersJsonProvider)
             timestamp(LoggingEventFormattedTimestampJsonProvider)
+            stackTrace(StackTraceJsonProvider)
         }
     }
 }
