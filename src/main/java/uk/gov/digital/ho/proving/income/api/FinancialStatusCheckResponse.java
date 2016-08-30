@@ -28,4 +28,11 @@ public class FinancialStatusCheckResponse extends BaseResponse{
         this.categoryCheck = categoryCheck;
     }
 
+    @Override
+    public String toString() {
+        return "FinancialStatusCheckResponse{" +
+            "individual=" + individual +
+            ", categoryCheck=" + categoryCheck +
+            '}';
+    }
 }
