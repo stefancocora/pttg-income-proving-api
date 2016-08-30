@@ -20,15 +20,6 @@ def version = "0.1.RELEASE"
 statusListener(OnConsoleStatusListener)
 
 appender("STDOUT", ConsoleAppender) {
-    encoder(PatternLayoutEncoder) {
-        pattern = "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
-    }
-}
-
-appender("FILE", FileAppender) {
-    file = "income-proving-api.log"
-    append = true
-
     encoder(LoggingEventCompositeJsonEncoder) {
         providers(LoggingEventJsonProviders) {
             pattern(LoggingEventPatternJsonProvider) {
@@ -40,6 +31,15 @@ appender("FILE", FileAppender) {
             logstashMarkers(LogstashMarkersJsonProvider)
             timestamp(LoggingEventFormattedTimestampJsonProvider)
         }
+    }
+}
+
+appender("FILE", FileAppender) {
+    file = "income-proving-api.log"
+    append = true
+
+    encoder(PatternLayoutEncoder) {
+        pattern = "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
     }
 
     filter(ch.qos.logback.classic.filter.ThresholdFilter) {
