@@ -2,18 +2,11 @@ import ch.qos.logback.classic.encoder.PatternLayoutEncoder
 import ch.qos.logback.core.ConsoleAppender
 import ch.qos.logback.core.FileAppender
 import ch.qos.logback.core.status.OnConsoleStatusListener
-import net.logstash.logback.composite.loggingevent.ArgumentsJsonProvider
-import net.logstash.logback.composite.loggingevent.LoggingEventFormattedTimestampJsonProvider
-import net.logstash.logback.composite.loggingevent.LoggingEventJsonProviders
-import net.logstash.logback.composite.loggingevent.LoggingEventPatternJsonProvider
-import net.logstash.logback.composite.loggingevent.LogstashMarkersJsonProvider
-import net.logstash.logback.composite.loggingevent.MdcJsonProvider
-import net.logstash.logback.composite.loggingevent.MessageJsonProvider
-import net.logstash.logback.composite.loggingevent.StackTraceJsonProvider
+import net.logstash.logback.composite.loggingevent.*
 import net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder
-import net.logstash.logback.stacktrace.ShortenedThrowableConverter
 
-import static ch.qos.logback.classic.Level.*
+import static ch.qos.logback.classic.Level.DEBUG
+import static ch.qos.logback.classic.Level.INFO
 
 def appName = "pttg-income-proving-api"
 def version = "0.1.RELEASE"
@@ -25,7 +18,9 @@ appender("STDOUT", ConsoleAppender) {
     encoder(LoggingEventCompositeJsonEncoder) {
         providers(LoggingEventJsonProviders) {
             pattern(LoggingEventPatternJsonProvider) {
-                pattern = """{ "appName": "${appName}", "appVersion":"${version}", "level": "%-5level", "thread": "%thread", "logger": "%logger{36}" }"""
+                pattern = """{ "appName": "${appName}", "appVersion":"${
+                    version
+                }", "level": "%-5level", "thread": "%thread", "logger": "%logger{36}" }"""
             }
             message(MessageJsonProvider)
             mdc(MdcJsonProvider)
@@ -56,7 +51,7 @@ logger("org.mongodb.driver.cluster", INFO)
 logger("org.springframework", INFO)
 logger("org.mongodb.driver.connection", INFO)
 
-root(DEBUG, ["STDOUT","FILE"])
+root(DEBUG, ["STDOUT", "FILE"])
 
 // Check config file every 30 seconds and reload if changed
 scan("30 seconds")
