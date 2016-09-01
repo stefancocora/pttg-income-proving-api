@@ -50,7 +50,7 @@ appender("FILE", FileAppender) {
 // Define logging levels for specific packages
 logger("org.eclipse.jetty", INFO)
 logger("org.mongodb.driver.cluster", INFO)
-logger("org.springframework", INFO)
+logger("org.springframework", DEBUG)
 logger("org.mongodb.driver.connection", INFO)
 
 root(DEBUG, ["STDOUT","FILE"])
