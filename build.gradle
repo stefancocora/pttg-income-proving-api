@@ -23,8 +23,8 @@ apply plugin: 'pttgSpringBootGradle'
 apply plugin: 'pttgApiDocsGradle'
 apply plugin: 'net.serenity-bdd.aggregator'
 
-group 'pttg-income-proving-api'
-version = '0.1.RELEASE'
+group 'pttg-ip-api'
+version = '0.1.0'
 
 mainClassName = "uk.gov.digital.ho.proving.income.ServiceRunner"
 
