@@ -1,12 +1,12 @@
 Errors may occur for several reasons. In the event of any error, the correct HTTP status code will be returned.
-See <<HTTP Conventions>>. Where possible, in the event of an error the API will return a response body containing
-further details to help diagnose the error, in JSON format.
+See <<HTTP Conventions>>. Where possible, in the event of an error the API response body will contain further details
+to help explain the error.
 
 === Client Errors
 
 Requests that are invalid due to missing mandatory parameters or incorrectly formatted request bodies etc, will result
 in an HTTP 400 status code, and a response body that provides further details. For example, when a mandatory parameter
-is missing, a response such as the following example will be provided:
+is missing, a response like this will be provided:
 
 include::{snippets}/missing-parameter-error/http-response.adoc[]
 
