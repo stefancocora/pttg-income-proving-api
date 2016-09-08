@@ -1,13 +1,18 @@
 = Income Proving API Guide
 include::common/config.adoc[]
 
-(uk.gov.digital.ho.proving.income.service)
-
 = API Overview
 
 == Introduction
 This document describes the Income Proving API, a REST service that exchanges JSON over HTTP and exposes information
-relating to an individual's financial status and income. This guide has three main sections:
+relating to an individual's financial status and income.
+
+This API can be used to:
+
+ . Check whether an individual meets the <<Financial Status>> requirements for a Category A application
+ . Get details of an individuals <<Income>> payments during a date range
+
+This guide has three main sections:
 
  . <<API Overview>> - Information, guidance, and conventions that apply across this API, such as access control or the use of HTTP verbs.
  . <<Resources>> - Details of the resources exposed through this API and the operations available against those resources.
@@ -43,30 +48,18 @@ include::common/auth.adoc[]
 
 = Resources
 
-[.lead]
-This API exposes financial status information relating to an individual. The central resource is the
-`Individual`, which represents a person and is typically identified by National Insurance Number. For a given
-`Individual`, this API provides access to a child resource describing details of the individual's financial status, the
-`Financial Status` resource. The API also provides access to the individuals `Income` details.
-
-
-
-== Individual
-
-The Individual resource represents a person, typically identified by their National Insurance Number (NINO).
-
-There are currently no operations for directly accessing the `Individual`.
+This API gives access to some information about an individual's financial status and income. An individual is typically
+identified by National Insurance Number.
 
 == Financial Status
 
-`Financial Status` is a child of the `Individual` resource. All operations regarding Financial Status are descendants
-of an identified individual.
+The Financial Status resource conveys whether an individual meets the financial status requirements for a
+Category A application.
 
-=== Find Financial Status of an individual
+=== Check the Financial Status of an individual
 
-To get the financial status for a given individual you need to know their NINO, which should be
+To check the financial status for a given individual you need to know their NINO, which should be
 provided as part of the URI.
-
 
 ==== Example request
 
@@ -93,12 +86,7 @@ include::{snippets}/financial-status/response-fields.adoc[]
 
 == Income
 
-`Income` is a child resource of the `Individual` resource. All operations regarding Financial Status are descendants
-of an identified individual.
-
-=== Income payment details
-
-The `Income` resource contains a list of income payment details that have the following structure.
+The Income resource contains a list of income payment details with the following structure:
 
 include::{snippets}/income-details-entry/response-fields.adoc[]
 

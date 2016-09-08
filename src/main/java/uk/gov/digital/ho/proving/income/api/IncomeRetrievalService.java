@@ -17,6 +17,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static java.time.LocalDate.now;
+import static net.logstash.logback.argument.StructuredArguments.value;
+import static net.logstash.logback.marker.Markers.append;
 import static uk.gov.digital.ho.proving.income.audit.AuditActions.auditEvent;
 import static uk.gov.digital.ho.proving.income.audit.AuditEventType.SEARCH;
 import static uk.gov.digital.ho.proving.income.audit.AuditEventType.SEARCH_RESULT;
@@ -41,7 +43,7 @@ public class IncomeRetrievalService extends AbstractIncomeProvingController {
         @RequestParam(value = "fromDate") String fromDateAsString,
         @RequestParam(value = "toDate") String toDateAsString) {
 
-        LOGGER.debug("Get income details invoked for {} nino between {} and {}", nino, fromDateAsString, toDateAsString);
+        LOGGER.debug("Get income details invoked for {} nino between {} and {}", value("nino", nino), fromDateAsString, toDateAsString);
 
         UUID eventId = AuditActions.nextId();
         auditor.publishEvent(auditEvent(SEARCH, eventId, auditData(nino, fromDateAsString, toDateAsString)));
@@ -78,6 +80,7 @@ public class IncomeRetrievalService extends AbstractIncomeProvingController {
                     incomeRetrievalResponse.setIndividual(ips.getindividual());
                     incomeRetrievalResponse.setIncomes(ips.getIncomes());
 
+                    LOGGER.debug("Income check result: {}", value("incomeCheckResponse", incomeRetrievalResponse));
                     auditor.publishEvent(auditEvent(SEARCH_RESULT, eventId, auditData(incomeRetrievalResponse)));
 
                     return new ResponseEntity<>(incomeRetrievalResponse, headers, HttpStatus.OK);
@@ -85,16 +88,16 @@ public class IncomeRetrievalService extends AbstractIncomeProvingController {
             ).orElse(buildErrorResponse(headers, "0004", "Invalid NINO", HttpStatus.NOT_FOUND));
 
         } catch (EarningsServiceFailedToMapDataToDomainClass | EarningsServiceNoUniqueMatch e) {
-            LOGGER.error("Could not retrieve earning details.", e);
+            LOGGER.error(append("errorCode", "0009"), "Could not retrieve earning details.", e);
             return buildErrorResponse(headers, "0009", "Resource not found", HttpStatus.NOT_FOUND);
         } catch (IllegalArgumentException iae) {
-            LOGGER.error(iae.getMessage(), iae);
+            LOGGER.error(append("errorCode", "0004"), iae.getMessage(), iae);
             return buildErrorResponse(headers, "0004", "Parameter error: " + iae.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         } catch (UnknownPaymentFrequencyType upte) {
-            LOGGER.error("Unknown payment frequency type " + upte);
+            LOGGER.error(append("errorCode", "0005"), "Unknown payment frequency type " + upte);
             return buildErrorResponse(headers, "0005", "Unknown payment frequency type", HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (RuntimeException e) {
-            LOGGER.error("NINO is not valid", e);
+            LOGGER.error(append("errorCode", "0004"), "NINO is not valid", e);
             return buildErrorResponse(headers, "0004", "Parameter error: NINO is invalid", HttpStatus.BAD_REQUEST);
         }
     }

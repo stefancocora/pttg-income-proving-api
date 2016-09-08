@@ -5,7 +5,7 @@ ENV MONGO_PORT 28017
 ENV HMRC_API_ENDPOINT localhost
 ENV USER pttg
 ENV GROUP pttg
-ENV NAME pttg-income-proving-api
+ENV NAME pttg-ip-api
 
 ARG JAR_PATH
 ARG VERSION

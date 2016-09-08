@@ -73,8 +73,8 @@ public class ApiDocumentation {
 
     private FieldDescriptor[] categoryCheckModelFields = new FieldDescriptor[]{
         fieldWithPath("categoryCheck").description("The financial status category check details"),
-        fieldWithPath("categoryCheck.category").description("to do - i don't know what this means"),
-        fieldWithPath("categoryCheck.passed").description("True if this check was satisfied, otherwise false"),
+        fieldWithPath("categoryCheck.category").description("The category that was checked"),
+        fieldWithPath("categoryCheck.passed").description("True if this individual meets the financial status requirements for the given Category, otherwise false"),
         fieldWithPath("categoryCheck.applicationRaisedDate").description("Date of the application"),
         fieldWithPath("categoryCheck.assessmentStartDate").description("Start date of the financial status check based on the application raised date minus 182 days"),
         fieldWithPath("categoryCheck.failureReason").description("Description of the failure reason when passed is not true - see <<Glossary>>")
@@ -144,7 +144,7 @@ public class ApiDocumentation {
             .spec(requestSpec)
             .filter(document.snippets(
                 responseFields(
-                    fieldWithPath("status.code").description("A specific error code to identify further details of this error"),
+                    fieldWithPath("status.code").description("A numeric code categorising this error"),
                     fieldWithPath("status.message").description("A description of the error, in this case identifying the missing mandatory parameter")
                 )
             ))
@@ -169,7 +169,7 @@ public class ApiDocumentation {
                         .description("Date of the application. Formatted as `yyyy-mm-dd` eg `2015-09-23`")
                         .attributes(key("optional").value(false)),
                     parameterWithName("dependants")
-                        .description("Number of dependants declared at time of application. Optional. Must be 0 or higher.")
+                        .description("Number of dependants. Optional. Minimum 0, maximum 99.")
 //                                        .optional()
 //                                         to do - remove following when springrestdocs fixes support for documenting optional
                         .attributes(key("optional").value(true))
