@@ -23,8 +23,8 @@ apply plugin: 'pttgSpringBootGradle'
 apply plugin: 'pttgApiDocsGradle'
 apply plugin: 'net.serenity-bdd.aggregator'
 
-group 'pttg-income-proving-api'
-version = '0.1.RELEASE'
+group 'pttg-ip-api'
+version = '0.1.0'
 
 mainClassName = "uk.gov.digital.ho.proving.income.ServiceRunner"
 
@@ -38,7 +38,7 @@ dependencies {
     compile libraries.springboot
     compile 'com.google.guava:guava:19.0'
     compile 'org.apache.httpcomponents:httpclient:4.5.2'
-//    compile 'org.springframework.boot:spring-boot-starter-hateoas:1.4.0.RELEASE'
+    compile 'net.logstash.logback:logstash-logback-encoder:4.7'
 
 
     testCompile libraries.cucumber
@@ -101,4 +101,29 @@ apidocs {
 task buildSpringBootWithApiDocs(type: BootRepackage, dependsOn: buildWithApiDocs) {
     group 'build'
     description 'Builds the jar as a Spring Boot executable jar containing the api docs'
+}
+
+tasks.withType(JavaCompile) {
+
+    options.fork = true  // Fork your compilation into a child process
+    options.forkOptions.setMemoryMaximumSize("256m")
+}
+
+tasks.withType(GroovyCompile) {
+
+    options.fork = true  // Fork your compilation into a child process
+    options.forkOptions.setMemoryMaximumSize("256m")
+}
+
+tasks.withType(ScalaCompile) {
+    scalaCompileOptions.with {
+        force = true
+        additionalParameters = ["-Xmax-classfile-name", "127"]
+        forkOptions.setMemoryMaximumSize("256m")
+    }
+}
+
+test {
+    exclude 'acceptance/**'
+    maxHeapSize = "256m"
 }

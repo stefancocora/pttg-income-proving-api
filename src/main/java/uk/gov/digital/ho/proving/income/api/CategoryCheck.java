@@ -72,4 +72,16 @@ public class CategoryCheck {
     public void setFailureReason(FinancialCheckValues failureReason) {
         this.failureReason = failureReason;
     }
+
+    @Override
+    public String toString() {
+        return "CategoryCheck{" +
+            "category='" + category + '\'' +
+            ", passed=" + passed +
+            ", applicationRaisedDate=" + applicationRaisedDate +
+            ", assessmentStartDate=" + assessmentStartDate +
+            ", failureReason=" + failureReason +
+            ", formatter=" + formatter +
+            '}';
+    }
 }
